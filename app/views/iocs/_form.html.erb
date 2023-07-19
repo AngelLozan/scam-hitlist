@@ -1,0 +1,41 @@
+
+<%= simple_form_for(@ioc) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <% report_method_one = ['Full Website Process',
+'Profile Report (social sites)',
+'Registrar/ Domain Host Email',
+'Telegram',
+'Via Host site (blog, apk, ect.)',
+'Site Specific Form',
+'Follow Up Email'] %>
+
+<% form = [] %>
+<% @forms.reverse_each do |f| %>
+  <% form << f %>
+<% end %>
+
+<% host = [] %>
+<% @hosts.reverse_each do |h| %>
+  <% host << h %>
+<% end %>
+
+  <div class="form-inputs">
+    <%= f.input :url %>
+    <%= f.input :status, collection: %w(added reported resolved official_url watchlist) %>
+    <%= f.input :report_method_one, collection: report_method_one %>
+    <%= f.input :report_method_two %>
+    <%= f.input :form, collection: form, default: nil %>
+    <%= f.input :host, collection: host, default: nil %>
+    <%= f.input :follow_up_date, default: nil, include_blank: true %>
+    <%= f.input :follow_up_count %>
+    <%= f.input :comments, :input_html => {:rows => 10} %>
+    <%= f.input :removed_date, default: nil, include_blank: true %>
+    <%= f.input :file %>
+  </div>
+
+  <div class="form-actions d-flex flex-column">
+    <%= f.button :submit, "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>

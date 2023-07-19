@@ -1,0 +1,12 @@
+<div class="container mt-3">
+
+  <p style="color: green"><%= notice %></p>
+
+  <%= render @form %>
+
+  <div class="d-flex flex-column">
+   <%= link_to "Back to Settings", settings_path, class: "btn btn-info mt-3" %>
+   <%= button_to "Delete", @form, method: :delete, class: 'btn btn-danger mt-3 text-white' %>
+  </div>
+
+</div>

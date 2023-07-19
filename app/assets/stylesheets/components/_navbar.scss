@@ -1,0 +1,27 @@
+.navbar-scams {
+  justify-content: space-between;
+  background: $darkblue;
+
+  i {
+    color: white;
+  }
+
+  a:hover {
+    background: $white;
+    i{
+      color: $darkblue;
+    }
+  }
+
+  .dropdown-menu {
+    background: $darkblue;
+  }
+}
+
+.navbar-scams .navbar-collapse {
+  flex-grow: 0;
+}
+
+.navbar-scams .navbar-brand img {
+  width: 40px;
+}

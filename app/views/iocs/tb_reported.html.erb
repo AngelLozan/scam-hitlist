@@ -1,0 +1,55 @@
+
+<div class='container'>
+  <p style="color: green"><%= notice %></p>
+
+  <h1 class='text-center'>Newly added IOCs</h1>
+  <div class="d-flex justify-content-center">
+      <div class="mx-3 p-3 border rounded shadow-sm">
+        <div>
+          <strong>Need to be Reported:</strong> <%= Ioc.tb_reported.count %>
+        </div>
+      </div>
+  </div>
+</div>
+
+<% if Ioc.tb_reported.count > 0 %>
+  <div>
+    <div class="ticket-table-container" data-controller="table">
+
+      <table class='table table-striped table-hover'>
+        <thead class='table-dark'>
+          <tr>
+            <th><%= sortable "url", 'URL' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+            <th><%= sortable "created_at", "Reported Date" %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+            <th><%= sortable 'report_method_one', 'Report Method?' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+            <th><%= sortable 'comments', 'Comments' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+            <th><%= sortable 'status', 'Status' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @iocs.each do |ioc| %>
+            <tr class='table-row' data-action="click->table#showIoc" data-url='<%= ioc_path(ioc) %>' data-table-target="tableRow">
+              <td class='url'><%= ioc.url %></td>
+              <td class='date'><%= ioc.created_at.strftime("%Y-%m-%d") %></td>
+              <td><%= ioc.report_method_one %></td>
+              <td><%= ioc.comments %></td>
+              <td><%= ioc.status %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+        <div class="container pages-list">
+          <%= paginate @iocs %>
+        </div>
+    </div>
+  </div>
+<% else %>
+ <div class="container mt-5">
+  <div class="d-flex justify-content-center">
+    <h3>Nothing to report!</h3>
+  </div>
+  <div class="d-flex justify-content-center">
+     <%= image_tag "shield.png", height: 300 %>
+  </div>
+ </div>
+<% end %>

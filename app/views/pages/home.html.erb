@@ -1,0 +1,15 @@
+
+
+<div class="banner">
+  <%= image_tag "Home.svg", alt: 'background', class: 'background-image'%>
+  <div class="banner-content text-center">
+    <div class="mx-3">
+      <div class='d-flex justify-content-center mb-5'>
+        <%= render "shared/user_details" %>
+      </div>
+      <div class='d-flex justify-content-center'>
+        <%= render "form", ioc: @ioc %>
+      </div>
+    </div>
+  </div>
+</div>

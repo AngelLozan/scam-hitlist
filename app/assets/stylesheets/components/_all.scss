@@ -1,0 +1,85 @@
+.table-hover tbody tr:hover {
+  background-color: #ebe8e8;
+  cursor: pointer;
+}
+.ticket-button:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.moved {
+  margin-left: 100px;
+}
+
+body {
+  color: $verydarkblue;
+}
+
+tbody > * > * {
+  color: $verydarkblue !important;
+}
+
+.card-body {
+  color: $verydarkblue !important;
+}
+
+.pagination > span {
+  padding: 6px;
+}
+
+.pagination span.current.current {
+  font-weight: bolder;
+}
+
+.pagination > span > a {
+  text-decoration: none;
+}
+
+.pages-list {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.table th {
+  text-align: center;
+}
+
+.table th .current {
+  padding-right: 12px;
+  color: $lightblue;
+}
+
+.table th > a {
+  text-decoration: none;
+  color: White;
+}
+
+.table td {
+  text-align: center;
+}
+
+// .table td {
+//   // overflow-wrap: break-word;
+//   white-space: normal;
+//   word-break: break-word;
+// }
+
+.url {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.date {
+  white-space: nowrap;
+}
+
+
+.ticket-table-container {
+  background-color: $light-gray;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  margin-top: 24px;
+  border-radius: 16px;
+}

@@ -1,0 +1,68 @@
+<div class="navbar navbar-expand-sm navbar-light navbar-scams">
+  <div class="container-fluid">
+    <%= link_to "/", class: "navbar-brand" do %>
+      <%= image_tag "ban.png" %>
+    <% end %>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto">
+        <% if user_signed_in? %>
+          <li class="nav-item active">
+            <%= link_to iocs_path, class: "nav-link" do %>
+              <i class="fa-solid fa-globe">  All</i>
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to new_ioc_path, class: "nav-link" do %>
+              <i class="fa-regular fa-square-plus">  New</i>
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to reported_path, class: "nav-link" do %>
+              <i class="fa-solid fa-gavel">  Reported</i>
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to follow_up_path, class: "nav-link" do %>
+              <i class="fa-solid fa-reply-all">  Follow-up</i>
+            <% end %>
+          </li>
+          <li class="nav-item">
+            <%= link_to tb_reported_path, class: "nav-link" do %>
+              <i class="fa-solid fa-list">  2b Reported</i>
+            <% end %>
+          </li>
+           <li class="nav-item">
+            <%= link_to watchlist_path, class: "nav-link" do %>
+              <i class="fa-brands fa-watchman-monitoring"> Watchlist</i>
+            <% end %>
+          </li>
+
+          <li class="nav-item dropdown">
+          <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <%= image_tag(current_user.image, class: "avatar", alt: "dropdown menu") %>
+          </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <%= link_to settings_path, class: "dropdown-item" do %>
+                <i class="fa-solid fa-gear"> Settings</i>
+              <% end %>
+              <%= link_to destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" do %>
+                <i class="fa-solid fa-right-from-bracket"> Logout</i>
+              <% end %>
+            </div>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to new_user_session_path, class: "nav-link" do %>
+              <i class="fa-solid fa-right-to-bracket"></i>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

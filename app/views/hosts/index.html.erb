@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Hosts</h1>
+
+<div id="hosts">
+  <% @hosts.each do |host| %>
+    <%= render host %>
+    <p>
+      <%= link_to "Show this host", host %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New host", new_host_path %>

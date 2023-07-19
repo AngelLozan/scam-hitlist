@@ -1,0 +1,12 @@
+<div id="<%= dom_id host %>">
+  <p>
+    <strong>Name:</strong>
+    <%= host.name.capitalize %>
+  </p>
+
+  <p>
+    <strong>Email:</strong>
+    <%= link_to host.email, "mailto:#{host.email}", target: "_blank" %>
+  </p>
+
+</div>

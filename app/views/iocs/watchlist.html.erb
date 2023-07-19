@@ -1,0 +1,82 @@
+
+<div class='container'>
+  <p style="color: green"><%= notice %></p>
+
+  <h1 class='text-center'>Watchlist</h1>
+  <div class="d-flex justify-content-center">
+      <div class="mx-3 p-3 border rounded shadow-sm">
+        <div>
+          <strong>Watchlist:</strong> <%= Ioc.watchlist.count %>
+        </div>
+      </div>
+      </div>
+    </div>
+
+  <div class="ticket-table-container" data-controller="table">
+
+  <div class="d-flex justify-content-center my-3">
+    <div class="mx-2">
+      <%= form_with url: watchlist_path, method: :get, class: "d-flex", data: { table_target: 'searchForm' } do %>
+        <%= text_field_tag :query,
+          params[:query],
+          class: "border border-blue-500 rounded p-2",
+          autocomplete: "off",
+          placeholder: "Find an IOC",
+          data: { table_target: 'input' }
+        %>
+        <%= submit_tag "Search", name: "", class: "btn btn-primary" %>
+      <% end %>
+      <%= render 'reset_link', query: params[:query] %>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class='table table-striped table-hover'>
+      <thead class='table-dark'>
+        <tr>
+          <th><%= sortable "url", 'URL' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable "created_at", "Reported Date" %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'report_method_one', 'Report Method 1' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'report_method_two', 'Report Method 2' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'form', 'Form Used'  %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'host', 'Domain Host' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'follow_up_date', 'Follow-up Date' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'follow_up_count', 'Follow-up Count' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+          <th><%= sortable 'status', 'Status' %> <i class="fa-solid <%= params[:direction] == "desc" ? "fa-caret-down" : "fa-caret-up" %> "></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @iocs.each do |ioc| %>
+          <tr class='table-row' data-action="click->table#showIoc" data-url='<%= ioc_path(ioc) %>' data-table-target="tableRow">
+            <td class='url'><%= ioc.url %></td>
+            <td class='date'><%= ioc.created_at.strftime("%Y-%m-%d") %></td>
+            <td><%= ioc.report_method_one %></td>
+            <td><%= ioc.report_method_two %></td>
+            <% if ioc.form_host_number?(ioc.form) %>
+              <td><%= @forms.find(ioc.form.to_i).name %></td>
+            <% else %>
+              <td><%= ioc.form %></td>
+            <% end %>
+            <% if ioc.form_host_number?(ioc.host)%>
+              <td><%= @hosts.find(ioc.host.to_i).name %></td>
+            <% else %>
+              <td><%= ioc.host %></td>
+            <% end %>
+            <% if ioc.follow_up_date.nil? %>
+              <td class='date'><%= ioc.follow_up_date %></td>
+            <% else %>
+              <td class='date'><%= ioc.follow_up_date.strftime("%Y-%m-%d") %></td>
+            <% end %>
+            <td><%= ioc.follow_up_count %></td>
+            <td><%= ioc.status %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+      <div class="container pages-list">
+        <%= paginate @iocs %>
+      </div>
+  </div>
+</div>

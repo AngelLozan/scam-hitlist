@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ScamHitlist - Protecting Exodus Customers From Scams</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Protecting Exodus Customers from Scams">
+
+        <!-- Facebook Open Graph data -->
+    <meta property="og:title" content="ScamHitlist">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:image" content="ban.png">
+    <meta property="og:description" content="Protecting Exodus Customers from Scams">
+    <meta property="og:site_name" content="ScamHitlist">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@twitter">
+    <meta name="twitter:title" content="ScamHitlist">
+    <meta name="twitter:description" content="Protecting Exodus Customers from Scams">
+    <meta name="twitter:creator" content="@twitter">
+    <meta name="twitter:image:src" content="ban.png">
+
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.css">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+     <%= favicon_link_tag "favicon.ico", rel: "icon", type: "image/x-icon" %>
+  </head>
+
+  <body>
+  <%= render "shared/navbar" %>
+
+
+      <%= render "shared/flashes" %>
+      <%= yield %>
+
+
+
+
+
+  </body>
+</html>

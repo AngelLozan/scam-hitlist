@@ -1,0 +1,29 @@
+
+<% if false %>
+<div id="<%= dom_id host %>">
+  <p>
+    <strong>Name:</strong>
+    <%= host.name %>
+  </p>
+
+  <p>
+    <strong>Email:</strong>
+    <%= link_to host.email, "mailto:#{host.email}", target: "_blank" %>
+  </p>
+
+</div>
+<% end %>
+
+<%= simple_form_for(@host) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :email %>
+  </div>
+
+  <div class="form-actions d-flex flex-column">
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+<% end %>

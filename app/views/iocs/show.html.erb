@@ -10,9 +10,9 @@
 
         <div class="d-flex flex-column my-3 justify-content-around">
           <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">Submit to ZF API</button>
-          <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="zfbtn">Submit to ZF API</button>
           <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-zf-target="cabtn">Submit to Chain Abuse API</button>
-          <%= link_to "Submit to PhishTank", "mailto:phish@phishtank.com", target: "_blank", class: 'btn btn-primary mb-3' %>
+          <% mailto = "mailto:phish@phishtank.com?subject=Phishing%20Link%2C%20please%20add%20to%20tank&body=Hello%2C%20SITE%3A%20#{@ioc.url}%20This%20is%20a%20scam%20phishing%20site%20that%20is%20not%20affiliated%20with%20Exodus%20Movement%20Inc.%20or%20our%20crypto%20wallet.%20Please%20add%20it%20to%20the%20tank.%20Thank%20you%21" %>
+          <%= link_to "Submit to PhishTank", mailto, target: "_blank", class: 'btn btn-primary mb-3' %>
           <button class="btn btn-primary mb-3">Submit to Google API</button>
           <div class="text-center my-3">
             <% if @host[:email].nil? || @host[:email] == 'null' || @host[:email] == 'N/A' %>

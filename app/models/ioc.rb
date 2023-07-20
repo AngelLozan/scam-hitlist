@@ -1,6 +1,7 @@
 require "date"
 
 class Ioc < ApplicationRecord
+  before_save :add_protocol_to_url
   has_one_attached :file, dependent: :destroy
   enum :status, { added: 0, reported: 1, resolved: 2, official_url: 3, watchlist: 4 }
   enum :zf_status, { not_sub_zf: 0, submitted_zf: 1 } # Used for buttons on show page
@@ -45,6 +46,14 @@ class Ioc < ApplicationRecord
 
   def form_host_number?(str)
     Integer(str) rescue false
+  end
+
+  private
+  
+  def add_protocol_to_url
+    if url.present? && !url.start_with?('http://', 'https://')
+      self.url = "http://#{url}"
+    end
   end
 
 end

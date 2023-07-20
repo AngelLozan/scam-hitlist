@@ -7,15 +7,21 @@ export default class extends Controller {
     fox: String,
   };
 
-  static targets = ['zfbtn', 'cabtn', 'whois']
+  static targets = ['zfbtn', 'cabtn', 'whois', 'ptbtn']
 
   connect() {
     console.log('connected zf controller');
-    get
+
     const zfbtnStatus = this.zfbtnTarget.getAttribute('data-status');
     console.log(zfbtnStatus);
-    if (zfbtnStatus === 1) {
+    if (zfbtnStatus === 'submitted_zf') {
       this.zfbtnTarget.disabled = true;
+    }
+
+    const ptbtnStatus = this.ptbtnTarget.getAttribute('data-status');
+    console.log(ptbtnStatus);
+    if (ptbtnStatus === 'submitted_pt') {
+      this.ptbtnTarget.disabled = true;
     }
   }
 
@@ -24,57 +30,68 @@ export default class extends Controller {
     return csrfMetaTag ? csrfMetaTag.content : "";
   }
 
-  async postZFIOC(e){
+  async postPT(e){
     e.preventDefault();
     const id = e.currentTarget.getAttribute('data-id');
+    const url = e.currentTarget.getAttribute('data-url');
     try {
+      window.open(url, "_blank");
       let setStatus = await fetch(`/iocs/${id}`, {
         method: 'PATCH',
         headers: {  "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
-        body: JSON.stringify({ 'zf_status': 1 })
+        body: JSON.stringify({ 'pt_status': 1 })
       })
       console.log(setStatus);
       let response = await setStatus.json();
       console.log(response);
+      if (response.pt_status === 'submitted_pt') {
+        this.ptbtnTarget.innerText = 'Submitted!'
+        this.ptbtnTarget.disabled = true;
+      }
     } catch (error) {
       console.log(error.message);
     }
   }
 
-  // async postZFIOC(e){
-  //   e.preventDefault();
-  //   const url = e.currentTarget.getAttribute('data-url');
-  //   const id = e.currentTarget.getAttribute('data-id');
-  //   try {
-  //     let res = await fetch('https://api.zerofox.com/2.0/threat_submit/', {
-  //       method: 'POST',
-  //       headers: {'Content-Type':'application/json', 'Authorization': `${this.foxValue}`},
-  //       body: JSON.stringify({"source": `${url}`, "alert_type": "url", "violation": "phishing", "entity_id": "1194602", "request_takedown": false, "notes": "test"})
-  //     })
-  //     let data = await res.json();
-  //     console.log(data);
-  //     if (data.alert_id) {
-  //       this.zfbtnTarget.innerText = 'Submitted!'
-  //       this.zfbtnTarget.disabled = true;
-  //       // Update the status via the controller to reviewed.
-  //       try {
-  //         let setStatus = await fetch(`/iocs/${id}`, {
-  //           method: 'PATCH',
-  //           headers: {  "Content-Type": "application/json", "Accept": "application/json" },
-  //           body: JSON.stringify({ 'zf_status': 1 })
-  //         })
-  //         let response = await setStatus.json();
-  //         console.log(response);
-  //       } catch (error) {
-  //         console.log(error.message);
-  //       }
+  async postZFIOC(e){
+    e.preventDefault();
+    const url = e.currentTarget.getAttribute('data-url');
+    const id = e.currentTarget.getAttribute('data-id');
+    try {
+      let res = await fetch('https://api.zerofox.com/2.0/threat_submit/', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'Authorization': `${this.foxValue}`},
+        body: JSON.stringify({"source": `${url}`, "alert_type": "url", "violation": "phishing", "entity_id": "1194602", "request_takedown": false, "notes": "test please ignore"})
+      })
+      let data = await res.json();
+      console.log(data);
+      if (data.alert_id) {
+        this.zfbtnTarget.innerText = 'Submitted!'
+        this.zfbtnTarget.disabled = true;
+        // Update the status via the controller to reviewed.
+        try {
+          let setStatus = await fetch(`/iocs/${id}`, {
+            method: 'PATCH',
+            headers: {  "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
+            body: JSON.stringify({ 'zf_status': 1 })
+          })
+          console.log(setStatus);
+          let response = await setStatus.json();
+          console.log(response);
+          if (response.zf_status === 'submitted_zf') {
+            this.zfbtnTarget.innerText = 'Submitted!'
+            this.zfbtnTarget.disabled = true;
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
 
-  //     }
+      }
 
-  //   } catch (error) {
-  //     console.log(error.message);
-  //   }
-  // }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   async postCAIOC(e){
     e.preventDefault();

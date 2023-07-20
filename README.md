@@ -42,3 +42,8 @@ next_available_id = highest_id + 1
 
 ActiveRecord::Base.connection.execute("SELECT setval('iocs_id_seq', #{next_available_id}, false)")
 ```
+In the case where you need to reset the sequence, you can run the following in the rails console (keep the `DATABASE` variable as is)):
+
+```
+heroku restart; heroku pg:reset DATABASE --confirm APP-NAME; heroku run rake db:migrate
+```

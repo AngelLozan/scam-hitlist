@@ -48,7 +48,7 @@ export default class extends Controller {
   //   try {
   //     let res = await fetch('https://api.zerofox.com/2.0/threat_submit/', {
   //       method: 'POST',
-  //       headers: {'Content-Type':'application/json', `${this.foxValue}`},
+  //       headers: {'Content-Type':'application/json', 'Authorization': `${this.foxValue}`},
   //       body: JSON.stringify({"source": `${url}`, "alert_type": "url", "violation": "phishing", "entity_id": "1194602", "request_takedown": false, "notes": "test"})
   //     })
   //     let data = await res.json();

@@ -58,12 +58,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_19_133438) do
 
   create_table "iocs", force: :cascade do |t|
     t.string "url"
-    t.date "removed_date"
+    t.datetime "removed_date", precision: nil
     t.string "report_method_one"
     t.string "report_method_two"
     t.string "form"
     t.string "host"
-    t.date "follow_up_date"
+    t.datetime "follow_up_date", precision: nil
     t.integer "follow_up_count"
     t.text "comments"
     t.datetime "created_at"

@@ -31,7 +31,7 @@ If failing to see various features in front end, use `rails assets:precompile` t
 
 
 ## Database setup
-After seeding the database, you will need to manually find the next ID and set it in the rails console:
+After seeding the database, you may need to manually find the next ID and set it in the rails console:
 
 ```
 highest_id = Ioc.maximum(:id)

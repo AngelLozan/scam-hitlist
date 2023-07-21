@@ -26,8 +26,8 @@
     <%= f.input :status, collection: %w(added reported resolved official_url watchlist) %>
     <%= f.input :report_method_one, collection: report_method_one %>
     <%= f.input :report_method_two %>
-    <%= f.input :form, collection: form, default: nil %>
-    <%= f.input :host, collection: host, default: nil %>
+    <%= f.input :form, collection: form, selected: "N/A" %>
+    <%= f.input :host, collection: host, selected: "N/A" %>
     <%= f.input :follow_up_date, default: nil, include_blank: true %>
     <%= f.input :follow_up_count %>
     <%= f.input :comments, :input_html => {:rows => 10} %>

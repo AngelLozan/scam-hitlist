@@ -1,48 +1,59 @@
-<div class='container'>
+<div class='container-fluid' data-controller="table">
   <p style="color: green"><%= notice %></p>
-
   <h1 class='text-center'>All IOCs</h1>
-    <div class="d-flex justify-content-center">
-      <div class="mx-3 p-3 border rounded shadow-sm">
-        <div>
-          <strong>Total:</strong> <%= Ioc.all_count %>
+
+
+  <div class="row text-center justify-content-center">
+
+        <div class="col-6 col-lg-2 p-3 border rounded shadow-sm">
+          <div>
+            <strong>Total:</strong> <%= Ioc.all_count %>
+          </div>
         </div>
-      </div>
-      <div class="mx-3 p-3 border rounded shadow-sm">
-        <div>
-          <strong>Reported:</strong> <%= Ioc.reported_count %>
+
+        <div class="col-6 col-lg-2 p-3 border rounded shadow-sm">
+          <div>
+            <strong>Reported:</strong> <%= Ioc.reported_count %>
+          </div>
         </div>
-      </div>
-      <div class="mx-3 p-3 border rounded shadow-sm">
-        <div>
-          <strong>Need to be Reported:</strong> <%= Ioc.tb_reported.count %>
+
+        <div class="col-6 col-lg-2 p-3 border rounded shadow-sm">
+          <div>
+            <strong>Need to be Reported:</strong> <%= Ioc.tb_reported.count %>
+          </div>
         </div>
-      </div>
-      <div class="mx-3 p-3 border rounded shadow-sm">
-        <div>
-          <strong>Follow-up needed:</strong> <%= Ioc.follow_up_needed.count %>
+
+        <div class="col-6 col-lg-2 p-3 border rounded shadow-sm">
+          <div>
+            <strong>Follow-up needed:</strong> <%= Ioc.follow_up_needed.count %>
+          </div>
         </div>
-      </div>
-    </div>
+
   </div>
 
-  <div class="ticket-table-container" data-controller="table">
 
   <div class="d-flex justify-content-center my-3">
-    <div class="mx-2">
-      <%= form_with url: iocs_path, method: :get, class: "d-flex", data: { table_target: 'searchForm' } do %>
+    <%= form_with url: iocs_path, method: :get, class: "d-flex", data: { table_target: 'searchForm' } do %>
+      <div class="input-group col-sm-6 col-md-4">
         <%= text_field_tag :query,
           params[:query],
-          class: "border border-blue-500 rounded p-2",
+          class: "border border-blue-200 rounded p-2",
           autocomplete: "off",
           placeholder: "Find a IOC",
           data: { table_target: 'input' }
         %>
         <%= submit_tag "Search", name: "", class: "btn btn-primary" %>
-      <% end %>
-      <%= render 'reset_link', query: params[:query] %>
-    </div>
+      </div>
+    <% end %>
   </div>
+
+  <div class='d-flex justify-content-center'>
+    <%= render 'reset_link', query: params[:query] %>
+  </div>
+
+
+
+<div class="ticket-table-container">
 
   <div class="table-responsive">
     <table class='table table-striped table-hover'>

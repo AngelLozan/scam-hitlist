@@ -12,16 +12,25 @@ export default class extends Controller {
   connect() {
     console.log('connected zf controller');
 
+    // ZeroFox
     const zfbtnStatus = this.zfbtnTarget.getAttribute('data-status');
     console.log(zfbtnStatus);
     if (zfbtnStatus === 'submitted_zf') {
       this.zfbtnTarget.disabled = true;
     }
 
+    // Phish Tank
     const ptbtnStatus = this.ptbtnTarget.getAttribute('data-status');
     console.log(ptbtnStatus);
     if (ptbtnStatus === 'submitted_pt') {
       this.ptbtnTarget.disabled = true;
+    }
+
+    // Chain Abuse
+    const cabtnStatus = this.cabtnTarget.getAttribute('data-status');
+    console.log(cabtnStatus);
+    if (cabtnStatus === 'submitted_ca') {
+      this.cabtnTarget.disabled = true;
     }
   }
 
@@ -101,30 +110,43 @@ export default class extends Controller {
       {
         "addresses": [
           {
-            "domain": `${url}`,
-            "address": `${url}`
+            "domain": "wwww.exodusclub.scamtest.com"
           }
         ],
         "agreedToBeContactedData": {
-          "agreed": true,
-          "name": "Scott",
-          "email": "scott.lo@exodus.io",
-          "country": "US"
+          "agreed": true
         },
         "scamCategory": "PHISHING",
-        "description": "Phishing Scam"
+        "description": "Phishing site"
       }
     ];
     try {
-      let res = await fetch('https://api.zerofox.com/2.0/threat_submit/', {
+      let res = await fetch('https://api.chainabuse.com/v0/reports/batch', {
         method: 'POST',
-        headers: {'Content-Type':'application/json', 'accept': 'application/json', 'Authorization': `${this.caValue}`},
+        headers: {'content-type':'application/json', 'accept': 'application/json', 'authorization': `${this.caValue}`},
         body: JSON.stringify(requestBody)
       })
       let data = await res.json();
-      if (data.alert_id) {
+      if (data.createdReports[0].id) {
         this.cabtnTarget.innerText = 'Submitted!'
         this.cabtnTarget.disabled = true;
+
+        try {
+          let setStatus = await fetch(`/iocs/${id}`, {
+            method: 'PATCH',
+            headers: {  "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
+            body: JSON.stringify({ 'ca_status': 1 })
+          })
+          console.log(setStatus);
+          let response = await setStatus.json();
+          console.log(response);
+          if (response.ca_status === 'submitted_ca') {
+            this.cabtnTarget.innerText = 'Submitted!'
+            this.cabtnTarget.disabled = true;
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
       }
       console.log(data);
     } catch (error) {

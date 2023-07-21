@@ -134,7 +134,8 @@ export default class extends Controller {
           let setStatus = await fetch(`/iocs/${id}`, {
             method: 'PATCH',
             headers: {  "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
-            body: JSON.stringify({ 'ca_status': 1 })
+            body: JSON.stringify({ 'ca_status': 1 }),
+            mode: 'no-cors'
           })
           console.log(setStatus);
           let response = await setStatus.json();

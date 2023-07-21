@@ -173,7 +173,7 @@ class IocsController < ApplicationController
     @ioc = Ioc.new(ioc_simple_params)
 
     respond_to do |format|
-      if @ioc.save
+      if verify_recaptcha(model: @ioc) && @ioc.save
         format.html { redirect_to root_path, notice: "Ioc was successfully created." }
         format.json { render :show, status: :created, location: @ioc }
       else

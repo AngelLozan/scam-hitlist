@@ -275,6 +275,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    recaptcha (5.14.0)
     redis (4.8.1)
     regexp_parser (2.8.1)
     reline (0.3.6)
@@ -411,6 +412,7 @@ DEPENDENCIES
   pg_search
   puma (~> 5.0)
   rails (~> 7.0.6)
+  recaptcha
   redis (~> 4.0)
   rspec-core (~> 3.4, >= 3.4.4)
   rspec-rails

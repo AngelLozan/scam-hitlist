@@ -72,6 +72,7 @@ group :development, :test, :production do
   gem 'byebug', platform: :mri
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
+  gem "recaptcha"
   gem 'rspec-core', '~> 3.4', '>= 3.4.4'
   gem 'rspec-rails'
   gem 'rubocop', '~> 1.54', '>= 1.54.1'

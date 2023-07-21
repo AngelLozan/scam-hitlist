@@ -105,12 +105,11 @@ export default class extends Controller {
   async postCAIOC(e){
     e.preventDefault();
     const url = e.currentTarget.getAttribute('data-url');
-    // Add this above domain in below body if needed: "chain": "BTC",
     const requestBody = [
       {
         "addresses": [
           {
-            "domain": "wwww.exodusclub.scamtest.com"
+            "domain": `${url}`
           }
         ],
         "agreedToBeContactedData": {

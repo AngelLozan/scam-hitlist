@@ -147,7 +147,7 @@ GEM
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
-    irb (1.7.3)
+    irb (1.7.4)
       reline (>= 0.3.6)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
@@ -185,7 +185,7 @@ GEM
     mime-types-data (3.2023.0218.1)
     mini_mime (1.1.2)
     minitest (5.18.1)
-    msgpack (1.7.1)
+    msgpack (1.7.2)
     multi_xml (0.6.0)
     net-imap (0.3.6)
       date
@@ -241,6 +241,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.7)
+    rack-cors (2.0.1)
+      rack (>= 2.0.0)
     rack-protection (3.0.6)
       rack
     rack-test (2.1.0)
@@ -411,6 +413,7 @@ DEPENDENCIES
   pg (~> 1.1)
   pg_search
   puma (~> 5.0)
+  rack-cors
   rails (~> 7.0.6)
   recaptcha
   redis (~> 4.0)

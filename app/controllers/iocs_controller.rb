@@ -176,6 +176,9 @@ class IocsController < ApplicationController
       if verify_recaptcha(model: @ioc) && @ioc.save
         format.html { redirect_to root_path, notice: "Ioc was successfully created." }
         format.json { render :show, status: :created, location: @ioc }
+      elsif @ioc.url == ''
+        format.html { redirect_to root_path, status: :unprocessable_entity, notice: "First field is required." }
+        format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif !verify_recaptcha(model: @ioc)
         format.html { redirect_to root_path, status: :unprocessable_entity, notice: "Please complete recaptcha" }
         format.json { render json: object.errors, status: :unprocessable_entity }

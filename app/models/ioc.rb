@@ -8,7 +8,8 @@ class Ioc < ApplicationRecord
   enum :ca_status, { not_sub_ca: 0, submitted_ca: 1 }
   enum :pt_status, { not_sub_pt: 0, submitted_pt: 1 }
   enum :gg_status, { not_sub_gg: 0, submitted_gg: 1 }
-  validates :url, presence: true, uniqueness: true
+  validates :url, presence: true
+  validates :url, uniqueness: true
   # validates :report_method_one, presence: true
   paginates_per 10
 
@@ -49,7 +50,7 @@ class Ioc < ApplicationRecord
   end
 
   private
-  
+
   def add_protocol_to_url
     if url.present? && !url.start_with?('http://', 'https://')
       self.url = "http://#{url}"

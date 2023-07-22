@@ -17,7 +17,7 @@
           <% if @host[:email].nil? || @host[:email] == 'null' || @host[:email] == 'N/A' %>
               <button class="btn btn-primary mb-3" data-action="click->zf#copyLookUp" data-url='<%= @ioc.url %>' >Copy IOC & LookUp Host</button>
             <% else %>
-              <%= link_to "Follow up with #{@host.email}?", "mailto:#{@host.email}", target: "_blank", class: 'btn btn-primary mb-3' %>
+              <%= link_to "Follow up with #{@host.email}?", "mailto:#{@host.email}", target: "_blank", class: 'btn btn-primary mb-3 text-break' %>
           <% end %>
         </div>
 

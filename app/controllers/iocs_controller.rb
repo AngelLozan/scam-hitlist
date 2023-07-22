@@ -140,12 +140,18 @@ class IocsController < ApplicationController
 
     @ioc = Ioc.new(ioc_params)
 
+    all_urls = Ioc.pluck(:url)
+    new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
+
     respond_to do |format|
-      if @ioc.save
-        format.html { redirect_to ioc_url(@ioc), notice: "Ioc was successfully created." }
+      if @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been added 👍" }
+        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+      elsif @ioc.save
+        format.html { redirect_to ioc_url(@ioc),  alert_success: "A record was successfully created ✅" }
         format.json { render :show, status: :created, location: @ioc }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity, alert_warning: "Something is wrong 🤔" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       end
     end

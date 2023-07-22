@@ -172,18 +172,28 @@ class IocsController < ApplicationController
 
     @ioc = Ioc.new(ioc_simple_params)
 
+    all_urls = Ioc.pluck(:url)
+    official_urls = Ioc.where(status: 3).pluck(:url)
+    new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
+
     respond_to do |format|
-      if verify_recaptcha(model: @ioc) && @ioc.save
-        format.html { redirect_to root_path, notice: "Ioc was successfully created." }
+      if @ioc.url.present? && official_urls.any? { |u| u.include? new_url }
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_primary: "This is owned by Exodus, please check with the team 😎" }
+        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+      elsif @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been reported 👍" }
+        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+      elsif verify_recaptcha(model: @ioc) && @ioc.save
+        format.html { redirect_to root_path, alert_success: "A record was successfully created ✅" }
         format.json { render :show, status: :created, location: @ioc }
-      elsif @ioc.url == ''
-        format.html { redirect_to root_path, status: :unprocessable_entity, notice: "First field is required." }
+      elsif !@ioc.url.present?
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_blue: "First field is required 👀" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif !verify_recaptcha(model: @ioc)
-        format.html { redirect_to root_path, status: :unprocessable_entity, notice: "Please complete recaptcha" }
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖" }
         format.json { render json: object.errors, status: :unprocessable_entity }
       else
-        format.html { redirect_to root_path, status: :unprocessable_entity, notice: "Already reported" }
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Something is missing 🤔" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       end
     end

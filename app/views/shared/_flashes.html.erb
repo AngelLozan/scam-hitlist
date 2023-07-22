@@ -13,3 +13,43 @@
     </button>
   </div>
 <% end %>
+
+<% if alert_primary %>
+  <div class="alert alert-primary alert-dismissible fade show m-1" role="alert">
+      <%= alert_primary %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+<% end %>
+
+<% if alert_success %>
+  <div class="alert alert-success alert-dismissible fade show m-1" role="alert">
+    <%= alert_success %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+<% end %>
+
+<% if alert_danger %>
+  <div class="alert alert-danger alert-dismissible fade show m-1" role="alert">
+    <%= alert_danger %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+<% end %>
+
+<% if alert_warning %>
+  <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
+    <%= alert_warning %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+<% end %>
+
+<% if alert_blue %>
+  <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
+    <%= alert_blue %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+<% end %>

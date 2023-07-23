@@ -193,7 +193,7 @@ class IocsController < ApplicationController
         format.html { redirect_to root_path, alert_success: "A record was successfully created ✅" }
         format.json { render :show, status: :created, location: @ioc }
       elsif !@ioc.url.present?
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_blue: "First field is required 👀" }
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "First field is required 👀" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif !verify_recaptcha(model: @ioc)
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖" }

@@ -278,7 +278,7 @@ class IocsController < ApplicationController
     request = Net::HTTP::Post.new(url)
     request["accept"] = "application/json"
     request["content-type"] = "application/json"
-    request["authorization"] = "Basic Y2FfWVdKMVYwTlZZVlpCV25oMFptdFpVbGRxZVhCT1dHTlFMbEZyVUdOTU9FSXlhVkpETDFORlNrOXNUVEp1U1ZFOVBROmNhX1lXSjFWME5WWVZaQlduaDBabXRaVWxkcWVYQk9XR05RTGxGclVHTk1PRUl5YVZKREwxTkZTazlzVFRKdVNWRTlQUQ=="
+    request["authorization"] = "#{ENV['CA_TOKEN']}"
     request.body = JSON.dump(request_body)
 
     response = http.request(request)

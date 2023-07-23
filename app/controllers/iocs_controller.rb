@@ -180,17 +180,21 @@ class IocsController < ApplicationController
 
     all_urls = Ioc.pluck(:url)
     official_urls = Ioc.where(status: 3).pluck(:url)
-    new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
+    new_url = @ioc.protocol_to_url
+    # new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
+    # !@ioc.url.start_with?('http://', 'https://') ? "http://#{@ioc.url}" : @ioc.url
 
     respond_to do |format|
       if @ioc.url.present? && official_urls.any? { |u| u.include? new_url }
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_primary: "This is owned by Exodus, please check with the team 😎" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        puts "\n OFFICIAL \n"
       elsif @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been reported 👍" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        puts "\n JA \n >>>>>#{new_url}<<<< \n"
       elsif verify_recaptcha(model: @ioc) && @ioc.save
-        format.html { redirect_to root_path, alert_success: "A record was successfully created ✅" }
+        format.html { redirect_to root_path, alert_success: "A record was successfully created, thanks! We'll review this shortly ✅" }
         format.json { render :show, status: :created, location: @ioc }
       elsif !@ioc.url.present?
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "First field is required 👀" }
@@ -198,6 +202,7 @@ class IocsController < ApplicationController
       elsif !verify_recaptcha(model: @ioc)
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖" }
         format.json { render json: object.errors, status: :unprocessable_entity }
+        puts "\n CAPTCHA \n >>>>>#{new_url}<<<< \n"
       else
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Something is missing 🤔" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
@@ -286,4 +291,5 @@ class IocsController < ApplicationController
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
+
 end

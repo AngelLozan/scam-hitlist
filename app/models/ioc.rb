@@ -49,6 +49,14 @@ class Ioc < ApplicationRecord
     Integer(str) rescue false
   end
 
+  def protocol_to_url
+    if url.present? && !url.start_with?('http://', 'https://')
+      self.url = "http://#{url}"
+    elsif url.present? && url.start_with?('http://', 'https://')
+      self.url = url
+    end
+  end
+
   private
 
   def add_protocol_to_url

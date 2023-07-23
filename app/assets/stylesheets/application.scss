@@ -19,9 +19,15 @@ body.light {
   color: $black;
   background-color: $light-gray;
 }
+
 body.dark {
-  color: white;
+  color: $light-gray;
   background-color: $black;
+
+
+  tbody > * > * {
+    color: $light-gray !important;
+  }
 
   .ticket-table-container {
     background-color: rgb(65, 60, 60);
@@ -33,12 +39,33 @@ body.dark {
     border-radius: 16px;
   }
 
-  // .table-hover tbody tr:hover {
-  //   background-color: #ebe8e8;
-  //   cursor: pointer;
-  // }
-  // .ticket-button:hover {
-  //   background-color: #f9f9f9;
-  //   cursor: pointer;
-  // }
+
+  .banner-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+
+  .form-control {
+    background-color: $gray;
+  }
+
+  .ticket-table-container .pagination .page-item a.page-link {
+    color: white;
+  }
+
+  .ticket-table-container .pagination .page-item.active a.page-link {
+    background-color: #fff;
+    color: #333;
+  }
+
+  .ticket-table-container .pagination .page-item.disabled a.page-link {
+    color: #666;
+  }
+
 }

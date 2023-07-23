@@ -59,6 +59,8 @@ gem 'font-awesome-sass', '~> 6.1'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'open-uri'
+gem 'uri', '~> 0.10.0'
+gem 'net-http', '~> 0.3.2'
 gem 'kaminari'
 gem "pg_search"
 gem 'nokogiri'

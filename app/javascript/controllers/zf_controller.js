@@ -104,29 +104,39 @@ export default class extends Controller {
 
   async postCAIOC(e){
     e.preventDefault();
-    const url = e.currentTarget.getAttribute('data-url');
-    const requestBody = [
-      {
-        "addresses": [
-          {
-            "domain": `${url}`
-          }
-        ],
-        "agreedToBeContactedData": {
-          "agreed": true
-        },
-        "scamCategory": "PHISHING",
-        "description": "Phishing site"
-      }
-    ];
+    // const url = e.currentTarget.getAttribute('data-url');
+    const id = e.currentTarget.getAttribute('data-id');
+    // const requestBody = [
+    //   {
+    //     "addresses": [
+    //       {
+    //         "domain": `${url}`
+    //       }
+    //     ],
+    //     "agreedToBeContactedData": {
+    //       "agreed": true
+    //     },
+    //     "scamCategory": "PHISHING",
+    //     "description": "Phishing site"
+    //   }
+    // ];
     try {
-      let res = await fetch('https://api.chainabuse.com/v0/reports/batch', {
-        method: 'POST',
-        headers: {'content-type':'application/json', 'accept': 'application/json', 'authorization': `${this.caValue}`},
-        body: JSON.stringify(requestBody)
+      // Patch to ioc/ca (body from above)
+      // Response from controller then set the button as same below.
+      // let res = await fetch('https://api.chainabuse.com/v0/reports/batch', {
+      //   method: 'POST',
+      //   headers: {'content-type':'application/json', 'accept': 'application/json', 'authorization': `${this.caValue}`},
+      //   body: JSON.stringify(requestBody)
+      // })
+      // let data = await res.json();
+      let res = await fetch(`/ca/${id}`, {
+        method: 'GET',
+        headers: {  "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken }
+        // body: JSON.stringify(requestBody)
       })
-      let data = await res.json();
-      if (data.createdReports[0].id) {
+      let data = res.json();
+      console.log(data); // data.createdReports[0].id
+      if (res.status === 201 ) {
         this.cabtnTarget.innerText = 'Submitted!'
         this.cabtnTarget.disabled = true;
 
@@ -134,8 +144,7 @@ export default class extends Controller {
           let setStatus = await fetch(`/iocs/${id}`, {
             method: 'PATCH',
             headers: {  "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
-            body: JSON.stringify({ 'ca_status': 1 }),
-            mode: 'no-cors'
+            body: JSON.stringify({ 'ca_status': 1 })
           })
           console.log(setStatus);
           let response = await setStatus.json();

@@ -1,8 +1,10 @@
 require "mail"
+require 'uri'
+require 'net/http'
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
-  before_action :set_ioc, only: %i[show edit update destroy]
+  before_action :set_ioc, only: %i[show edit update ca destroy]
   helper_method :sort_column, :sort_direction
 
   # GET /iocs or /iocs.json
@@ -244,13 +246,49 @@ class IocsController < ApplicationController
 
     respond_to do |format|
       if @ioc.update(ioc_params)
-        format.html { redirect_to ioc_url(@ioc), notice: "Ioc was successfully updated." }
+        format.html { redirect_to ioc_url(@ioc), alert_success: "The record was successfully updated." }
         format.json { render :show, status: :ok, location: @ioc }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity, alert_warning: "Something is missing" }
         format.json { render json: @ioc.errors.full_messages, status: :unprocessable_entity }
       end
     end
+  end
+
+  def ca
+
+    request_body = [
+      {
+        "addresses": [
+          {
+            "domain": "#{@ioc.url}"
+          }
+        ],
+        "agreedToBeContactedData": {
+          "agreed": true
+        },
+        "scamCategory": "PHISHING",
+        "description": "Phishing site"
+      }
+    ];
+
+    url = URI("https://api.chainabuse.com/v0/reports/batch")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(url)
+    request["accept"] = 'application/json'
+    request["content-type"] = 'application/json'
+    request["authorization"] = 'Basic Y2FfWVdKMVYwTlZZVlpCV25oMFptdFpVbGRxZVhCT1dHTlFMbEZyVUdOTU9FSXlhVkpETDFORlNrOXNUVEp1U1ZFOVBROmNhX1lXSjFWME5WWVZaQlduaDBabXRaVWxkcWVYQk9XR05RTGxGclVHTk1PRUl5YVZKREwxTkZTazlzVFRKdVNWRTlQUQ=='
+    request.body = JSON.dump(request_body)
+    # "[{\"addresses\":[{\"domain\":\"www.scam.com\"}],\"agreedToBeContactedData\":{\"agreed\":true},\"scamCategory\":\"PHISHING\",\"description\":\"Phishing Site\"}]"
+
+    response = http.request(request)
+    puts response.read_body
+
+    render json: JSON.parse(response.body), status: response.code
+
   end
 
   # DELETE /iocs/1 or /iocs/1.json
@@ -258,7 +296,7 @@ class IocsController < ApplicationController
     @ioc.destroy
 
     respond_to do |format|
-      format.html { redirect_to iocs_url, notice: "Ioc was successfully destroyed." }
+      format.html { redirect_to iocs_url, alert_success: "The record was successfully destroyed." }
       format.json { head :no_content }
     end
   end

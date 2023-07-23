@@ -20,5 +20,7 @@ Rails.application.routes.draw do
 
 
   get '/settings', to: 'pages#settings', as: 'settings'
+
+  get '/ca/:id/', to: 'iocs#ca', as: 'chain_abuse'
   root to: 'pages#home'
 end

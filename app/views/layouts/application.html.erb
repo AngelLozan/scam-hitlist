@@ -30,9 +30,8 @@
      <%= favicon_link_tag "favicon.ico", rel: "icon", type: "image/x-icon" %>
   </head>
 
-  <body>
+  <body class="<%= cookies[:theme] %>">
   <%= render "shared/navbar" %>
-
 
       <%= render "shared/flashes" %>
       <%= yield %>

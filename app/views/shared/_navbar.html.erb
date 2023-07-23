@@ -50,9 +50,21 @@
               <%= link_to settings_path, class: "dropdown-item" do %>
                 <i class="fa-solid fa-gear"> Settings</i>
               <% end %>
+
               <%= link_to destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" do %>
                 <i class="fa-solid fa-right-from-bracket"> Logout</i>
               <% end %>
+
+              <% if cookies[:theme] == "light" %>
+                <%= link_to root_path(theme: "dark"), class: "dropdown-item" do %>
+                 <i class="fa-regular fa-moon"> Dark Mode</i>
+                <% end %>
+              <% else %>
+                <%= link_to root_path(theme: "light"), class: "dropdown-item" do %>
+                  <i class="fa-regular fa-sun"> Light Mode</i>
+                <% end %>
+              <% end %>
+
             </div>
           </li>
         <% else %>

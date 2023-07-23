@@ -11,6 +11,15 @@
 @import "components/index";
 @import "pages/index";
 
-body {
+// body {
+//   background-color: $light-gray;
+// }
+
+body.light {
+  color: black;
   background-color: $light-gray;
+}
+body.dark {
+  color: white;
+  background-color: black;
 }

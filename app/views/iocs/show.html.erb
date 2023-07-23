@@ -12,7 +12,7 @@
           <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="cabtn" data-status="<%= @ioc.ca_status %>">Submit to Chain Abuse API</button>
           <% mailto = "mailto:phish@phishtank.com?subject=Phishing%20Link%2C%20please%20add%20to%20tank&body=Hello%2C%20%0A%0ASITE%3A%20#{@ioc.url.gsub('.', '[.]')}%20%0A%0AThis%20is%20a%20scam%20phishing%20site%20that%20is%20not%20affiliated%20with%20Exodus%20Movement%20Inc.%20or%20our%20crypto%20wallet.%20Please%20add%20it%20to%20the%20tank.%20Thank%20you%21" %>
           <button class="btn btn-primary mb-3" data-url=<%= mailto %> data-action="click->zf#postPT" data-zf-target="ptbtn" data-status="<%= @ioc.pt_status %>" data-id="<%= @ioc.id %>">Submit to PhishTank</button>
-          <button class="btn btn-primary mb-3">Submit to Google API</button>
+          <%# <button class="btn btn-primary mb-3">Submit to Google API</button> %>
           <% if @host[:email].nil? || @host[:email] == 'null' || @host[:email] == 'N/A' %>
               <button class="btn btn-primary mb-3" data-action="click->zf#copyLookUp" data-url='<%= @ioc.url %>' >Copy IOC & LookUp Host</button>
             <% else %>

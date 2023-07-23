@@ -16,10 +16,29 @@
 // }
 
 body.light {
-  color: black;
+  color: $black;
   background-color: $light-gray;
 }
 body.dark {
   color: white;
-  background-color: black;
+  background-color: $black;
+
+  .ticket-table-container {
+    background-color: rgb(65, 60, 60);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 12px;
+    padding-bottom: 8px;
+    margin-top: 15px;
+    border-radius: 16px;
+  }
+
+  // .table-hover tbody tr:hover {
+  //   background-color: #ebe8e8;
+  //   cursor: pointer;
+  // }
+  // .ticket-button:hover {
+  //   background-color: #f9f9f9;
+  //   cursor: pointer;
+  // }
 }

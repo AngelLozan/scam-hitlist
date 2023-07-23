@@ -1,6 +1,6 @@
 require "mail"
-require 'uri'
-require 'net/http'
+require "uri"
+require "net/http"
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
@@ -74,7 +74,6 @@ class IocsController < ApplicationController
 
   # GET /iocs/1 or /iocs/1.json
   def show
-
     if @ioc.host.nil? && @ioc.form.nil? || @ioc.host == "null" && @ioc.form == "null"
       @form = { "name" => "none", "url" => "null" }
       @host = { "name" => "none", "email" => "null" }
@@ -150,7 +149,7 @@ class IocsController < ApplicationController
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been added 👍" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif @ioc.save
-        format.html { redirect_to ioc_url(@ioc),  alert_success: "A record was successfully created ✅" }
+        format.html { redirect_to ioc_url(@ioc), alert_success: "A record was successfully created ✅" }
         format.json { render :show, status: :created, location: @ioc }
       else
         format.html { render :new, status: :unprocessable_entity, alert_warning: "Something is wrong 🤔" }
@@ -256,21 +255,20 @@ class IocsController < ApplicationController
   end
 
   def ca
-
     request_body = [
       {
         "addresses": [
           {
-            "domain": "#{@ioc.url}"
-          }
+            "domain": "#{@ioc.url}",
+          },
         ],
         "agreedToBeContactedData": {
-          "agreed": true
+          "agreed": true,
         },
         "scamCategory": "PHISHING",
-        "description": "Phishing site"
-      }
-    ];
+        "description": "Phishing site",
+      },
+    ]
 
     url = URI("https://api.chainabuse.com/v0/reports/batch")
 
@@ -278,17 +276,15 @@ class IocsController < ApplicationController
     http.use_ssl = true
 
     request = Net::HTTP::Post.new(url)
-    request["accept"] = 'application/json'
-    request["content-type"] = 'application/json'
-    request["authorization"] = 'Basic Y2FfWVdKMVYwTlZZVlpCV25oMFptdFpVbGRxZVhCT1dHTlFMbEZyVUdOTU9FSXlhVkpETDFORlNrOXNUVEp1U1ZFOVBROmNhX1lXSjFWME5WWVZaQlduaDBabXRaVWxkcWVYQk9XR05RTGxGclVHTk1PRUl5YVZKREwxTkZTazlzVFRKdVNWRTlQUQ=='
+    request["accept"] = "application/json"
+    request["content-type"] = "application/json"
+    request["authorization"] = "Basic Y2FfWVdKMVYwTlZZVlpCV25oMFptdFpVbGRxZVhCT1dHTlFMbEZyVUdOTU9FSXlhVkpETDFORlNrOXNUVEp1U1ZFOVBROmNhX1lXSjFWME5WWVZaQlduaDBabXRaVWxkcWVYQk9XR05RTGxGclVHTk1PRUl5YVZKREwxTkZTazlzVFRKdVNWRTlQUQ=="
     request.body = JSON.dump(request_body)
-    # "[{\"addresses\":[{\"domain\":\"www.scam.com\"}],\"agreedToBeContactedData\":{\"agreed\":true},\"scamCategory\":\"PHISHING\",\"description\":\"Phishing Site\"}]"
 
     response = http.request(request)
     puts response.read_body
 
     render json: JSON.parse(response.body), status: response.code
-
   end
 
   # DELETE /iocs/1 or /iocs/1.json
@@ -315,7 +311,7 @@ class IocsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def ioc_params
     params.require(:ioc).permit(:status, :url, :removed_date, :report_method_one, :report_method_two, :form, :host,
-                                :follow_up_date, :follow_up_count, :comments, :file, :zf_status, :ca_status, :pt_status, :gg_status )
+                                :follow_up_date, :follow_up_count, :comments, :file, :zf_status, :ca_status, :pt_status, :gg_status)
   end
 
   def ioc_simple_params
@@ -329,5 +325,4 @@ class IocsController < ApplicationController
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
-
 end

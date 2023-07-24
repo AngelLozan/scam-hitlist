@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="table"
 export default class extends Controller {
-  static targets = ['tableRow', 'searchForm', 'input', 'url']
+  static targets = ['tableRow', 'searchForm', 'input', 'url', 'copied']
 
   connect() {
     console.log('table connected');
@@ -37,17 +37,26 @@ export default class extends Controller {
     this.searchFormTarget.submit();
   }
 
-  openAll(e) {
+  async openAll(e) {
     e.preventDefault();
     console.log('clicked open all');
-    this.urlTargets.forEach((element) => {
-      // console.log(element.innerText);
-      window.open(`${element.innerText}`, "_blank")
-    })
+    for (let i = 0; i < urlTargets.length; i++) {
+      const element = await urlTargets[i].innerText;
+      await window.open(element, "_blank");
+      console.log(`Opened ${element}`);
+    }
+    // this.urlTargets.forEach((element) => {
+    //   // console.log(element.innerText);
+    //   window.open(`${element.innerText}`, "_blank")
+    // })
   }
 
   async copyTelegram(e){
     e.preventDefault();
+    this.copiedTarget.classList.add('d-block')
+    setTimeout(() => {
+      this.copiedTarget.classList.remove('d-block')
+    }, 6000);
     const tgUrls = [];
     try {
       this.urlTargets.forEach((el) => {
@@ -63,6 +72,7 @@ export default class extends Controller {
       console.log(error.message);
     }
   }
+
 
 
   get searchFormTarget() {

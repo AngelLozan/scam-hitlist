@@ -74,7 +74,7 @@ class IocsController < ApplicationController
 
   # GET /iocs/1 or /iocs/1.json
   def show
-    if @ioc.host.nil? && @ioc.form.nil? || @ioc.host == "null" && @ioc.form == "null"
+    if (@ioc.host.nil? && @ioc.form.nil?) || (@ioc.host == "null" && @ioc.form == "null")
       @form = { "name" => "none", "url" => "null" }
       @host = { "name" => "none", "email" => "null" }
     elsif @ioc.host.nil? || @ioc.host == "null"
@@ -121,22 +121,20 @@ class IocsController < ApplicationController
 
   # POST /iocs or /iocs.json
   def create
-    if params[:ioc][:file].present?
-      if params[:ioc][:file].content_type == "message/rfc822"
-        eml_content = params[:ioc][:file].read
-        mail = Mail.new(eml_content)
-        txt_content = mail.body.decoded
-        txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-        txt_file.write(txt_content)
-        txt_file.rewind
+    if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
+      eml_content = params[:ioc][:file].read
+      mail = Mail.new(eml_content)
+      txt_content = mail.body.decoded
+      txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+      txt_file.write(txt_content)
+      txt_file.rewind
 
-        txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: txt_file,
-          filename: params[:ioc][:file].original_filename.chomp(".eml") + ".txt",
-          type: "text/plain",
-        )
-        params[:ioc][:file] = txt_uploaded_file
-      end
+      txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+        tempfile: txt_file,
+        filename: "#{params[:ioc][:file].original_filename.chomp('.eml')}.txt",
+        type: "text/plain"
+      )
+      params[:ioc][:file] = txt_uploaded_file
     end
 
     @ioc = Ioc.new(ioc_params)
@@ -146,7 +144,9 @@ class IocsController < ApplicationController
 
     respond_to do |format|
       if @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been added 👍" }
+        format.html do
+          redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been added 👍"
+        end
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif @ioc.save
         format.html { redirect_to ioc_url(@ioc), alert_success: "A record was successfully created ✅" }
@@ -159,22 +159,20 @@ class IocsController < ApplicationController
   end
 
   def simple_create
-    if params[:ioc][:file].present?
-      if params[:ioc][:file].content_type == "message/rfc822"
-        eml_content = params[:ioc][:file].read
-        mail = Mail.new(eml_content)
-        txt_content = mail.body.decoded
-        txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-        txt_file.write(txt_content)
-        txt_file.rewind
+    if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
+      eml_content = params[:ioc][:file].read
+      mail = Mail.new(eml_content)
+      txt_content = mail.body.decoded
+      txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+      txt_file.write(txt_content)
+      txt_file.rewind
 
-        txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: txt_file,
-          filename: params[:ioc][:file].original_filename.chomp(".eml") + ".txt",
-          type: "text/plain",
-        )
-        params[:ioc][:file] = txt_uploaded_file
-      end
+      txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+        tempfile: txt_file,
+        filename: "#{params[:ioc][:file].original_filename.chomp('.eml')}.txt",
+        type: "text/plain"
+      )
+      params[:ioc][:file] = txt_uploaded_file
     end
 
     @ioc = Ioc.new(ioc_simple_params)
@@ -187,21 +185,30 @@ class IocsController < ApplicationController
 
     respond_to do |format|
       if @ioc.url.present? && official_urls.any? { |u| u.include? new_url }
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_primary: "This is owned by Exodus, please check with the team 😎" }
+        format.html do
+          redirect_to root_path, status: :unprocessable_entity,
+                                 alert_primary: "This is owned by Exodus, please check with the team 😎"
+        end
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
         puts "\n OFFICIAL \n"
       elsif @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been reported 👍" }
+        format.html do
+          redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been reported 👍"
+        end
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
         puts "\n JA \n >>>>>#{new_url}<<<< \n"
       elsif verify_recaptcha(model: @ioc) && @ioc.save
-        format.html { redirect_to root_path, alert_success: "A record was successfully created, thanks! We'll review this shortly ✅" }
+        format.html do
+          redirect_to root_path, alert_success: "A record was successfully created, thanks! We'll review this shortly ✅"
+        end
         format.json { render :show, status: :created, location: @ioc }
       elsif !@ioc.url.present?
         format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "First field is required 👀" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif !verify_recaptcha(model: @ioc)
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖" }
+        format.html do
+          redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖"
+        end
         format.json { render json: object.errors, status: :unprocessable_entity }
         puts "\n CAPTCHA \n >>>>>#{new_url}<<<< \n"
       else
@@ -216,31 +223,29 @@ class IocsController < ApplicationController
     @forms = Form.all
     @hosts = Host.all
 
-    if params[:ioc][:file].present?
-      # Check if it's an .eml file and perform the conversion if needed
-      if params[:ioc][:file].content_type == "message/rfc822"
-        # Read the contents of the .eml file
-        eml_content = params[:ioc][:file].read
+    # Check if it's an .eml file and perform the conversion if needed
+    if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
+      # Read the contents of the .eml file
+      eml_content = params[:ioc][:file].read
 
-        # Convert the .eml content to .txt format using the mail gem
-        mail = Mail.new(eml_content)
-        txt_content = mail.body.decoded
+      # Convert the .eml content to .txt format using the mail gem
+      mail = Mail.new(eml_content)
+      txt_content = mail.body.decoded
 
-        # Create a Tempfile with the .txt content
-        txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-        txt_file.write(txt_content)
-        txt_file.rewind
+      # Create a Tempfile with the .txt content
+      txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+      txt_file.write(txt_content)
+      txt_file.rewind
 
-        # Create a new ActionDispatch::Http::UploadedFile object with the Tempfile
-        txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-          tempfile: txt_file,
-          filename: params[:ioc][:file].original_filename.chomp(".eml") + ".txt",
-          type: "text/plain",
-        )
+      # Create a new ActionDispatch::Http::UploadedFile object with the Tempfile
+      txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+        tempfile: txt_file,
+        filename: "#{params[:ioc][:file].original_filename.chomp('.eml')}.txt",
+        type: "text/plain"
+      )
 
-        # Replace the original .eml file in the params with the new .txt file
-        params[:ioc][:file] = txt_uploaded_file
-      end
+      # Replace the original .eml file in the params with the new .txt file
+      params[:ioc][:file] = txt_uploaded_file
     end
 
     respond_to do |format|
@@ -257,17 +262,17 @@ class IocsController < ApplicationController
   def ca
     request_body = [
       {
-        "addresses": [
+        addresses: [
           {
-            "domain": "#{@ioc.url}",
-          },
+            domain: @ioc.url.to_s
+          }
         ],
-        "agreedToBeContactedData": {
-          "agreed": true,
+        agreedToBeContactedData: {
+          agreed: true
         },
-        "scamCategory": "PHISHING",
-        "description": "Phishing site",
-      },
+        scamCategory: "PHISHING",
+        description: "Phishing site"
+      }
     ]
 
     url = URI("https://api.chainabuse.com/v0/reports/batch")
@@ -278,7 +283,7 @@ class IocsController < ApplicationController
     request = Net::HTTP::Post.new(url)
     request["accept"] = "application/json"
     request["content-type"] = "application/json"
-    request["authorization"] = "#{ENV['CA_TOKEN']}"
+    request["authorization"] = ENV.fetch('CA_TOKEN', nil).to_s
     request.body = JSON.dump(request_body)
 
     response = http.request(request)
@@ -300,7 +305,9 @@ class IocsController < ApplicationController
   private
 
   def check_number?(str)
-    Integer(str) rescue false
+    Integer(str)
+  rescue StandardError
+    false
   end
 
   # Use callbacks to share common setup or constraints between actions.

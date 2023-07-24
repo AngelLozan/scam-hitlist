@@ -68,7 +68,6 @@ gem 'simple_form', github: 'heartcombo/simple_form'
 gem 'mail'
 gem 'mime-types', '~> 3.1'
 
-
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'byebug', platform: :mri
@@ -78,8 +77,7 @@ group :development, :test, :production do
   gem 'rspec-core', '~> 3.4', '>= 3.4.4'
   gem 'rspec-rails'
   gem 'rubocop', '~> 1.54', '>= 1.54.1'
-  gem 'rack-cors', :require => 'rack/cors'
-
+  gem 'rack-cors', require: 'rack/cors'
 end
 
 group :development do

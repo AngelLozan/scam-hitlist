@@ -27,18 +27,20 @@
     <%= f.input :report_method_one, collection: report_method_one %>
     <%= f.input :report_method_two %>
 
-  <% if Integer(@ioc.form) %>
-    <%= f.input :form, collection: form, selected: @forms.find(@ioc.form.to_i).id %>
-  <% elsif @ioc.form == '' || @ioc.form == 'null' || @ioc.form == 'N/A' %>
+
+  <% if @ioc.form == '' || @ioc.form == 'null' || @ioc.form == 'N/A' || @ioc.form.nil? %>
     <%= f.input :form, collection: form, selected: "N/A" %>
+  <% elsif Integer(@ioc.form) %>
+    <%= f.input :form, collection: form, selected: @forms.find(@ioc.form.to_i).id %>
   <% else %>
       <%= f.input :form, collection: form, selected: @forms.find_by(name:@ioc.form).id %>
   <% end %>
 
-  <% if Integer(@ioc.host) %>
-    <%= f.input :host, collection: host, selected: @hosts.find(@ioc.host.to_i).id %>
-  <% elsif @ioc.host == '' || @ioc.host == 'null' || @ioc.host == 'N/A' %>
+
+  <% if @ioc.host == '' || @ioc.host == 'null' || @ioc.host == 'N/A' || @ioc.host.nil?%>
      <%= f.input :host, collection: host, selected: "N/A" %>
+  <% elsif Integer(@ioc.host) %>
+    <%= f.input :host, collection: host, selected: @hosts.find(@ioc.host.to_i).id %>
   <% else %>
       <%= f.input :host, collection: host, selected: @hosts.find_by(name: @ioc.host).id %>
   <% end %>

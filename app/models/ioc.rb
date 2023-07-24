@@ -17,7 +17,7 @@ class Ioc < ApplicationRecord
   pg_search_scope :search_by_url,
                   against: %i[status url],
                   using: {
-                    tsearch: { prefix: true },
+                    tsearch: { prefix: true }
                   }
 
   def self.all_count
@@ -46,7 +46,9 @@ class Ioc < ApplicationRecord
   end
 
   def form_host_number?(str)
-    Integer(str) rescue false
+    Integer(str)
+  rescue StandardError
+    false
   end
 
   def protocol_to_url
@@ -60,9 +62,8 @@ class Ioc < ApplicationRecord
   private
 
   def add_protocol_to_url
-    if url.present? && !url.start_with?('http://', 'https://')
-      self.url = "http://#{url}"
-    end
-  end
+    return unless url.present? && !url.start_with?('http://', 'https://')
 
+    self.url = "http://#{url}"
+  end
 end

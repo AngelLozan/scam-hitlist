@@ -33,7 +33,9 @@ RSpec.describe PagesController, type: :controller do
   describe "Route new submissions to the IOC controller from pages home" do
     context "when not logged in" do
       it "allows an IOC to be created succesfully" do
-        post :home, params: { ioc: { url: "example.com", comments: "Sample comments", photo: fixture_file_upload("ban.png", "image/png") } }
+        post :home,
+             params: { ioc: { url: "example.com", comments: "Sample comments",
+                              photo: fixture_file_upload("ban.png", "image/png") } }
         # byebug
         expect(response).to have_http_status(200) # Redirect to home
       end
@@ -54,8 +56,8 @@ def authenticate
     info: {
       email: "test@example.com",
       name: "John Doe",
-      image: "https://example.com/avatar.jpg",
-    },
+      image: "https://example.com/avatar.jpg"
+    }
   )
 
   allow(controller).to receive(:authenticate_user!) # Stub Devise's authenticate_user! method

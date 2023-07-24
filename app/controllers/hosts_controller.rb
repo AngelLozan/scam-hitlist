@@ -1,5 +1,5 @@
 class HostsController < ApplicationController
-  before_action :set_host, only: %i[ show edit update destroy ]
+  before_action :set_host, only: %i[show edit update destroy]
 
   # GET /hosts or /hosts.json
   def index
@@ -58,13 +58,14 @@ class HostsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_host
-      @host = Host.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def host_params
-      params.require(:host).permit(:name, :email)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_host
+    @host = Host.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def host_params
+    params.require(:host).permit(:name, :email)
+  end
 end

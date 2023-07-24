@@ -40,8 +40,8 @@ export default class extends Controller {
   async openAll(e) {
     e.preventDefault();
     console.log('clicked open all');
-    for (let i = 0; i < urlTargets.length; i++) {
-      const element = await urlTargets[i].innerText;
+    for (let i = 0; i < this.urlTargets.length; i++) {
+      const element = await this.urlTargets[i].innerText;
       await window.open(element, "_blank");
       console.log(`Opened ${element}`);
     }
@@ -56,7 +56,7 @@ export default class extends Controller {
     this.copiedTarget.classList.add('d-block')
     setTimeout(() => {
       this.copiedTarget.classList.remove('d-block')
-    }, 6000);
+    }, 900);
     const tgUrls = [];
     try {
       this.urlTargets.forEach((el) => {

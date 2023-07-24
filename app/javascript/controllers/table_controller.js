@@ -42,7 +42,7 @@ export default class extends Controller {
     console.log('clicked open all');
     for (let i = 0; i < this.urlTargets.length; i++) {
       const element = await this.urlTargets[i].innerText;
-      await window.open(element, "_blank");
+      await window.open(element, "_blank", "noopener");
       console.log(`Opened ${element}`);
     }
     // this.urlTargets.forEach((element) => {

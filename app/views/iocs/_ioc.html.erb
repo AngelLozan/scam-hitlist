@@ -9,6 +9,7 @@
       <p class="card-text"><%= ioc.comments %></p>
     </div>
     <hr>
+  <% unless ioc.status == "official_url" %>
     <p class="card-text">
       <strong>Removed date:</strong>
       <%= ioc.removed_date %>
@@ -48,6 +49,7 @@
       </p>
     <% end %>
     <%= link_to "Go to: #{ioc.url}", ioc.url, target: "_blank", class: 'card-link' %>
+  <% end %>
   </div>
 </div>
 

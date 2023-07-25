@@ -58,7 +58,7 @@ export default class extends Controller {
       const element = await this.urlTargets[i].innerText;
       setTimeout(() => {
         window.open(element, "_blank", "noopener");
-      }, i * 1000); // Add a delay of 1 second (1000 milliseconds) between each opening
+      }, i * 3000);
       console.log(`Opened ${element}`);
     }
   }

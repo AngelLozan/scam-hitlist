@@ -58,7 +58,7 @@ export default class extends Controller {
       const element = await this.urlTargets[i].innerText;
       setTimeout(() => {
         window.open(element, "_blank", "noopener");
-      }, i * 3000);
+      }, i * 1000);
       console.log(`Opened ${element}`);
     }
   }

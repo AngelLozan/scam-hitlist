@@ -18,11 +18,19 @@
             <% else %>
               <%= link_to "Follow up with #{@host.email}?", "mailto:#{@host.email}", target: "_blank", class: 'btn btn-primary mb-3 text-break' %>
           <% end %>
-          <%= link_to "Take Screenshot", screenshot_path(@ioc), class: "btn btn-primary mb-3 text-break" %>
+          <%= link_to "Take Screenshot 👇", ioc_path(ioc: @ioc, screenshot_url: @ioc.url), class: "btn btn-primary mb-3 text-break" %>
 
           <div>
+          <% if @screenshot_error.present? %>
+            <div data-controller="flash" class="alert alert-warning alert-dismissible fade show m-1" role="alert">
+              <%= @screenshot_error %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+              </button>
+            </div>
+          <% end %>
+
             <% if @image %>
-              <img src="data:image/png;base64, <%= @image %>" alt="Screenshot">
+              <%= image_tag "data:image/png;base64,#{Base64.strict_encode64(@image)}", class: "img-fluid" %>
             <% end %>
           </div>
 
@@ -44,9 +52,3 @@
   </div>
 
 </div>
-
-<% if false %>
-          <%= link_to "Submit to PhishTank", mailto, target: "_blank", class: 'btn btn-primary mb-3', data: { action: 'click->zf#postPT', zf_target: 'ptbtn', status: @ioc.pt_status, id: @ioc.id } %>
-                   <%= image_tag "data:image/png;base64,#{Base64.strict_encode64(@image)}" %>
-              <%= image_tag "data:image/png;base64,#{@image}" %>
-<% end %>

@@ -37,18 +37,30 @@ export default class extends Controller {
     this.searchFormTarget.submit();
   }
 
+  // async openAll(e) {
+  //   e.preventDefault();
+  //   console.log('clicked open all');
+  //   for (let i = 0; i < this.urlTargets.length; i++) {
+  //     const element = await this.urlTargets[i].innerText;
+  //     await window.open(element, "_blank", "noopener");
+  //     console.log(`Opened ${element}`);
+  //   }
+  //   // this.urlTargets.forEach((element) => {
+  //   //   // console.log(element.innerText);
+  //   //   window.open(`${element.innerText}`, "_blank")
+  //   // })
+  // }
+
   async openAll(e) {
     e.preventDefault();
     console.log('clicked open all');
     for (let i = 0; i < this.urlTargets.length; i++) {
       const element = await this.urlTargets[i].innerText;
-      await window.open(element, "_blank", "noopener");
+      setTimeout(() => {
+        window.open(element, "_blank", "noopener");
+      }, i * 1000); // Add a delay of 1 second (1000 milliseconds) between each opening
       console.log(`Opened ${element}`);
     }
-    // this.urlTargets.forEach((element) => {
-    //   // console.log(element.innerText);
-    //   window.open(`${element.innerText}`, "_blank")
-    // })
   }
 
   async copyTelegram(e){

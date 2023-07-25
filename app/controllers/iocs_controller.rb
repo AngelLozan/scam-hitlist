@@ -73,47 +73,48 @@ class IocsController < ApplicationController
   end
 
   def show
-      if params[:screenshot_url]
-        begin
-          url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
-          @image = Grover.new(url).to_png
-        rescue Grover::JavaScript::Error => e
-          @screenshot_error = "An error occurred while capturing the screenshot: #{e.message}"
-          Rails.logger.error("Grover Screenshot Error: #{e.message}")
-        end
+    # @dev For screenshoting from within the app.
+    if params[:screenshot_url]
+      begin
+        url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
+        @image = Grover.new(url).to_png
+      rescue Grover::JavaScript::Error => e
+        @screenshot_error = "An error occurred while capturing the screenshot: #{e.message}"
+        Rails.logger.error("Grover Screenshot Error: #{e.message}")
       end
-
-      if (@ioc.host.nil? && @ioc.form.nil?) || (@ioc.host == "null" && @ioc.form == "null")
-        @form = { "name" => "none", "url" => "null" }
-        @host = { "name" => "none", "email" => "null" }
-      elsif @ioc.host.nil? || @ioc.host == "null"
-        @host = { "name" => "none", "email" => "null" }
-        if check_number?(@ioc.form)
-          @form = Form.find(@ioc.form)
-        else
-          @form = Form.find_by(name: @ioc.form)
-        end
-      elsif @ioc.form.nil? || @ioc.form == "null"
-        @form = { "name" => "none", "url" => "null" }
-        if check_number?(@ioc.host)
-          @host = Host.find(@ioc.host.to_i)
-        else
-          @host = Host.find_by(name: @ioc.host)
-        end
+    end
+    
+    # @dev To account for legacy data. Needs cleaning to avoid so many conditions.
+    if (@ioc.host.nil? && @ioc.form.nil?) || (@ioc.host == "null" && @ioc.form == "null")
+      @form = { "name" => "none", "url" => "null" }
+      @host = { "name" => "none", "email" => "null" }
+    elsif @ioc.host.nil? || @ioc.host == "null"
+      @host = { "name" => "none", "email" => "null" }
+      if check_number?(@ioc.form)
+        @form = Form.find(@ioc.form)
       else
-        if check_number?(@ioc.form)
-          @form = Form.find(@ioc.form.to_i)
-        else
-          @form = Form.find_by(name: @ioc.form)
-        end
-
-        if check_number?(@ioc.host)
-          @host = Host.find(@ioc.host.to_i)
-        else
-          @host = Host.find_by(name: @ioc.host)
-        end
+        @form = Form.find_by(name: @ioc.form)
+      end
+    elsif @ioc.form.nil? || @ioc.form == "null"
+      @form = { "name" => "none", "url" => "null" }
+      if check_number?(@ioc.host)
+        @host = Host.find(@ioc.host.to_i)
+      else
+        @host = Host.find_by(name: @ioc.host)
+      end
+    else
+      if check_number?(@ioc.form)
+        @form = Form.find(@ioc.form.to_i)
+      else
+        @form = Form.find_by(name: @ioc.form)
       end
 
+      if check_number?(@ioc.host)
+        @host = Host.find(@ioc.host.to_i)
+      else
+        @host = Host.find_by(name: @ioc.host)
+      end
+    end
   end
 
   # GET /iocs/new

@@ -47,3 +47,42 @@ In the case where you need to reset the sequence, you can run the following in t
 ```
 heroku restart; heroku pg:reset DATABASE --confirm APP-NAME; heroku run rake db:migrate
 ```
+
+## Deploying to Heroku:
+
+In order to use `Grover` gem and `puppeteer` on Heroku, you need to add the following buildpacks:
+
+Add Chrome buildpack:
+
+```
+heroku buildpacks:add heroku/google-chrome --index=1
+
+```
+Add Node/JS buildpack:
+
+```
+heroku buildpacks:add heroku/nodejs --index=2
+```
+
+Add Puppeteer buildpack (not sure if I still really need it or if Chrome build pack is enough will try at some point without it)
+
+```
+heroku buildpacks:add jontewks/puppeteer --index=3
+```
+Set the ENV variable to prevent downloading Chrominium:
+
+```
+heroku config:set PUPPETEER_SKIP_DOWNLOAD=true [--remote yourappname]
+
+```
+Configure the executable path in `config/initializers/grover.rb`:
+
+```
+
+Grover.configure do |config|
+  config.options = {
+    ...
+    executable_path: "google-chrome"
+  }
+end
+```

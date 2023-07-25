@@ -4,7 +4,7 @@ require "net/http"
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
-  before_action :set_ioc, only: %i[show edit update ca destroy]
+  before_action :set_ioc, only: %i[show screenshot edit update ca destroy]
   helper_method :sort_column, :sort_direction
 
   # GET /iocs or /iocs.json
@@ -72,7 +72,6 @@ class IocsController < ApplicationController
     @iocs = @iocs.where(sql_subquery, query: "%#{params[:query]}%").page params[:page]
   end
 
-  # GET /iocs/1 or /iocs/1.json
   def show
     if (@ioc.host.nil? && @ioc.form.nil?) || (@ioc.host == "null" && @ioc.form == "null")
       @form = { "name" => "none", "url" => "null" }
@@ -106,6 +105,52 @@ class IocsController < ApplicationController
     end
   end
 
+  def screenshot
+    url = ActionController::Base.helpers.sanitize(@ioc.url)
+    @image = Grover.new(url).to_png
+
+    if (@ioc.host.nil? && @ioc.form.nil?) || (@ioc.host == "null" && @ioc.form == "null")
+      @form = { "name" => "none", "url" => "null" }
+      @host = { "name" => "none", "email" => "null" }
+    elsif @ioc.host.nil? || @ioc.host == "null"
+      @host = { "name" => "none", "email" => "null" }
+      if check_number?(@ioc.form)
+        @form = Form.find(@ioc.form)
+      else
+        @form = Form.find_by(name: @ioc.form)
+      end
+    elsif @ioc.form.nil? || @ioc.form == "null"
+      @form = { "name" => "none", "url" => "null" }
+      if check_number?(@ioc.host)
+        @host = Host.find(@ioc.host.to_i)
+      else
+        @host = Host.find_by(name: @ioc.host)
+      end
+    else
+      if check_number?(@ioc.form)
+        @form = Form.find(@ioc.form.to_i)
+      else
+        @form = Form.find_by(name: @ioc.form)
+      end
+
+      if check_number?(@ioc.host)
+        @host = Host.find(@ioc.host.to_i)
+      else
+        @host = Host.find_by(name: @ioc.host)
+      end
+    end
+    respond_to do |format|
+      if @ioc && @host && @form
+        format.html { redirect_to ioc_url(@ioc), alert_success: "Screenshot captured!" }
+        format.json { render :show, status: :ok, location: @ioc }
+        format.png { send_data @image, type: 'image/png', disposition: 'inline' }
+      else
+        format.html { render :edit, status: :unprocessable_entity, alert_warning: "Something went wrong with the screenshot 🙁" }
+        format.json { render json: @ioc.errors.full_messages, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # GET /iocs/new
   def new
     @ioc = Ioc.new
@@ -131,8 +176,8 @@ class IocsController < ApplicationController
 
       txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
         tempfile: txt_file,
-        filename: "#{params[:ioc][:file].original_filename.chomp('.eml')}.txt",
-        type: "text/plain"
+        filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
+        type: "text/plain",
       )
       params[:ioc][:file] = txt_uploaded_file
     end
@@ -169,8 +214,8 @@ class IocsController < ApplicationController
 
       txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
         tempfile: txt_file,
-        filename: "#{params[:ioc][:file].original_filename.chomp('.eml')}.txt",
-        type: "text/plain"
+        filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
+        type: "text/plain",
       )
       params[:ioc][:file] = txt_uploaded_file
     end
@@ -240,8 +285,8 @@ class IocsController < ApplicationController
       # Create a new ActionDispatch::Http::UploadedFile object with the Tempfile
       txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
         tempfile: txt_file,
-        filename: "#{params[:ioc][:file].original_filename.chomp('.eml')}.txt",
-        type: "text/plain"
+        filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
+        type: "text/plain",
       )
 
       # Replace the original .eml file in the params with the new .txt file
@@ -264,15 +309,15 @@ class IocsController < ApplicationController
       {
         addresses: [
           {
-            domain: @ioc.url.to_s
-          }
+            domain: @ioc.url.to_s,
+          },
         ],
         agreedToBeContactedData: {
-          agreed: true
+          agreed: true,
         },
         scamCategory: "PHISHING",
-        description: "Phishing site"
-      }
+        description: "Phishing site",
+      },
     ]
 
     url = URI("https://api.chainabuse.com/v0/reports/batch")
@@ -283,7 +328,7 @@ class IocsController < ApplicationController
     request = Net::HTTP::Post.new(url)
     request["accept"] = "application/json"
     request["content-type"] = "application/json"
-    request["authorization"] = ENV.fetch('CA_TOKEN', nil).to_s
+    request["authorization"] = ENV.fetch("CA_TOKEN", nil).to_s
     request.body = JSON.dump(request_body)
 
     response = http.request(request)

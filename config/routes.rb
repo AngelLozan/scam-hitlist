@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   }
   get '/2b_reported', to: 'iocs#tb_reported', as: 'tb_reported'
   get '/watchlist', to: 'iocs#watchlist', as: 'watchlist'
-
+  get '/screenshot/:id', to: 'iocs#screenshot', as: 'screenshot'
 
   get '/settings', to: 'pages#settings', as: 'settings'
 

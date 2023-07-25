@@ -18,6 +18,14 @@
             <% else %>
               <%= link_to "Follow up with #{@host.email}?", "mailto:#{@host.email}", target: "_blank", class: 'btn btn-primary mb-3 text-break' %>
           <% end %>
+          <%= link_to "Take Screenshot", screenshot_path(@ioc), class: "btn btn-primary mb-3 text-break" %>
+
+          <div>
+            <% if @image %>
+              <img src="data:image/png;base64, <%= @image %>" alt="Screenshot">
+            <% end %>
+          </div>
+
         </div>
 
       </div>
@@ -33,11 +41,12 @@
     <%= link_to "Edit this record", edit_ioc_path(@ioc), class: 'btn btn-primary' %>
     <%= link_to "Back to all IOCs", iocs_path, class: 'btn btn-info mt-3' %>
     <%= link_to "Delete", @ioc, class: "btn btn-danger mt-3 text-white", data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-
   </div>
 
 </div>
 
 <% if false %>
           <%= link_to "Submit to PhishTank", mailto, target: "_blank", class: 'btn btn-primary mb-3', data: { action: 'click->zf#postPT', zf_target: 'ptbtn', status: @ioc.pt_status, id: @ioc.id } %>
+                   <%= image_tag "data:image/png;base64,#{Base64.strict_encode64(@image)}" %>
+              <%= image_tag "data:image/png;base64,#{@image}" %>
 <% end %>

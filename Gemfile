@@ -67,6 +67,7 @@ gem 'nokogiri'
 gem 'simple_form', github: 'heartcombo/simple_form'
 gem 'mail'
 gem 'mime-types', '~> 3.1'
+gem 'grover', '~> 1.1', '>= 1.1.5'
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

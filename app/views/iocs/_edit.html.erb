@@ -39,7 +39,7 @@
   <% end %>
 
 
-  <% if @ioc.host == '' || @ioc.host == 'null' || @ioc.host == 'N/A' || @ioc.host.nil?%>
+  <% if @ioc.host == '' || @ioc.host == 'null' || @ioc.host == 'N/A' || @ioc.host.nil? %>
      <%= f.input :host, collection: host, selected: "N/A" %>
   <% elsif @ioc.host.length > 2 %>
       <%= f.input :host, collection: host, selected: @hosts.find_by(name: @ioc.host).id %>

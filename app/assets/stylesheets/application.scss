@@ -24,6 +24,13 @@ body.dark {
   color: $light-gray;
   background-color: $black;
 
+  a {
+    color: white;
+  }
+
+  a.card-link {
+    color: $darkblue;
+  }
 
   tbody > * > * {
     color: $light-gray !important;

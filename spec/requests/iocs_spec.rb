@@ -43,6 +43,7 @@ RSpec.describe IocsController, type: :controller do
 
   describe 'Edit an Ioc' do
     let(:ioc) { Ioc.create!(url: 'https://www.google.com', report_method_one: 'email', comments: 'test', host: "hm-changed") }
+    @hosts = Host.create!(name: "hm-changed", email: 'hm-changed@vnnic.vn')
 
     before do
       authenticate

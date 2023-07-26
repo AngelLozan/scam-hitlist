@@ -81,9 +81,12 @@ class IocsController < ApplicationController
       rescue Grover::JavaScript::Error => e
         @screenshot_error = "An error occurred while capturing the screenshot: #{e.message}"
         Rails.logger.error("Grover Screenshot Error: #{e.message}")
+      rescue Timeout::Error
+        @screenshot_error = "The screenshot process timed out."
+        Rails.logger.error("Grover Screenshot Timeout Error: The screenshot process timed out.")
       end
     end
-    
+
     # @dev To account for legacy data. Needs cleaning to avoid so many conditions.
     if (@ioc.host.nil? && @ioc.form.nil?) || (@ioc.host == "null" && @ioc.form == "null")
       @form = { "name" => "none", "url" => "null" }
@@ -132,23 +135,64 @@ class IocsController < ApplicationController
 
   # POST /iocs or /iocs.json
   def create
-    if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
-      eml_content = params[:ioc][:file].read
-      mail = Mail.new(eml_content)
-      txt_content = mail.body.decoded
-      txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-      txt_file.write(txt_content)
-      txt_file.rewind
+    @ioc = Ioc.new(ioc_params)
+    @ioc.url = sanitize_url(@ioc.url)
+    @ioc.comments = sanitize_comments(@ioc.comments)
 
-      txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: txt_file,
-        filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
-        type: "text/plain",
-      )
-      params[:ioc][:file] = txt_uploaded_file
+    if params[:ioc][:file].present?
+      uploaded_file = params[:ioc][:file]
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+        if (uploaded_file.content_type == "message/rfc822")
+          eml_content = uploaded_file.read
+          mail = Mail.new(eml_content)
+          txt_content = mail.body.decoded
+          txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+          txt_file.write(txt_content)
+          txt_file.rewind
+
+          txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+            tempfile: txt_file,
+            filename: "#{uploaded_file.original_filename.chomp(".eml")}.txt",
+            type: "text/plain",
+          )
+          uploaded_file = txt_uploaded_file
+        end
+
+        file_extension = File.extname(uploaded_file.original_filename)
+        random_filename = SecureRandom.hex + file_extension
+        @ioc.file.attach(io: uploaded_file, filename: random_filename)
+      else
+        respond_to do |format|
+          format.html do
+            redirect_to root_path, status: :unprocessable_entity, alert_warning: "Invalid file type or size. Please choose a valid file."
+          end
+          format.json { render json: { error: "Invalid file type or size." }, status: :unprocessable_entity }
+        end
+        return
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Failed to upload the file. Please try again with a valid file." }
+        format.json { render json: { error: "Failed to upload the file. Please try again with a valid file." }, status: :unprocessable_entity }
+      end
     end
 
-    @ioc = Ioc.new(ioc_params)
+    # @dev Keeping for reference 👇
+    # if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
+    #   eml_content = params[:ioc][:file].read
+    #   mail = Mail.new(eml_content)
+    #   txt_content = mail.body.decoded
+    #   txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+    #   txt_file.write(txt_content)
+    #   txt_file.rewind
+
+    #   txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+    #     tempfile: txt_file,
+    #     filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
+    #     type: "text/plain",
+    #   )
+    #   params[:ioc][:file] = txt_uploaded_file
+    # end
 
     all_urls = Ioc.pluck(:url)
     new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
@@ -170,29 +214,46 @@ class IocsController < ApplicationController
   end
 
   def simple_create
-    if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
-      eml_content = params[:ioc][:file].read
-      mail = Mail.new(eml_content)
-      txt_content = mail.body.decoded
-      txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-      txt_file.write(txt_content)
-      txt_file.rewind
-
-      txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: txt_file,
-        filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
-        type: "text/plain",
-      )
-      params[:ioc][:file] = txt_uploaded_file
-    end
-
     @ioc = Ioc.new(ioc_simple_params)
+    @ioc.url = sanitize_url(@ioc.url)
+    @ioc.comments = sanitize_comments(@ioc.comments)
+
+    if params[:ioc][:file].present?
+      uploaded_file = params[:ioc][:file]
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+        if (uploaded_file.content_type == "message/rfc822")
+          eml_content = uploaded_file.read
+          mail = Mail.new(eml_content)
+          txt_content = mail.body.decoded
+          txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+          txt_file.write(txt_content)
+          txt_file.rewind
+
+          txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+            tempfile: txt_file,
+            filename: "#{uploaded_file.original_filename.chomp(".eml")}.txt",
+            type: "text/plain",
+          )
+          uploaded_file = txt_uploaded_file
+        end
+
+        file_extension = File.extname(uploaded_file.original_filename)
+        random_filename = SecureRandom.hex + file_extension
+        @ioc.file.attach(io: uploaded_file, filename: random_filename)
+      else
+        respond_to do |format|
+          format.html do
+            redirect_to root_path, status: :unprocessable_entity, alert_warning: "Invalid file type or size. Please choose a valid file."
+          end
+          format.json { render json: { error: "Invalid file type or size." }, status: :unprocessable_entity }
+        end
+        return
+      end
+    end
 
     all_urls = Ioc.pluck(:url)
     official_urls = Ioc.where(status: 3).pluck(:url)
     new_url = @ioc.protocol_to_url
-    # new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
-    # !@ioc.url.start_with?('http://', 'https://') ? "http://#{@ioc.url}" : @ioc.url
 
     respond_to do |format|
       if @ioc.url.present? && official_urls.any? { |u| u.include? new_url }
@@ -229,35 +290,70 @@ class IocsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /iocs/1 or /iocs/1.json
   def update
     @forms = Form.all
     @hosts = Host.all
+    @ioc.url = sanitize_url(@ioc.url)
+    @ioc.comments = sanitize_comments(@ioc.comments)
 
-    # Check if it's an .eml file and perform the conversion if needed
-    if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
-      # Read the contents of the .eml file
-      eml_content = params[:ioc][:file].read
+    if params[:ioc][:file].present?
+      uploaded_file = params[:ioc][:file]
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+        if (uploaded_file.content_type == "message/rfc822")
+          eml_content = uploaded_file.read
+          mail = Mail.new(eml_content)
+          txt_content = mail.body.decoded
+          txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+          txt_file.write(txt_content)
+          txt_file.rewind
 
-      # Convert the .eml content to .txt format using the mail gem
-      mail = Mail.new(eml_content)
-      txt_content = mail.body.decoded
+          txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+            tempfile: txt_file,
+            filename: "#{uploaded_file.original_filename.chomp(".eml")}.txt",
+            type: "text/plain",
+          )
+          uploaded_file = txt_uploaded_file
+        end
 
-      # Create a Tempfile with the .txt content
-      txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-      txt_file.write(txt_content)
-      txt_file.rewind
-
-      # Create a new ActionDispatch::Http::UploadedFile object with the Tempfile
-      txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-        tempfile: txt_file,
-        filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
-        type: "text/plain",
-      )
-
-      # Replace the original .eml file in the params with the new .txt file
-      params[:ioc][:file] = txt_uploaded_file
+        file_extension = File.extname(uploaded_file.original_filename)
+        random_filename = SecureRandom.hex + file_extension
+        @ioc.file.attach(io: uploaded_file, filename: random_filename)
+      else
+        respond_to do |format|
+          format.html do
+            redirect_to ioc_path, status: :unprocessable_entity, alert_warning: "Invalid file type or size. Please choose a valid file."
+          end
+          format.json { render json: { error: "Invalid file type or size." }, status: :unprocessable_entity }
+        end
+        return
+      end
     end
+
+
+    # # Check if it's an .eml file and perform the conversion if needed
+    # if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
+    #   # Read the contents of the .eml file
+    #   eml_content = params[:ioc][:file].read
+
+    #   # Convert the .eml content to .txt format using the mail gem
+    #   mail = Mail.new(eml_content)
+    #   txt_content = mail.body.decoded
+
+    #   # Create a Tempfile with the .txt content
+    #   txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
+    #   txt_file.write(txt_content)
+    #   txt_file.rewind
+
+    #   # Create a new ActionDispatch::Http::UploadedFile object with the Tempfile
+    #   txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
+    #     tempfile: txt_file,
+    #     filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
+    #     type: "text/plain",
+    #   )
+
+    #   # Replace the original .eml file in the params with the new .txt file
+    #   params[:ioc][:file] = txt_uploaded_file
+    # end
 
     respond_to do |format|
       if @ioc.update(ioc_params)
@@ -303,7 +399,7 @@ class IocsController < ApplicationController
     render json: JSON.parse(response.body), status: response.code
   end
 
-  # DELETE /iocs/1 or /iocs/1.json
+
   def destroy
     @ioc.destroy
 
@@ -332,6 +428,14 @@ class IocsController < ApplicationController
                                 :follow_up_date, :follow_up_count, :comments, :file, :zf_status, :ca_status, :pt_status, :gg_status)
   end
 
+  def sanitize_url(url)
+    ActionController::Base.helpers.sanitize(url)
+  end
+
+  def sanitize_comments(comments)
+    ActionController::Base.helpers.sanitize(comments)
+  end
+
   def ioc_simple_params
     params.require(:ioc).permit(:url, :comments, :file)
   end
@@ -342,5 +446,15 @@ class IocsController < ApplicationController
 
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
+
+  def valid_file_type?(file)
+    allowed_types = %w[image/jpeg image/png application/pdf text/plain message/rfc822]
+    allowed_types.include?(file.content_type)
+  end
+
+  def valid_file_size?(file)
+    max_file_size_in_bytes = 5 * 1024 * 1024 # 5 MB
+    file.size <= max_file_size_in_bytes && file.size > 0
   end
 end

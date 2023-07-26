@@ -86,3 +86,14 @@ Grover.configure do |config|
   }
 end
 ```
+
+## Base Security Features
+
+- Validates file size and limits to 5 mb and greater than 0
+- Validates file type and only allows PDFs, .eml, jpeg, png, and txt
+- Uses built in methods to sanitize and remove xss attacks from form inputs (comments and url fields)
+- Strong parameters
+- CSRF meta tags used
+- Strong Hash algorithm for cookies signatures (SHA-256)
+- No open-uri use, no Marshal, no multiline, no use of html_safe, raw.
+- Omniauth with limited users (2) and google enterprise account.

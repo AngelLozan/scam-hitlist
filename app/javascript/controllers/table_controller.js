@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="table"
 export default class extends Controller {
-  static targets = ['tableRow', 'searchForm', 'input', 'url', 'copied']
+  static targets = ['tableRow', 'searchForm', 'input', 'url', 'snackbar']
 
   connect() {
     console.log('table connected');
@@ -65,10 +65,10 @@ export default class extends Controller {
 
   async copyTelegram(e){
     e.preventDefault();
-    this.copiedTarget.classList.add('d-block')
+    this.snackbarTarget.className = "show";
     setTimeout(() => {
-      this.copiedTarget.classList.remove('d-block')
-    }, 900);
+      this.snackbarTarget.className = this.snackbarTarget.className.replace("show", "");
+    }, 2000);
     const tgUrls = [];
     try {
       this.urlTargets.forEach((el) => {

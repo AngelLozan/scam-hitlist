@@ -58,7 +58,6 @@ gem 'factory_bot', '~> 6.2', '>= 6.2.1'
 gem 'font-awesome-sass', '~> 6.1'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
-gem 'open-uri'
 gem 'uri', '~> 0.10.0'
 gem 'net-http', '~> 0.3.2'
 gem 'kaminari'
@@ -68,6 +67,7 @@ gem 'simple_form', github: 'heartcombo/simple_form'
 gem 'mail'
 gem 'mime-types', '~> 3.1'
 gem 'grover', '~> 1.1', '>= 1.1.5'
+gem 'whois', '~> 4.0'
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -1,4 +1,4 @@
-<div class="navbar navbar-expand-sm navbar-light bg-warning navbar-scams">
+<div class="navbar navbar-expand-sm navbar-light bg-warning navbar-scams" data-controller="navbar">
   <div class="container-fluid">
     <%= link_to "/", class: "navbar-brand" do %>
       <%= image_tag "ban.png" %>
@@ -12,6 +12,12 @@
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
           <li class="nav-item active">
+            <div class="input-group input-group-sm mt-1 me-3 flex-nowrap">
+              <input data-navbar-target="format" type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon2">
+              <button class="btn btn-outline-secondary" type="button" id="button-addon2" data-action="click->navbar#formatURL" >Format URL</button>
+            </div>
+          </li>
+          <li class="nav-item active ms-3">
             <%= link_to iocs_path, class: "nav-link" do %>
               <i class="fa-solid fa-globe">  All</i>
             <% end %>
@@ -77,4 +83,5 @@
       </ul>
     </div>
   </div>
+  <div id="snackbar" data-navbar-target="snackbar">Copied!</div>
 </div>

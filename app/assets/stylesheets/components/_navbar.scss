@@ -38,3 +38,12 @@
 .navbar-toggler {
   color: white;
 }
+
+#format {
+  width:40px;
+  transition:width .5s ease
+}
+
+#format:focus{
+  width:200px;
+}

@@ -1,6 +1,7 @@
 require "rails_helper"
-require 'date'
-require 'nokogiri'
+require "date"
+require "nokogiri"
+require 'byebug'
 
 RSpec.describe IocsController, type: :controller do
   render_views
@@ -25,13 +26,13 @@ RSpec.describe IocsController, type: :controller do
       end
 
       it "allows creation of an IOC" do
-        ioc = Ioc.create!(url: 'https://www.google.com', report_method_one: 'email', comments: 'test')
+        ioc = Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test")
         expect(ioc).to be_valid
-        expect(ioc.url).to eq('https://www.google.com')
+        expect(ioc.url).to eq("https://www.google.com")
       end
 
       it "allows user to destroy an IOC" do
-        ioc = Ioc.create!(url: 'https://www.google.com', report_method_one: 'email', comments: 'test')
+        ioc = Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test")
 
         expect do
           # delete :destroy, params: { id: ioc.id }
@@ -41,26 +42,39 @@ RSpec.describe IocsController, type: :controller do
     end
   end
 
-  describe 'Edit an Ioc' do
-    let(:ioc) { Ioc.create!(url: 'https://www.google.com', report_method_one: 'email', comments: 'test', host: "hm-changed") }
-    @hosts = Host.create!(name: "hm-changed", email: 'hm-changed@vnnic.vn')
+  describe "Edit an Ioc" do
+    let(:ioc) { Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test", host: "hm-changed", status: 1) }
+    let(:host) { Host.create!(name: "hm-changed", email: "hm-changed@vnnic.vn") }
 
     before do
       authenticate
+      ioc
+      host # @dev This triggers creating of the host
       get :edit, params: { id: ioc.id }
+
     end
 
-    it 'succesfully redirects to the edit page' do
+    it "succesfully redirects to the edit page" do
       expect(response).to have_http_status(:success)
+    end
+
+    it "sets the date on updating resolved status" do
+      t = DateTime.now.to_date
+      initial = Ioc.reported_count
+      ioc.status = "resolved"
+      ioc.save!
+      # byebug
+      expect(Ioc.reported_count).to eq(initial - 1)
+      expect(ioc.reload.removed_date).to eq t
     end
   end
 
-  describe 'Reported route' do
-    context 'when a user is logged in' do
+  describe "Reported route" do
+    context "when a user is logged in" do
       before do
         authenticate
-        Ioc.create!(url: 'https://www.bing.com', report_method_one: 'email', comments: 'test', status: 1)
-        Ioc.create!(url: 'https://www.google.com', report_method_one: 'email', comments: 'test', status: 0)
+        Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1)
+        Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test", status: 0)
         get :reported
       end
 
@@ -74,12 +88,12 @@ RSpec.describe IocsController, type: :controller do
     end
   end
 
-  describe '2b_reported route' do
-    context 'when a user is logged in' do
+  describe "2b_reported route" do
+    context "when a user is logged in" do
       before do
         authenticate
-        Ioc.create!(url: 'https://www.bing.com', report_method_one: 'email', comments: 'test', status: 1)
-        Ioc.create!(url: 'https://www.google.com', report_method_one: 'email', comments: 'test', status: 0)
+        Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1)
+        Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test", status: 0)
         get :tb_reported
       end
 
@@ -91,33 +105,33 @@ RSpec.describe IocsController, type: :controller do
         expect(Ioc.tb_reported.count).to eq 1
       end
 
-      it 'displays two table rows, headings and one added IOC' do
+      it "displays two table rows, headings and one added IOC" do
         process :tb_reported, method: :get
         # byebug Can check response.body to troubleshoot.
         html = Nokogiri::HTML(response.body)
-        expect(html.css('tr').count).to eq 2
+        expect(html.css("tr").count).to eq 2
       end
     end
   end
 
-  describe 'PG search' do
+  describe "PG search" do
     before do
-      Ioc.create!(url: 'https://www.bing.com', report_method_one: 'email', comments: 'test', status: 1)
+      Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1)
     end
 
     it "should return the correct url" do
-      result = Ioc.search_by_url('www.bing.com')
+      result = Ioc.search_by_url("www.bing.com")
       expect(result.count).to eq 1
     end
   end
 
-  describe 'follow-up route' do
+  describe "follow-up route" do
     t = DateTime.now - 14
     puts t
 
     before do
       authenticate
-      Ioc.create!(url: 'https://www.bing.com', report_method_one: 'email', comments: 'test', status: 1,
+      Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1,
                   created_at: t)
       get :follow_up
     end
@@ -131,15 +145,15 @@ RSpec.describe IocsController, type: :controller do
     end
   end
 
-  describe 'simple_create route' do
+  describe "simple_create route" do
     before do
       authenticate
     end
 
-    it 'routes / to iocs#simple_create' do
-      expect(post: '/iocs/simple_create').to route_to(
+    it "routes / to iocs#simple_create" do
+      expect(post: "/iocs/simple_create").to route_to(
         controller: "iocs",
-        action: 'simple_create'
+        action: "simple_create",
       )
     end
 
@@ -163,8 +177,8 @@ def authenticate
     info: {
       email: "test@example.com",
       name: "John Doe",
-      image: "https://example.com/avatar.jpg"
-    }
+      image: "https://example.com/avatar.jpg",
+    },
   )
 
   allow(controller).to receive(:authenticate_user!) # Stub Devise's authenticate_user! method

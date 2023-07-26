@@ -91,9 +91,14 @@ end
 
 - Validates file size and limits to 5 mb and greater than 0
 - Validates file type and only allows PDFs, .eml, jpeg, png, and txt
+- Model Validations
 - Uses built in methods to sanitize and remove xss attacks from form inputs (comments and url fields)
 - Strong parameters
 - CSRF meta tags used
 - Strong Hash algorithm for cookies signatures (SHA-256)
 - No open-uri use, no Marshal, no multiline, no use of html_safe, raw.
 - Omniauth with limited users (2) and google enterprise account.
+
+## Testing
+
+- In controller rspec tests, create all model instances you would like to use. Then use `let` to create a variable that will be used in the tests. This will allow you to use the same variable in multiple tests without having to create a new instance each time. This will also allow you to use the same variable in multiple describe blocks. This is useful for testing the same variable in different contexts. For example, you can test the same variable in a context where it is valid and a context where it is invalid. This will allow you to test both the happy path and the sad path in the same test.

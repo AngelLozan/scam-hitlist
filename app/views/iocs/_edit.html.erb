@@ -30,7 +30,7 @@
 
   <% if @ioc.form == '' || @ioc.form == 'null' || @ioc.form == 'N/A' || @ioc.form.nil? %>
     <%= f.input :form, collection: form, selected: "N/A" %>
-  <% elsif @ioc.form.length > 2 %>
+  <% elsif @ioc.form.length > 2 && @ioc.form.to_i == 0 %>
     <%= f.input :form, collection: form, selected: @forms.find_by(name:@ioc.form).id %>
   <% elsif Integer(@ioc.form) %>
     <%= f.input :form, collection: form, selected: @forms.find(@ioc.form.to_i).id %>
@@ -41,7 +41,7 @@
 
   <% if @ioc.host == '' || @ioc.host == 'null' || @ioc.host == 'N/A' || @ioc.host.nil? %>
      <%= f.input :host, collection: host, selected: "N/A" %>
-  <% elsif @ioc.host.length > 2 %>
+  <% elsif @ioc.host.length >= 3 && @ioc.host.to_i == 0 %>
       <%= f.input :host, collection: host, selected: @hosts.find_by(name: @ioc.host).id %>
   <% elsif Integer(@ioc.host) %>
     <%= f.input :host, collection: host, selected: @hosts.find(@ioc.host.to_i).id %>

@@ -2,6 +2,7 @@ require "date"
 
 class Ioc < ApplicationRecord
   before_save :add_protocol_to_url
+  before_save :set_removed_date, if: :status_changed_to_resolved?
   has_one_attached :file, dependent: :destroy
   enum :status, { added: 0, reported: 1, resolved: 2, official_url: 3, watchlist: 4 }
   enum :zf_status, { not_sub_zf: 0, submitted_zf: 1 } # Used for buttons on show page
@@ -60,6 +61,14 @@ class Ioc < ApplicationRecord
   end
 
   private
+
+  def status_changed_to_resolved?
+    status_changed? && status == 'resolved'
+  end
+
+  def set_removed_date
+    self.removed_date ||= Date.current
+  end
 
   def add_protocol_to_url
     return unless url.present? && !url.start_with?('http://', 'https://')

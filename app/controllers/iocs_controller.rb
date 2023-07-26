@@ -1,6 +1,7 @@
 require "mail"
 require "uri"
 require "net/http"
+require 'date'
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
@@ -328,32 +329,6 @@ class IocsController < ApplicationController
         return
       end
     end
-
-
-    # # Check if it's an .eml file and perform the conversion if needed
-    # if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
-    #   # Read the contents of the .eml file
-    #   eml_content = params[:ioc][:file].read
-
-    #   # Convert the .eml content to .txt format using the mail gem
-    #   mail = Mail.new(eml_content)
-    #   txt_content = mail.body.decoded
-
-    #   # Create a Tempfile with the .txt content
-    #   txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-    #   txt_file.write(txt_content)
-    #   txt_file.rewind
-
-    #   # Create a new ActionDispatch::Http::UploadedFile object with the Tempfile
-    #   txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-    #     tempfile: txt_file,
-    #     filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
-    #     type: "text/plain",
-    #   )
-
-    #   # Replace the original .eml file in the params with the new .txt file
-    #   params[:ioc][:file] = txt_uploaded_file
-    # end
 
     respond_to do |format|
       if @ioc.update(ioc_params)

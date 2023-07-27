@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get '/settings', to: 'pages#settings', as: 'settings'
 
   get '/ca/:id/', to: 'iocs#ca', as: 'chain_abuse'
-  get '/mini_bb', to: 'pages#rubric', as: 'bug_bounty'
-  
+  # get '/mini_bb', to: 'pages#rubric', as: 'bug_bounty'
+
   root to: 'pages#home'
 end

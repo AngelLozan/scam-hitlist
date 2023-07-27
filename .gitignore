@@ -42,3 +42,4 @@
 .DS_Store
 .env*
 .cache*
+.byebug_history

@@ -1,10 +1,6 @@
 class FormsController < ApplicationController
   before_action :set_form, only: %i[show edit update destroy]
 
-  # GET /forms or /forms.json
-  def index
-    @forms = Form.all
-  end
 
   # GET /forms/1 or /forms/1.json
   def show

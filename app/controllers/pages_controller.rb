@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:home]
+  skip_before_action :authenticate_user!, only: %i[:home :rubric]
   helper_method :sort_column, :sort_direction, :sort_column_host
 
   def home
@@ -21,6 +21,9 @@ class PagesController < ApplicationController
     SQL
     @forms = @forms.where(sql_subquery, query: "%#{params[:query]}%").page params[:page]
     @hosts = @hosts.where(sql_subquery, query: "%#{params[:query]}%").page params[:page]
+  end
+
+  def rubric
   end
 
   private

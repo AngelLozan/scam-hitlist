@@ -36,7 +36,6 @@ RSpec.describe PagesController, type: :controller do
         post :home,
              params: { ioc: { url: "www.exodus.example.com", comments: "Sample comments",
                               photo: fixture_file_upload("ban.png", "image/png") } }
-        byebug
         expect(response).to have_http_status(200) # Redirect to home
       end
     end

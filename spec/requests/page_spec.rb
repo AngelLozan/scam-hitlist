@@ -34,9 +34,9 @@ RSpec.describe PagesController, type: :controller do
     context "when not logged in" do
       it "allows an IOC to be created succesfully" do
         post :home,
-             params: { ioc: { url: "example.com", comments: "Sample comments",
+             params: { ioc: { url: "www.exodus.example.com", comments: "Sample comments",
                               photo: fixture_file_upload("ban.png", "image/png") } }
-        # byebug
+        byebug
         expect(response).to have_http_status(200) # Redirect to home
       end
     end

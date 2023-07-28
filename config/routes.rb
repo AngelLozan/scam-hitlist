@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :hosts, only: %i[show new create update destroy]
-  resources :forms, only: %i[show new create update destroy]
+  resources :hosts
+  resources :forms
   resources :iocs do
     collection do
       post :simple_create

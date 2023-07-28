@@ -7,7 +7,7 @@ RSpec.describe FormsController, type: :controller do
 
   describe "GET /forms" do
     context "when user is logged in" do
-      it "Forms route is created and can display all forms" do
+      it "they can view a form and update it" do
         authenticate
         get :index
         expect(response).to have_http_status(200)

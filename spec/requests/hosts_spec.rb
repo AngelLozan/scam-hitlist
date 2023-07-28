@@ -7,7 +7,7 @@ RSpec.describe HostsController, type: :controller do
 
   describe "GET /hosts" do
     context "when user is logged in" do
-      it "Forms route is created and can display all domain hosts" do
+      it "they can view a domain host and information associated" do
         authenticate
         get :index
         expect(response).to have_http_status(200)

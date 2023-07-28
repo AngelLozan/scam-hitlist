@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[:home :rubric]
+  skip_before_action :authenticate_user!, only: %i[:home]
   helper_method :sort_column, :sort_direction, :sort_column_host
 
   def home

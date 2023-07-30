@@ -1,7 +1,10 @@
 class HostsController < ApplicationController
   before_action :set_host, only: %i[show edit update destroy]
 
-  # GET /hosts/1 or /hosts/1.json
+  def index
+    @hosts = Host.all
+  end
+
   def show
   end
 

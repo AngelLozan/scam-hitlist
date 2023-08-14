@@ -24,6 +24,10 @@ default: &default
 development:
   <<: *default
   database: scam_hitlist_development
+  # Important to specify for running with Docker:
+  username: postgres
+  password: postgres
+  host: db
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.

@@ -103,3 +103,19 @@ end
 ## Testing
 
 - In controller rspec tests, create all model instances you would like to use. Then use `let` to create a variable that will be used in the tests.
+  
+## Docker
+
+- Build
+
+`docker build -t scottlozano/scam-hitlist:latest .`
+
+- Test locally
+
+`docker run -p 3000:3000 scottlozano/scam-hitlist:latest`
+
+- Push 
+
+`docker push scottlozano/scam-hitlist:latest`
+
+

@@ -43,3 +43,4 @@
 .env*
 .cache*
 .byebug_history
+secret.yml

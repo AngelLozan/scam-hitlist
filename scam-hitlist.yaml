@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scam-hitlist # name of the deployment
+  labels: # these labels apply to the deployment
+    app: root
+    component: scam-hitlist
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: root
+      component: scam-hitlist
+  template:
+    metadata:
+      labels: # these labels apply to our container
+        app: root
+        component: scam-hitlist
+    spec:
+      containers:
+      - name: scam-hitlist # name of our container
+        image: public.ecr.aws/t5u0q4a0/scam-hitlist:latest # the URI that we got from ECR
+        env:
+        - name: DB_URL
+          value: database-1.cthtpb74ohct.eu-north-1.rds.amazonaws.com # URL of our database endpoint
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: username # use the encoded username from the K8s secret db-creds
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: password # use the encoded password from the K8s secret db-creds
+        - name: DB_NAME
+          value: scam-hitlist # our DB is named scam-hitlist
+        ports:
+        - containerPort: 3000 # expose the running container on port 3000
+          name: scam-hitlist
+
+
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: railsapp-deployment
+# spec:
+#   replicas: 3
+#   template:
+#     metadata:
+#       labels:
+#         app: 
+#     spec:
+#       containers:
+#       - name: s
+#         image: crigor/rails51:v6
+#         ports:
+#         - containerPort: 3000
+#         env:
+#           - name: DATABASE_URL
+#             valueFrom:
+#               secretKeyRef:
+#                 name: railsapp-secrets
+#                 key: database-url
+#           - name: SECRET_KEY_BASE
+#             valueFrom:
+#               secretKeyRef:
+#                 name: railsapp-secrets
+#                 key: secret-key-base

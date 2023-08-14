@@ -44,3 +44,4 @@
 .cache*
 .byebug_history
 secret.yml
+db-secret.yaml

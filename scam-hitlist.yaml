@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scam-hitlist-6 # name of the deployment
+  name: scam-hitlist-11 # name of the deployment
   labels:
     app: root
     component: scam-hitlist
@@ -28,15 +28,20 @@ spec:
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
-              name: db-creds
+              name: db-creds-2
               key: username 
         - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-creds
+              name: db-creds-2
               key: password 
         - name: DB_NAME
-          value: scam-hitlist 
+          value: scam-hitlist
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: db-creds-2
+              key: secret-key-base 
         ports:
         - containerPort: 3000
           name: scam-hitlist

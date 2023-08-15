@@ -43,6 +43,6 @@
 .env*
 .cache*
 .byebug_history
-secret.yml
+secrets.yml
 db-secret.yaml
 kubectl

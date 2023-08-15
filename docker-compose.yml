@@ -1,4 +1,4 @@
- # docker-compose.yml
+ # docker-compose.yml Works locally for M1
 
   version: "3.8"
   networks:

@@ -106,6 +106,11 @@ end
   
 ## Docker
 
+View on localhost:3000 for captcha and oauth with docker compose. Separate from the build process below. 
+`docker-compose build` & `docker-compose up`
+
+Else, use this to build and push to docker hub and similar instructions on aws. 
+
 - Build
 
 `docker build -t scottlozano/scam-hitlist:latest .`
@@ -113,6 +118,7 @@ end
 - Test locally
 
 `docker run -p 3000:3000 scottlozano/scam-hitlist:latest`
+
 
 - Push 
 
@@ -122,5 +128,6 @@ end
 ## AWS
 
 - restart terminal if unable to connect to pods
+- Need to set dockerfile to run on linux `FROM --platform=linux/amd64 ruby:$RUBY_VERSION` in order to compile image built on mac M1
 
 

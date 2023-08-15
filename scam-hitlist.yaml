@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scam-hitlist-5 # name of the deployment
+  name: scam-hitlist-6 # name of the deployment
   labels:
     app: root
     component: scam-hitlist

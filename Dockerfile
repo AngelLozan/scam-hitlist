@@ -1,6 +1,6 @@
 
 ARG RUBY_VERSION=3.1.2
-FROM ruby:$RUBY_VERSION
+FROM --platform=linux/amd64 ruby:$RUBY_VERSION
 
 
 RUN apt-get update && apt-get install -y nodejs yarn postgresql-client
@@ -17,8 +17,7 @@ WORKDIR /rails
 
 ENV RAILS_LOG_TO_STDOUT="1" \
     RAILS_SERVE_STATIC_FILES="true" \
-    RAILS_ENV="development" \
-    BUNDLE_WITHOUT="development"
+    RAILS_ENV="production"
 
 
 COPY Gemfile Gemfile.lock ./

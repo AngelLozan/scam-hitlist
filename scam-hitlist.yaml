@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scam-hitlist # name of the deployment
+  name: scam-hitlist-4 # name of the deployment
   labels: # these labels apply to the deployment
     app: root
     component: scam-hitlist
@@ -41,31 +41,3 @@ spec:
         - containerPort: 3000 # expose the running container on port 3000
           name: scam-hitlist
 
-
-# apiVersion: extensions/v1beta1
-# kind: Deployment
-# metadata:
-#   name: railsapp-deployment
-# spec:
-#   replicas: 3
-#   template:
-#     metadata:
-#       labels:
-#         app: 
-#     spec:
-#       containers:
-#       - name: s
-#         image: crigor/rails51:v6
-#         ports:
-#         - containerPort: 3000
-#         env:
-#           - name: DATABASE_URL
-#             valueFrom:
-#               secretKeyRef:
-#                 name: railsapp-secrets
-#                 key: database-url
-#           - name: SECRET_KEY_BASE
-#             valueFrom:
-#               secretKeyRef:
-#                 name: railsapp-secrets
-#                 key: secret-key-base

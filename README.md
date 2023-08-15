@@ -119,3 +119,8 @@ end
 `docker push scottlozano/scam-hitlist:latest`
 
 
+## AWS
+
+- restart terminal if unable to connect to pods
+
+

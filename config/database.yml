@@ -24,7 +24,7 @@ default: &default
 development:
   <<: *default
   database: scam_hitlist_development
-  # Important to specify for running with Docker:
+  # Important to specify for running with Docker compose:
   username: postgres
   password: postgres
   host: db
@@ -85,6 +85,11 @@ test:
 #
 production:
   <<: *default
-  database: scam_hitlist_production
-  username: scam_hitlist
-  password: <%= ENV["SCAM_HITLIST_DATABASE_PASSWORD"] %>
+  # database: scam_hitlist_production
+  # username: scam_hitlist
+  # password: <%= ENV["SCAM_HITLIST_DATABASE_PASSWORD"] %>
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_URL'] %>
+  port: 5432

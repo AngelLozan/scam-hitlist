@@ -20,11 +20,12 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  
 
 development:
   <<: *default
   database: scam_hitlist_development
-  # Important to specify for running with Docker compose:
+  # Important to specify for running with Docker compose. Comment out for localhost:
   username: postgres
   password: postgres
   host: db
@@ -93,3 +94,4 @@ production:
   password: <%= ENV['DB_PASSWORD'] %>
   host: <%= ENV['DB_URL'] %>
   port: 5432
+

@@ -105,17 +105,26 @@ end
 - In controller rspec tests, create all model instances you would like to use. Then use `let` to create a variable that will be used in the tests.
   
 ## Docker
+Don't forget to reset highest IOC as explained in `Database Setup`. Important if you've seeded the Database as planned here. 
 
-View on localhost:3000 for captcha and oauth with docker compose. Separate from the build process below. 
+View on localhost:3000 or 8080 depending on port chosen for captcha and oauth with docker compose. Separate from the build process below. 
 `docker-compose build` & `docker-compose up`
 
 Else, use this to build and push to docker hub and similar instructions on aws. 
 
 - Build
 
+`docker-compose build`
+
+or
+
 `docker build -t scottlozano/scam-hitlist:latest .`
 
 - Test locally
+
+`docker-compose up`
+
+or
 
 `docker run -p 3000:3000 scottlozano/scam-hitlist:latest`
 
@@ -124,10 +133,28 @@ Else, use this to build and push to docker hub and similar instructions on aws.
 
 `docker push scottlozano/scam-hitlist:latest`
 
+- Access the console
+
+`docker container ps ` -> Find container
+
+`docker exec -it <container ID> bin/rails c `
+
 
 ## AWS
 
 - restart terminal if unable to connect to pods
 - Need to set dockerfile to run on linux `FROM --platform=linux/amd64 ruby:$RUBY_VERSION` in order to compile image built on mac M1
+- Changing deployment number helps track deployments. 
+- Ensure setting up security groups with creation of the RDS DB
 
+
+Access Console:
+
+`kubectl exec -it <pod ID> -- /bin/bash`
+
+ Migrate and seed:
+
+ `bundle exec rake db:migrate`
+
+ `bundle exec rake db:seed`
 

@@ -8,8 +8,10 @@ Grover.configure  do  |config|
 		extra_http_headers:  {  'Accept-Language':  'en-US'  },
 		cache:  false,
 		timeout:  0,  # Timeout in ms. A value of `0` means 'no timeout'
-		launch_args:  ['--font-render-hinting=medium'],
+		launch_args:  ['--no-sandbox','--font-render-hinting=medium'],
 		wait_until:  'domcontentloaded',
-    executable_path: "google-chrome"
+		# executable_path: "/usr/bin/google-chrome"
+		# For Localhost
+    	executable_path: "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 	}
 end

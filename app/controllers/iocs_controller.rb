@@ -78,7 +78,8 @@ class IocsController < ApplicationController
     if params[:screenshot_url]
       begin
         url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
-        @image = Grover.new(url).to_png
+        grover = Grover.new(url)
+        @image = grover.to_png
       rescue Grover::JavaScript::Error => e
         @screenshot_error = "An error occurred while capturing the screenshot: #{e.message}"
         Rails.logger.error("Grover Screenshot Error: #{e.message}")
@@ -171,29 +172,13 @@ class IocsController < ApplicationController
         end
         return
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Failed to upload the file. Please try again with a valid file." }
-        format.json { render json: { error: "Failed to upload the file. Please try again with a valid file." }, status: :unprocessable_entity }
-      end
+    # else
+    #   respond_to do |format|
+    #     format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Failed to upload the file. Please try again with a valid file." }
+    #     format.json { render json: { error: "Failed to upload the file. Please try again with a valid file." }, status: :unprocessable_entity }
+    #   end
     end
 
-    # @dev Keeping for reference 👇
-    # if params[:ioc][:file].present? && (params[:ioc][:file].content_type == "message/rfc822")
-    #   eml_content = params[:ioc][:file].read
-    #   mail = Mail.new(eml_content)
-    #   txt_content = mail.body.decoded
-    #   txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-    #   txt_file.write(txt_content)
-    #   txt_file.rewind
-
-    #   txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-    #     tempfile: txt_file,
-    #     filename: "#{params[:ioc][:file].original_filename.chomp(".eml")}.txt",
-    #     type: "text/plain",
-    #   )
-    #   params[:ioc][:file] = txt_uploaded_file
-    # end
 
     all_urls = Ioc.pluck(:url)
     new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""

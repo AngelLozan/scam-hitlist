@@ -32,9 +32,9 @@ body.dark {
     color: $darkblue;
   }
 
-  tbody > * > * {
-    color: $light-gray !important;
-  }
+  // tbody > * > * {
+  //   color: $light-gray !important;
+  // }
 
   .ticket-table-container {
     background-color: rgb(65, 60, 60);

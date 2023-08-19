@@ -2,6 +2,7 @@ require "mail"
 require "uri"
 require "net/http"
 require 'date'
+require 'puppeteer'
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
@@ -76,16 +77,14 @@ class IocsController < ApplicationController
   def show
     # @dev For screenshoting from within the app.
     if params[:screenshot_url]
-      begin
-        url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
-        grover = Grover.new(url)
-        @image = grover.to_png
-      rescue Grover::JavaScript::Error => e
-        @screenshot_error = "An error occurred while capturing the screenshot: #{e.message}"
-        Rails.logger.error("Grover Screenshot Error: #{e.message}")
-      rescue Timeout::Error
-        @screenshot_error = "The screenshot process timed out."
-        Rails.logger.error("Grover Screenshot Timeout Error: The screenshot process timed out.")
+      url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
+      api_token = ENV['BROWSERLESS_TOKEN']
+      ws_url = "wss://chrome.browserless.io?token=#{api_token}"
+
+      Puppeteer.connect(browser_ws_endpoint: ws_url) do |browser|
+        page = browser.pages.first || browser.new_page
+        page.goto(url)
+        @image = page.screenshot()
       end
     end
 

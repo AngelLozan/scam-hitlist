@@ -142,10 +142,25 @@ or
 
 ## AWS
 
+- Deploy to cloud: [Amazon Elastic Container Registry](https://aws.amazon.com/ecr/)
+  + Ensure Docker is running
+  + After building with docker-compose. Tag container with desired name for docker hub and push to docker hub. (find app with `docker ps` then `docker tag <name> <dockerhub name>` & `docker push <dockerhub name>`)
+  + Tag this image as your repository tag as specified after creating repo on AWS & push
+- Create Kubernetes cluster: `eksctl create cluster --region eu-north-1 --name root --managed` (check region when logged into AWS to ensure the same as where repo and database are). This takes a few moments. 
+- Create the RDS database. Use the free teir and the pre-configuration.
+  + Port 5432
+  + Add security groups used by the cluster to the database ensure that containers are not blocked from communicating with the RDS database. 
+- Set DB credentials with k8s secret:
+  + `echo -n "<username>" | base64` and `echo -n "<password>" | base64`
+  + Store in yaml file.
+  + Create secret on cluster: `kubectl create -f <secrets_filename>.yaml`
+- Create k8s deployment
+  + Run with `kubectl create -f <deployment_filename>.yaml`
+- Verify with `kubectl get pods`
+
 - restart terminal if unable to connect to pods
 - Need to set dockerfile to run on linux `FROM --platform=linux/amd64 ruby:$RUBY_VERSION` in order to compile image built on mac M1
 - Changing deployment number helps track deployments. 
-- Ensure setting up security groups with creation of the RDS DB
 
 
 Access Console:

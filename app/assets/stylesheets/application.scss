@@ -25,16 +25,18 @@ body.dark {
   background-color: $black;
 
   a {
-    color: white;
+    color: white !important;
   }
 
   a.card-link {
     color: $darkblue;
   }
 
-  // tbody > * > * {
-  //   color: $light-gray !important;
-  // }
+  tbody > * > * {
+    color: $light-gray;
+    background-color: rgb(65, 60, 60);
+  }
+
 
   .ticket-table-container {
     background-color: rgb(65, 60, 60);

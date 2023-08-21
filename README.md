@@ -137,7 +137,7 @@ or
 
 `docker container ps ` -> Find container
 
-`docker exec -it <container ID> bin/rails c `
+`docker exec -it <container ID> bin/rails c ` or `docker exec -it <container ID> /bin/sh` for Alpine then `rails c`
 
 
 ## AWS
@@ -165,7 +165,7 @@ or
 
 Access Console:
 
-`kubectl exec -it <pod ID> -- /bin/bash`
+`kubectl exec -it <pod ID> -- /bin/bash` or if on Alpine `kubectl exec -it <pod ID> -- /bin/sh`
 
  Migrate and seed:
 

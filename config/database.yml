@@ -24,7 +24,8 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV['DB'] %>
+  database: postgres
+  # database: <%= ENV['DB'] %>
   # Important to specify for running with Docker compose. Comment out for localhost:
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>

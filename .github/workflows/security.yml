@@ -32,10 +32,11 @@ jobs:
           gem install brakeman
           brakeman
 
-      - name: Install OWASP Dependency-Check
+      - name: Download OWASP Dependency-Check
         run: |
-          brew install dependency-check
+          wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.0.0/dependency-check-6.0.0-release.zip
+          unzip dependency-check-6.0.0-release.zip
 
       - name: Run OWASP Dependency-Check
         run: |
-          dependency-check --project "scam-hitlist" --out /github/workspace/owasp-reports
+          java -jar dependency-check/bin/dependency-check.jar --project "scam-hitlist" --out /github/workspace/owasp-reports

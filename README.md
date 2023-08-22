@@ -99,6 +99,7 @@ end
 - No open-uri use, no Marshal, no multiline, no use of html_safe, raw.
 - Omniauth with limited users (2) and google enterprise account.
 - Limiting routes
+- Automated security check with bundler audit for dependencies, brakeman for code review and OSWAP dependency check. 
 
 ## Testing
 

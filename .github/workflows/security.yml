@@ -32,11 +32,27 @@ jobs:
           gem install brakeman
           brakeman
 
-      - name: Download OWASP Dependency-Check
-        run: |
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v6.0.0/dependency-check-6.0.0-release.zip
-          unzip dependency-check-6.0.0-release.zip
+      - name: Dependency check
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v2
+          - name: Build project with Maven
+            run: mvn clean install
+          - name: Depcheck
+            uses: dependency-check/Dependency-Check_Action@main
+            id: Depcheck
+            with:
+              project: 'test'
+              path: '.'
+              format: 'HTML'
+              out: 'reports' # this is the default, no need to specify unless you wish to override it
+              args: >
+                --failOnCVSS 7
+                --enableRetired
 
-      - name: Run OWASP Dependency-Check
-        run: |
-          java -jar dependency-check/bin/dependency-check.jar --project "scam-hitlist" --out /github/workspace/owasp-reports
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+          name: Depcheck report
+          path: ${{github.workspace}}/reports
+

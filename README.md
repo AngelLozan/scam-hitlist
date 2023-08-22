@@ -137,7 +137,9 @@ or
 
 `docker container ps ` -> Find container
 
-`docker exec -it <container ID> bin/rails c ` or `docker exec -it <container ID> /bin/sh` for Alpine then `rails c`
+`docker exec -it <container ID> bin/rails c ` or `docker exec -it <container ID> /bin/sh` for Alpine then `rails c` 
+
+- You will need to run `rails db:migrate db:seed` & see Database setup step above. 
 
 
 ## AWS

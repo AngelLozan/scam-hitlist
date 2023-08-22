@@ -69,6 +69,10 @@ gem 'mail'
 gem 'mime-types', '~> 3.1'
 gem 'tzinfo-data' # For Docker image to work properly with alpine
 gem 'puppeteer-ruby', '~> 0.45.3'
+# Security audits for dependencies and code. 
+gem 'bundler-audit', require: false
+gem 'ruby_audit', require: false
+gem "brakeman"
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

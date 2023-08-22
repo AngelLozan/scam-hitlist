@@ -1,0 +1,41 @@
+name: Security Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  security_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Run Bundler Audit
+        run: |
+          bundle audit check --update
+
+      - name: Run Brakeman
+        run: |
+          gem install brakeman
+          brakeman
+
+      - name: Install OWASP Dependency-Check
+        run: |
+          brew install dependency-check
+
+      - name: Run OWASP Dependency-Check
+        run: |
+          dependency-check --project "scam-hitlist" --out /github/workspace/owasp-reports

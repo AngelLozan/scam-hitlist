@@ -73,7 +73,7 @@ gem 'puppeteer-ruby', '~> 0.45.3'
 gem 'bundler-audit', require: false
 gem 'ruby_audit', require: false
 gem "brakeman"
-# gem 'clamby', '~> 1.1' Not used yet. 
+gem 'clamby', '~> 1.1' # Not used yet. 
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

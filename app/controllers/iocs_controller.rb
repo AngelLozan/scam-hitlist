@@ -142,7 +142,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -205,7 +205,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -405,6 +405,11 @@ class IocsController < ApplicationController
 
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+  end
+
+  def pdf_mime_type?(file)
+    mime = MIME::Types.type_for(file.original_filename).first
+    mime&.content_type == 'application/pdf'
   end
 
   def valid_file_type?(file)

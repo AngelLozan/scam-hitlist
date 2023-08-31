@@ -6,7 +6,6 @@
     "@hotwired/turbo-rails": "^7.3.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.0",
-    "html2canvas": "^1.4.1",
     "puppeteer": "^20.9.0",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"

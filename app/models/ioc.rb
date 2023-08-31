@@ -1,4 +1,5 @@
 require "date"
+require 'clamby'
 
 class Ioc < ApplicationRecord
   before_save :add_protocol_to_url
@@ -11,6 +12,7 @@ class Ioc < ApplicationRecord
   enum :gg_status, { not_sub_gg: 0, submitted_gg: 1 }
   validates :url, presence: true
   validates :url, uniqueness: true
+  # validate :pdf_file_virus_scan
   # validates :report_method_one, presence: true
   paginates_per 10
 
@@ -75,4 +77,11 @@ class Ioc < ApplicationRecord
 
     self.url = "http://#{url}"
   end
+
+  #  def pdf_file_virus_scan
+  #   if file.attached? && file.blob.present? && Clamby.virus?(file.blob)
+  #     file.purge
+  #     errors.add(:file, 'contains a virus')
+  #   end
+  # end
 end

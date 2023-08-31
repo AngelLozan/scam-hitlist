@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: clamav
+  namespace: shared
+spec:
+  replicas: 1
+  minReadySeconds: 30
+  template:
+    metadata:
+      labels:
+        app: clamav
+    spec:
+      containers:
+      - name: clamav
+        image: quay.io/ukhomeofficedigital/clamav:v1.7.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3310
+          name: api
+          protocol: TCP
+        livenessProbe:
+          exec:
+            command:
+            - /readyness.sh
+          initialDelaySeconds: 20
+          timeoutSeconds: 2

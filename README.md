@@ -158,7 +158,8 @@ or
   + Store in yaml file.
   + Create secret on cluster: `kubectl create -f <secrets_filename>.yaml`
 - Create k8s deployment
-  + Run with `kubectl create -f <deployment_filename>.yaml`
+  + Run with `kubectl create -f k8s/scam-hitlist.yaml`
+  + `kubectl apply -f k8s/clamav-deployment.yaml -f k8s/clamav-service.yaml`
 - Verify with `kubectl get pods`
 
 - restart terminal if unable to connect to pods

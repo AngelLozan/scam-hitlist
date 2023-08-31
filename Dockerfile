@@ -59,6 +59,8 @@ RUN yarn install && yarn build
 
 RUN bundle exec bootsnap precompile --gemfile app/ lib/
 
+RUN echo "TCPSocket 3310" > /etc/clamav/clamd.conf
+RUN echo "TCPAddr antivirus-svc.shared.svc.cluster.local" >> /etc/clamav/clamd.conf
 
 EXPOSE 8080
 ENTRYPOINT ["sh", "./entrypoint.sh"]

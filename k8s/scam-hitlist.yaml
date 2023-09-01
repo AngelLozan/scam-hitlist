@@ -21,10 +21,13 @@ spec:
     spec:
       containers:
       - name: scam-hitlist
-        image: public.ecr.aws/t5u0q4a0/scam-hitlist:latest
+        image: scottlozano/scam-hitlist:latest
         env:
         - name: DB_URL
-          value: scam-hitlist-db-1.cthtpb74ohct.eu-north-1.rds.amazonaws.com
+          valueFrom:
+            secretKeyRef:
+              name: db-creds-2
+              key: database-url
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:

@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import html2canvas from "html2canvas";
+
 
 
 // Connects to data-controller="zf"

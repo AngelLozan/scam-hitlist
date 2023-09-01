@@ -142,7 +142,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file) && virus_total?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -205,7 +205,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file) && virus_total(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -283,7 +283,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -421,4 +421,19 @@ class IocsController < ApplicationController
     max_file_size_in_bytes = 5 * 1024 * 1024 # 5 MB
     file.size <= max_file_size_in_bytes && file.size > 0
   end
+
+  def virus_total?(upload)
+    file = VirusTotal::File.new(upload, ENV['VIRUS_TOTAL'])
+    file.scan
+    
+    if !file.report
+      file.rescan
+    end
+
+    response = file.report
+    if response.danger_brands
+      return false
+    end
+  end
+
 end

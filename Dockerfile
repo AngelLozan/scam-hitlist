@@ -59,8 +59,9 @@ RUN yarn install && yarn build
 
 RUN bundle exec bootsnap precompile --gemfile app/ lib/
 
-# EXPOSE 3000
 EXPOSE 8080
-# ENTRYPOINT ["sh", "./entrypoint.sh"]
+
+# Uncomment below for running only as docker container. Responsible for starting redis and db.
+# ENTRYPOINT ["sh", "./entrypoint.sh"] 
 
 CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

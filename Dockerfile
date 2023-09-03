@@ -59,6 +59,8 @@ RUN yarn install && yarn build
 
 RUN bundle exec bootsnap precompile --gemfile app/ lib/
 
-
+# EXPOSE 3000
 EXPOSE 8080
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+# ENTRYPOINT ["sh", "./entrypoint.sh"]
+
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

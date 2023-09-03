@@ -38,8 +38,11 @@ spec:
             secretKeyRef:
               name: db-creds
               key: password 
-        # - name: DB_NAME
-        #   value: scam-hitlist-development
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: name 
         - name: DB_HOST
           valueFrom:
             secretKeyRef:

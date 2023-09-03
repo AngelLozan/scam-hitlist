@@ -1,0 +1,39 @@
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: scam-hitlist-migrate
+#   labels:
+#     app.kubernetes.io/name: scam-hitlist-migrate
+# spec:
+#   template:
+#     metadata:
+#       labels:
+#         app.kubernetes.io/name: scam-hitlist-migrate
+#     spec:
+#       containers:
+#       - command:
+#         - rails
+#         - db:migrate
+#         envFrom:
+#         - configMapRef:
+#             name: scam-hitlist-config
+#         image: scottlozano/scam-hitlist:latest
+#         imagePullPolicy: IfNotPresent
+#         name: root
+#       restartPolicy: Never
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: db-migrate
+        image: scottlozano/scamhitlist:latest
+        command: ["bin/rails", "db:create", "db:migrate"]
+        envFrom:
+        - configMapRef:
+            name: scam-hitlist-config
+      restartPolicy: Never

@@ -52,7 +52,52 @@ spec:
           valueFrom:
             secretKeyRef:
               name: db-creds
-              key: secret-key-base 
+              key: secret-key-base
+        - name: CLOUDINARY_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: cloudinary
+        - name: GOOGLE_OAUTH_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: google-id
+        - name: GOOGLE_OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: google-secret
+        - name: EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: email
+        - name: ZF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: zf 
+        - name: CA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: ca
+        - name: VIRUS_TOTAL
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: vt
+        - name: RECAPTCHA_SITE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: recaptcha-key
+        - name: RECAPTCHA_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: recaptcha-secret
         ports:
         - containerPort: 3000
           name: scam-hitlist

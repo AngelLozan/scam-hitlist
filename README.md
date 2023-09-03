@@ -142,6 +142,27 @@ or
 
 - You will need to run `rails db:migrate db:seed` & see Database setup step above. 
 
+## Minikube (local kubernetes cluster)
+
+Test with `minikube` and run a local cluster
+
+- Build image and name it in the `k8s/scam-hitlist-deployment.yaml`
+- Store secrets bas64 encoded in file `k8s/db-secret.yaml`
+  + `bundle exec rake secret` (rails secret)
+  + After above, run `echo -n "<secret here>" | base64`
+- Start a postgres container, use a service like elephantsql (used here) or RDS on AWS as a database. Encode these secrets in the same yaml file and set them in the deployment.
+- Ensure naming convention and secrets are referenced properly in the `config/database.yml`
+- Start minikube with `minikube start`
+- Run:
+  + `kubectly apply -f k8s/db-secret.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-deployment.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-service.yaml`
+- Commands to check on status of pods, deployments, services, secrets, jobs, ect.:
+  + `kubectl get services,deployments,secrets,pods` (check status and get basic info)
+  + `kubectl logs -f <pod>` (log continuously)
+  + `kubectl delete <pods,secrets,deployments,services,jobs> <pod,secrets,deployment,service,job>` (delete)
+  + `kubectl apply -f <file>` (update with changes to file)
+  + `kubectl exec -it <pod> /bin/sh` (for alpine docker, access rails console)
 
 ## AWS
 
@@ -157,9 +178,10 @@ or
   + `echo -n "<username>" | base64` and `echo -n "<password>" | base64`
   + Store in yaml file.
   + Create secret on cluster: `kubectl create -f <secrets_filename>.yaml`
-- Create k8s deployment
-  + Run with `kubectl create -f k8s/scam-hitlist.yaml`
-  + `kubectl apply -f k8s/clamav-deployment.yaml -f k8s/clamav-service.yaml`
+- Create k8s deployment `kubectl apply -f ./k8s` OR below:
+  + `kubectly apply -f k8s/db-secret.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-deployment.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-service.yaml`
 - Verify with `kubectl get pods`
 
 - restart terminal if unable to connect to pods

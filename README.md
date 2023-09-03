@@ -178,7 +178,7 @@ Test with `minikube` and run a local cluster
   + `echo -n "<username>" | base64` and `echo -n "<password>" | base64`
   + Store in yaml file.
   + Create secret on cluster: `kubectl create -f <secrets_filename>.yaml`
-- Create k8s deployment
+- Create k8s deployment `kubectl apply -f ./k8s` OR below:
   + `kubectly apply -f k8s/db-secret.yaml`
   + `kubectly apply -f k8s/scam-hitlist-deployment.yaml`
   + `kubectly apply -f k8s/scam-hitlist-service.yaml`

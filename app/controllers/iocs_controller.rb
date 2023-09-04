@@ -423,12 +423,17 @@ class IocsController < ApplicationController
     file.size <= max_file_size_in_bytes && file.size > 0
   end
 
-  def virus_total?(upload)
-    file = VirusTotal::File.new(upload, ENV['VIRUS_TOTAL'])
+  def virus_total?(file_upload)
+    # file = VirusTotal::File.new(upload, ENV['VIRUS_TOTAL'])
 
-    resource = file.scan.response["scan_id"]
-
-    url = URI("https://www.virustotal.com/vtapi/v2/file/report?apikey=#{ENV['VIRUS_TOTAL']}&resource=#{resource}&allinfo=true")
+    api_key = "#{ENV['VIRUS_TOTAL']}"
+    vtscan = VirustotalAPI::File.upload(file_upload, api_key)
+    upload_id = vtscan.id
+    puts "========================================="
+    puts "===========>> #{vtscan.id} <=="
+    puts "========================================="
+    # resource = file.scan.response["scan_id"]
+    url = URI("https://www.virustotal.com/vtapi/v2/file/report?apikey=#{ENV['VIRUS_TOTAL']}&resource=#{upload_id}&allinfo=true")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true

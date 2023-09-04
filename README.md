@@ -101,6 +101,8 @@ end
 - Limiting routes
 - Automated security check with bundler audit for dependencies, brakeman for code review and OSWAP dependency check. 
 
+Alternatively run `dependency-check --out . --scan .` to run the dependency check and `bundle audit` for the gems. 
+
 ## Testing
 
 - In controller rspec tests, create all model instances you would like to use. Then use `let` to create a variable that will be used in the tests.

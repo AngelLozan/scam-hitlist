@@ -21,6 +21,8 @@ run `heroku pg:psql -a scam-hitlist` to access postgres on heroku
 Success message will be `copy 7000` or similar number.
 
 ## Setup
+In the `Gemfile.lock`, make sure to add `x86_64-linux` to the `Platforms` section to run with GHA
+
 run `bundle install` to install dependencies
 run `rails db:drop db:create db:migrate db:seed` to create database and seed with data
 
@@ -100,6 +102,8 @@ end
 - Omniauth with limited users (2) and google enterprise account.
 - Limiting routes
 - Automated security check with bundler audit for dependencies, brakeman for code review and OSWAP dependency check. 
+
+Alternatively run `dependency-check --out . --scan .` to run the dependency check and `bundle audit` for the gems. 
 
 ## Testing
 

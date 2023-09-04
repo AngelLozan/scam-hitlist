@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.2'
 
-# gemspec
+gemspec
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.0.6'
@@ -79,7 +79,7 @@ gem 'ruby_audit', require: false
 gem "brakeman"
 gem 'clamby', '~> 1.1' # Not used yet. 
 gem 'simple-form-datepicker', '~> 0.1.3'
-gem 'virus_total'
+# gem 'virus_total'
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

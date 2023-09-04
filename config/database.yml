@@ -24,12 +24,14 @@ default: &default
 
 development:
   <<: *default
-  database: scam_hitlist_development # uncomment for local development
-  # database: <%= ENV['DB_NAME'] %>
-  # username: <%= ENV['DB_USERNAME'] %>
-  # password: <%= ENV['DB_PASSWORD'] %>
-  # host: <%= ENV['DB_HOST'] %>
-  # port: 5432
+  # database: scam_hitlist_development # uncomment for local development
+
+  # Uncomment below for kubernetes deployment
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: 5432
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -90,9 +92,9 @@ production:
   # database: scam_hitlist_production
   # username: scam_hitlist
   # password: <%= ENV["SCAM_HITLIST_DATABASE_PASSWORD"] %>
-  # database: <%= ENV['DB_NAME'] %>
-  # username: <%= ENV['DB_USERNAME'] %>
-  # password: <%= ENV['DB_PASSWORD'] %>
-  # host: <%= ENV['DB_URL'] %>
-  # port: 5432
+  database: <%= ENV['DB_NAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  host: <%= ENV['DB_HOST'] %>
+  port: 5432
 

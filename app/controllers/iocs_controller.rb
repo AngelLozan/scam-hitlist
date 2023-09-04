@@ -206,7 +206,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -284,7 +284,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)

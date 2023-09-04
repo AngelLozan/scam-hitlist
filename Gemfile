@@ -51,6 +51,9 @@ gem 'sassc-rails'
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# gem 'rest-client', '~> 1.8.0' # Cannot use virustotal, every version of virus_total depends on rest-client ~> 1.6.7
+gem 'activesupport', '>= 7.0.7.1'
+
 gem 'autoprefixer-rails'
 gem 'bootstrap', '~> 5.2'
 gem 'cloudinary'

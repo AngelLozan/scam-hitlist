@@ -101,6 +101,7 @@ end
 - No open-uri use, no Marshal, no multiline, no use of html_safe, raw.
 - Omniauth with limited users (2) and google enterprise account.
 - Limiting routes
+- Upload type matching, limiting type to img,pdf,txt files, limiting size of upload and VirusTotal scan.
 - Automated security check with bundler audit for dependencies, brakeman for code review and OSWAP dependency check. 
 
 Alternatively run `dependency-check --out . --scan .` to run the dependency check and `bundle audit` for the gems. 

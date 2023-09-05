@@ -2,7 +2,8 @@ require "mail"
 require "uri"
 require "net/http"
 require 'date'
-require 'puppeteer'
+# require 'puppeteer'
+require 'json'
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
@@ -142,7 +143,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -205,7 +206,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && pdf_mime_type?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -283,7 +284,7 @@ class IocsController < ApplicationController
 
     if params[:ioc][:file].present?
       uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file)
+      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) && virus_total?(uploaded_file)
         if (uploaded_file.content_type == "message/rfc822")
           eml_content = uploaded_file.read
           mail = Mail.new(eml_content)
@@ -407,10 +408,10 @@ class IocsController < ApplicationController
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 
-  def pdf_mime_type?(file)
-    mime = MIME::Types.type_for(file.original_filename).first
-    mime&.content_type == 'application/pdf'
-  end
+  # def pdf_mime_type?(file)
+  #   mime = MIME::Types.type_for(file.original_filename).first
+  #   mime&.content_type == 'application/pdf'
+  # end
 
   def valid_file_type?(file)
     allowed_types = %w[image/jpeg image/png application/pdf text/plain message/rfc822]
@@ -421,4 +422,34 @@ class IocsController < ApplicationController
     max_file_size_in_bytes = 5 * 1024 * 1024 # 5 MB
     file.size <= max_file_size_in_bytes && file.size > 0
   end
+
+  def virus_total?(file_upload)
+    # file = VirusTotal::File.new(upload, ENV['VIRUS_TOTAL'])
+
+    api_key = "#{ENV['VIRUS_TOTAL']}"
+    vtscan = VirustotalAPI::File.upload(file_upload, api_key)
+    upload_id = vtscan.id
+    puts "========================================="
+    puts "===========>> #{vtscan.id} <=="
+    puts "========================================="
+    # resource = file.scan.response["scan_id"]
+    url = URI("https://www.virustotal.com/vtapi/v2/file/report?apikey=#{ENV['VIRUS_TOTAL']}&resource=#{upload_id}&allinfo=true")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Get.new(url)
+
+    response = http.request(request)
+    parsed_response = JSON.parse(response.read_body)
+    positives_count = parsed_response["positives"]
+    puts "Positives count: #{positives_count}"
+
+    if positives_count > 0
+      return false
+    else
+      return true
+    end
+  end
+
 end

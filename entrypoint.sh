@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 # Precompile assets
+echo "Compiling assets, stand by for lots of output...."
 bundle exec rake assets:precompile
+echo "Assets precompiled! Pipeline ready."
 
-# Wait for database to be ready
+# Wait for database to be ready. For Docker-Compose database as service.
   set -xeu pipefail
   ./services.sh db 5432
   ./services.sh redis 6379
@@ -21,4 +23,5 @@ echo "Postgres database has been created & migrated!"
 rm -f tmp/pids/server.pid
 
 # Run the Rails server
+echo "Starting server"
 bundle exec rails server -b 0.0.0.0 -p 8080

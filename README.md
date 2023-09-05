@@ -21,6 +21,8 @@ run `heroku pg:psql -a scam-hitlist` to access postgres on heroku
 Success message will be `copy 7000` or similar number.
 
 ## Setup
+In the `Gemfile.lock`, make sure to add `x86_64-linux` to the `Platforms` section to run with GHA
+
 run `bundle install` to install dependencies
 run `rails db:drop db:create db:migrate db:seed` to create database and seed with data
 
@@ -99,7 +101,10 @@ end
 - No open-uri use, no Marshal, no multiline, no use of html_safe, raw.
 - Omniauth with limited users (2) and google enterprise account.
 - Limiting routes
+- Upload type matching, limiting type to img,pdf,txt files, limiting size of upload and VirusTotal scan.
 - Automated security check with bundler audit for dependencies, brakeman for code review and OSWAP dependency check. 
+
+Alternatively run `dependency-check --out . --scan .` to run the dependency check and `bundle audit` for the gems. 
 
 ## Testing
 
@@ -142,6 +147,27 @@ or
 
 - You will need to run `rails db:migrate db:seed` & see Database setup step above. 
 
+## Minikube (local kubernetes cluster)
+
+Test with `minikube` and run a local cluster
+
+- Build image and name it in the `k8s/scam-hitlist-deployment.yaml`
+- Store secrets bas64 encoded in file `k8s/db-secret.yaml`
+  + `bundle exec rake secret` (rails secret)
+  + After above, run `echo -n "<secret here>" | base64`
+- Start a postgres container, use a service like elephantsql (used here) or RDS on AWS as a database. Encode these secrets in the same yaml file and set them in the deployment.
+- Ensure naming convention and secrets are referenced properly in the `config/database.yml`
+- Start minikube with `minikube start`
+- Run:
+  + `kubectly apply -f k8s/db-secret.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-deployment.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-service.yaml`
+- Commands to check on status of pods, deployments, services, secrets, jobs, ect.:
+  + `kubectl get services,deployments,secrets,pods` (check status and get basic info)
+  + `kubectl logs -f <pod>` (log continuously)
+  + `kubectl delete <pods,secrets,deployments,services,jobs> <pod,secrets,deployment,service,job>` (delete)
+  + `kubectl apply -f <file>` (update with changes to file)
+  + `kubectl exec -it <pod> /bin/sh` (for alpine docker, access rails console)
 
 ## AWS
 
@@ -157,8 +183,10 @@ or
   + `echo -n "<username>" | base64` and `echo -n "<password>" | base64`
   + Store in yaml file.
   + Create secret on cluster: `kubectl create -f <secrets_filename>.yaml`
-- Create k8s deployment
-  + Run with `kubectl create -f <deployment_filename>.yaml`
+- Create k8s deployment `kubectl apply -f ./k8s` OR below:
+  + `kubectly apply -f k8s/db-secret.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-deployment.yaml`
+  + `kubectly apply -f k8s/scam-hitlist-service.yaml`
 - Verify with `kubectl get pods`
 
 - restart terminal if unable to connect to pods

@@ -76,6 +76,9 @@ Else, use this to build and push to docker hub and similar instructions on aws.
 
 `docker-compose build`
 
+(for production): `docker-compose build --build-arg RAILS_MASTER_KEY="$(cat config/master.key)"`
+
+
 or
 
 `docker build -t scottlozano/scam-hitlist:latest .`

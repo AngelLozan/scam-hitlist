@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: scam-hitlist
-        image: scottlozano/scamhitlist:latest
+        image: scottlozano/scam-hitlist:latest
         env:
         - name: DB_URL
           valueFrom:

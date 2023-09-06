@@ -33,6 +33,8 @@
         DB_PORT: 5432
         DB_USERNAME: ${DB_USERNAME}
         DB_PASSWORD: ${DB_PASSWORD}
+        RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+        SECRET_KEY_BASE: ${SECRET_KEY_BASE}
         BUNDLE_GEMFILE: /workdir/Gemfile
       command: >
         bash -c "bundle install &&

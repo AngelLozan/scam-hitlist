@@ -6,7 +6,7 @@
   <div class="form-inputs">
     <%= f.input :url, label: "Crypto Address | URL | Email | IP Address:" %>
     <%= f.input :comments, label: "Scam details or comments:", :input_html => {:rows => 5} %>
-    <%= f.input :file, label: "Attach an image, pdf, .txt or .eml:", as: :file %>
+    <%= f.input :file, label: "Attach an image, .txt or .eml:", as: :file, direct_upload: true %>
   </div>
   <div class="d-flex justify-content-center my-3">
    <%= recaptcha_tags %>

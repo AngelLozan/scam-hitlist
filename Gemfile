@@ -81,6 +81,8 @@ gem 'clamby', '~> 1.1' # Not used yet.
 gem 'simple-form-datepicker', '~> 0.1.3'
 # gem 'virus_total'
 gem 'virustotal_api'
+gem "aws-sdk-s3", require: false
+
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

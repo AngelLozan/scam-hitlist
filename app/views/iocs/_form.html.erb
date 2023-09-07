@@ -32,7 +32,7 @@
     <%= f.input :follow_up_count %>
     <%= f.input :comments, :input_html => {:rows => 10} %>
     <%= f.input :removed_date, default: nil, include_blank: true %>
-    <%= f.input :file %>
+    <%= f.input :file, direct_upload: true %>
   </div>
 
   <div class="form-actions d-flex flex-column">

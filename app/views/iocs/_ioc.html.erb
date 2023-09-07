@@ -42,8 +42,8 @@
       <p class="mb-3">
         <strong>Evidence:</strong>
         <% if ioc.file.image? %>
-          <%=cl_image_tag ioc.file.key, height: 300 %>
-        <% elsif %>
+          <%=image_tag ioc.file, height: 300 %>
+        <% else %>
           <%= link_to ioc.file.filename, url_for(ioc.file), target: "_blank", class: 'card-link' %>
         <% end %>
       </p>

@@ -1,10 +1,9 @@
 require "date"
-require 'clamby'
 
 class Ioc < ApplicationRecord
   before_save :add_protocol_to_url
   before_save :set_removed_date, if: :status_changed_to_resolved?
-  has_one_attached :file, dependent: :destroy
+  has_one_attached :file, dependent: :destroy, service: :amazon
   enum :status, { added: 0, reported: 1, resolved: 2, official_url: 3, watchlist: 4 }
   enum :zf_status, { not_sub_zf: 0, submitted_zf: 1 } # Used for buttons on show page
   enum :ca_status, { not_sub_ca: 0, submitted_ca: 1 }

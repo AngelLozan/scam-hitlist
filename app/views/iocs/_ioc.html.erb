@@ -41,11 +41,9 @@
     <% if ioc.file.attached? %>
       <p class="mb-3">
         <strong>Evidence:</strong>
-        <% if ioc.file.image? %>
-          <%=image_tag ioc.file, height: 300 %>
-        <% else %>
-          <%= link_to ioc.file.filename, url_for(ioc.file), target: "_blank", class: 'card-link' %>
-        <% end %>
+       
+          <%= link_to ioc.file, url_for(ioc.file), target: "_blank", class: 'card-link' %>
+
       </p>
     <% end %>
     <%= link_to "Go to: #{ioc.url}", ioc.url, target: "_blank", class: 'card-link' %>

@@ -23,5 +23,7 @@ Rails.application.routes.draw do
   get '/ca/:id/', to: 'iocs#ca', as: 'chain_abuse'
   # get '/mini_bb', to: 'pages#rubric', as: 'bug_bounty'
 
+  get '/presigned', to: 'iocs#presigned', as: 'presigned'
+
   root to: 'pages#home'
 end

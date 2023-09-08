@@ -4,6 +4,7 @@ require "net/http"
 require 'date'
 # require 'puppeteer'
 require 'json'
+require "aws-sdk-s3"
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
@@ -135,50 +136,25 @@ class IocsController < ApplicationController
     @hosts = Host.all
   end
 
+  def presigned
+    bucket_name = "scam-hitlist"
+    bucket = Aws::S3::Bucket.new(bucket_name)
+    object_key = SecureRandom.hex
+
+    url = bucket.object(object_key).presigned_url(:put)
+    puts "Created presigned URL: #{url}"
+    render json: { presigned_url: url }
+    rescue Aws::Errors::ServiceError => e
+      puts "Couldn't create presigned URL for #{bucket.name}:#{object_key}. Here's why: #{e.message}"
+      render json: { error: "Failed to generate presigned URL" }, status: :unprocessable_entity
+  end
+  
+
   # POST /iocs or /iocs.json
   def create
     @ioc = Ioc.new(ioc_params)
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
-
-    if params[:ioc][:file].present?
-      uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) # && virus_total?(uploaded_file)
-        if (uploaded_file.content_type == "message/rfc822")
-          eml_content = uploaded_file.read
-          mail = Mail.new(eml_content)
-          txt_content = mail.body.decoded
-          txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-          txt_file.write(txt_content)
-          txt_file.rewind
-
-          txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-            tempfile: txt_file,
-            filename: "#{uploaded_file.original_filename.chomp(".eml")}.txt",
-            type: "text/plain",
-          )
-          uploaded_file = txt_uploaded_file
-        end
-
-        file_extension = File.extname(uploaded_file.original_filename)
-        random_filename = SecureRandom.hex + file_extension
-        @ioc.file.attach(io: uploaded_file, filename: random_filename)
-      else
-        respond_to do |format|
-          format.html do
-            redirect_to root_path, status: :unprocessable_entity, alert_warning: "Invalid file type or size. Please choose a valid file."
-          end
-          format.json { render json: { error: "Invalid file type or size." }, status: :unprocessable_entity }
-        end
-        return
-      end
-    # else
-    #   respond_to do |format|
-    #     format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Failed to upload the file. Please try again with a valid file." }
-    #     format.json { render json: { error: "Failed to upload the file. Please try again with a valid file." }, status: :unprocessable_entity }
-    #   end
-    end
-
 
     all_urls = Ioc.pluck(:url)
     new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
@@ -203,40 +179,6 @@ class IocsController < ApplicationController
     @ioc = Ioc.new(ioc_simple_params)
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
-
-    if params[:ioc][:file].present?
-      uploaded_file = params[:ioc][:file]
-      # enqueue_scan(uploaded_file, @ioc)
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) # && virus_total?(uploaded_file)
-        if (uploaded_file.content_type == "message/rfc822")
-          eml_content = uploaded_file.read
-          mail = Mail.new(eml_content)
-          txt_content = mail.body.decoded
-          txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-          txt_file.write(txt_content)
-          txt_file.rewind
-
-          txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-            tempfile: txt_file,
-            filename: "#{uploaded_file.original_filename.chomp(".eml")}.txt",
-            type: "text/plain",
-          )
-          uploaded_file = txt_uploaded_file
-        end
-
-        file_extension = File.extname(uploaded_file.original_filename)
-        random_filename = SecureRandom.hex + file_extension
-        @ioc.file.attach(io: uploaded_file, filename: random_filename)
-      else
-        respond_to do |format|
-          format.html do
-            redirect_to root_path, status: :unprocessable_entity, alert_warning: "Invalid file type or size. Please choose a valid file."
-          end
-          format.json { render json: { error: "Invalid file type or size." }, status: :unprocessable_entity }
-        end
-        return
-      end
-    end
 
     all_urls = Ioc.pluck(:url)
     official_urls = Ioc.where(status: 3).pluck(:url)
@@ -283,38 +225,6 @@ class IocsController < ApplicationController
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
 
-    if params[:ioc][:file].present?
-      uploaded_file = params[:ioc][:file]
-      if valid_file_type?(uploaded_file) && valid_file_size?(uploaded_file) # && virus_total?(uploaded_file)
-        if (uploaded_file.content_type == "message/rfc822")
-          eml_content = uploaded_file.read
-          mail = Mail.new(eml_content)
-          txt_content = mail.body.decoded
-          txt_file = Tempfile.new(["converted", ".txt"], encoding: "ascii-8bit")
-          txt_file.write(txt_content)
-          txt_file.rewind
-
-          txt_uploaded_file = ActionDispatch::Http::UploadedFile.new(
-            tempfile: txt_file,
-            filename: "#{uploaded_file.original_filename.chomp(".eml")}.txt",
-            type: "text/plain",
-          )
-          uploaded_file = txt_uploaded_file
-        end
-
-        file_extension = File.extname(uploaded_file.original_filename)
-        random_filename = SecureRandom.hex + file_extension
-        @ioc.file.attach(io: uploaded_file, filename: random_filename)
-      else
-        respond_to do |format|
-          format.html do
-            redirect_to ioc_path, status: :unprocessable_entity, alert_warning: "Invalid file type or size. Please choose a valid file."
-          end
-          format.json { render json: { error: "Invalid file type or size." }, status: :unprocessable_entity }
-        end
-        return
-      end
-    end
 
     respond_to do |format|
       if @ioc.update(ioc_params)
@@ -408,6 +318,8 @@ class IocsController < ApplicationController
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
+
+
 
   # def pdf_mime_type?(file)
   #   mime = MIME::Types.type_for(file.original_filename).first

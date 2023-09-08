@@ -296,7 +296,7 @@ class IocsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def ioc_params
     params.require(:ioc).permit(:status, :url, :removed_date, :report_method_one, :report_method_two, :form, :host,
-                                :follow_up_date, :follow_up_count, :comments, :file, :zf_status, :ca_status, :pt_status, :gg_status)
+                                :follow_up_date, :follow_up_count, :comments, :file_url, :zf_status, :ca_status, :pt_status, :gg_status)
   end
 
   def sanitize_url(url)

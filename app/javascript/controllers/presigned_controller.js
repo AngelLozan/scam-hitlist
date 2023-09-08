@@ -2,12 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 
 
 export default class extends Controller {
-    static targets = ["form", "fileInput"]
+    static targets = ["form", "fileInput", "fileUrl"]
 
     connect() {
         console.log("Controller connected");
         // console.log(this.fileInputTarget);
-        // console.log(this.formTarget);
+        console.log(this.formTarget);
+        console.log(this.fileUrlTarget);
     }
 
     async fetchPresigned() {
@@ -15,7 +16,8 @@ export default class extends Controller {
         const res = await fetch('/presigned');
         const data = await res.json();
         console.log("The url is:", data);
-        this.uploadFormTarget.action = data.presigned_url;
+        this.fileUrlTarget.setAttribute("data-url", data.presigned_url);
+        // return(data.presigned_url);
       } catch(e) {
         console.log(e);
       }
@@ -23,14 +25,18 @@ export default class extends Controller {
 
     handleSubmit(event) {
         event.preventDefault();
+        const path = this.formTarget.action
+        const upload_file_url = this.fileUrlTarget.getAttribute("data-url");
 
+        this.fileUrlTarget.value = upload_file_url
         const formData = new FormData(this.formTarget);
-        formData.delete('file');
+        
+        formData.set('file_url', upload_file_url);
+      
 
-        fetch('/iocs', {
+        fetch(path, {
                 method: 'POST',
-                headers: { "Accept": "text/plain" },
-                body: formData,
+                body: formData
             })
             .then((response) => {
                 if (response.ok) {

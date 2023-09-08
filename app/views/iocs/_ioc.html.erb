@@ -38,11 +38,11 @@
       <strong>Follow-up count:</strong>
       <%= ioc.follow_up_count %>
     </p>
-    <% if ioc.file.attached? %>
+    <% unless !ioc.file_url %>
       <p class="mb-3">
         <strong>Evidence:</strong>
        
-          <%= link_to ioc.file, url_for(ioc.file), target: "_blank", class: 'card-link' %>
+          <%= link_to ioc.file_url, url_for(ioc.file_url), target: "_blank", class: 'card-link' %>
 
       </p>
     <% end %>

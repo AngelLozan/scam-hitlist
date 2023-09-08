@@ -138,6 +138,9 @@ class IocsController < ApplicationController
 
   def presigned
     bucket_name = "scam-hitlist"
+    region = "eu-north-1"
+    Aws.config.update(region: region)
+
     bucket = Aws::S3::Bucket.new(bucket_name)
     object_key = SecureRandom.hex
 
@@ -166,8 +169,9 @@ class IocsController < ApplicationController
         end
         format.json { render json: @ioc.errors, status: :unprocessable_entity }
       elsif @ioc.save
-        format.html { redirect_to ioc_url(@ioc), alert_success: "A record was successfully created ✅" }
-        format.json { render :show, status: :created, location: @ioc }
+        # format.html { redirect_to ioc_url(@ioc), alert_success: "A record was successfully created ✅" }
+        # format.json { render :show, status: :created, location: @ioc }
+        format.json { render json: { ioc: @ioc, show_url: ioc_url(@ioc) }, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity, alert_warning: "Something is wrong 🤔" }
         format.json { render json: @ioc.errors, status: :unprocessable_entity }

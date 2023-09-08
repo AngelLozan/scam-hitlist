@@ -12,15 +12,15 @@ export default class extends Controller {
     }
 
     async fetchPresigned() {
-      try {
-        const res = await fetch('/presigned');
-        const data = await res.json();
-        console.log("The url is:", data);
-        this.fileUrlTarget.setAttribute("data-url", data.presigned_url);
-        // return(data.presigned_url);
-      } catch(e) {
-        console.log(e);
-      }
+        try {
+            const res = await fetch('/presigned');
+            const data = await res.json();
+            console.log("The url is:", data);
+            this.fileUrlTarget.setAttribute("data-url", data.presigned_url);
+            // return(data.presigned_url);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     handleSubmit(event) {
@@ -30,23 +30,21 @@ export default class extends Controller {
 
         this.fileUrlTarget.value = upload_file_url
         const formData = new FormData(this.formTarget);
-        
+
         formData.set('file_url', upload_file_url);
-      
+
 
         fetch(path, {
                 method: 'POST',
                 body: formData
             })
-            .then((response) => {
-                if (response.ok) {
-                    response.text();
-                } else {
-                    console.log("Something is wrong with submission");
-                }
-            })
+            .then(response => response.json())
             .then((data) => {
-                console.log(data)
+                if (data.show_url) {
+                    window.location.href = data.show_url;
+                } else {
+                    console.log("Data:", data);
+                }
             })
             .catch((error) => {
                 console.error(error);

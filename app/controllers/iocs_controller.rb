@@ -151,6 +151,19 @@ class IocsController < ApplicationController
       puts "Couldn't create presigned URL for #{bucket.name}:#{object_key}. Here's why: #{e.message}"
       render json: { error: "Failed to generate presigned URL" }, status: :unprocessable_entity
   end
+
+  def download_presigned
+    key = params[:key]
+    signer = Aws::S3::Presigner.new
+    url = signer.presigned_url(:get_object,
+                 bucket: "scam-hitlist",
+                 key: key,
+                 expires_in: 7.days.to_i,
+                 response_content_disposition: "attachment"
+                 )
+    puts " >>>>>>>> Created download url: #{url} <<<<<<<<<<<"
+    render json: { download_url: url }
+  end
   
 
   # POST /iocs or /iocs.json

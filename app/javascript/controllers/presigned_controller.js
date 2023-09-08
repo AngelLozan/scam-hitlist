@@ -49,21 +49,42 @@ export default class extends Controller {
         });
     }
 
+    async download(key) {
+      try {
+        let res = await fetch(`/download_presigned?key=${key}`, {
+          method: 'GET'
+        });
+        const data = await res.json();
+        console.log("Download url is: ", data.download_url);
+        return (data.download_url);
+      } catch(e) {
+        console.log(e);
+      }
+    }
+
     async handleSubmit(event) {
         event.preventDefault();
         try {
             const path = this.formTarget.action
             const file = this.fileInputTarget.value
             const upload_file_url = this.fileUrlTarget.getAttribute("data-url");
-            this.fileUrlTarget.value = upload_file_url
+
+            // Get object key to create download presigned url
+            const parts = upload_file_url.split("?");
+            const objectKey = parts[0].split("/").pop();
+            console.log("Object Key:", objectKey);
+            const download = await this.download(objectKey);
+
+            this.fileUrlTarget.value = download
             const formData = await new FormData(this.formTarget);
 
-            await formData.set('file_url', upload_file_url);
 
+            // Upload file to S3 Bucket
             console.log("Calling PUT using presigned URL with client");
             await this.put(upload_file_url, file);
             console.log("\nDone. Check your S3 console.");
 
+            // Post form data and create IOC with download url attached so evidence can be accessed.
             let res = await fetch(path, {
                 method: 'POST',
                 body: formData

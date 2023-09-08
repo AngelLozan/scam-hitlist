@@ -41,8 +41,7 @@
     <% unless !ioc.file_url %>
       <p class="mb-3">
         <strong>Evidence:</strong>
-       
-          <%= link_to ioc.file_url, url_for(ioc.file_url), target: "_blank", class: 'card-link' %>
+          <%= link_to "Download Evidence", ioc.file_url, target: "_blank", class: 'card-link' %>
 
       </p>
     <% end %>

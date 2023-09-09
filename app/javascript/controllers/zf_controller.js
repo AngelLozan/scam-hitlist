@@ -178,8 +178,8 @@ export default class extends Controller {
             console.log("Download url is: ", data.download_url);
             this.evidenceTarget.href = data.download_url;
 
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            console.log(error);
         }
     }
 

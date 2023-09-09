@@ -16,7 +16,7 @@ export default class extends Controller {
         try {
             const file = await this.fileInputTarget.files[0];
             const fileName = file.name;
-            const res = await fetch(`/presigned?name=${fileName}`);
+            const res = await fetch(`/presigned?fileName=${fileName}`);
             const data = await res.json();
             console.log("The url is:", data);
             this.fileUrlTarget.setAttribute("data-url", data.presigned_url);
@@ -68,7 +68,8 @@ export default class extends Controller {
         event.preventDefault();
         try {
             const path = this.formTarget.action
-            const file = this.fileInputTarget.value
+            const fileValue = this.fileInputTarget
+            const file = fileValue.files[0]
             const upload_file_url = this.fileUrlTarget.getAttribute("data-url");
 
             // Get object key to create download presigned url

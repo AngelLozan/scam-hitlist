@@ -1,6 +1,6 @@
 <div id="<%= dom_id ioc %>">
 
-<div class="card my-3" >
+<div class="card my-3">
   <div class="card-body">
     <div class="text-center mb-3">
       <h5 class="card-title"><%= ioc.url %></h5>
@@ -38,14 +38,10 @@
       <strong>Follow-up count:</strong>
       <%= ioc.follow_up_count %>
     </p>
-    <% if ioc.file.attached? %>
+    <% unless !ioc.file_url %>
       <p class="mb-3">
         <strong>Evidence:</strong>
-        <% if ioc.file.image? %>
-          <%=image_tag ioc.file, height: 300 %>
-        <% else %>
-          <%= link_to ioc.file.filename, url_for(ioc.file), target: "_blank", class: 'card-link' %>
-        <% end %>
+          <%= link_to "Download Evidence", ioc.file_url, target: "_blank", class: 'card-link', data: { zf_target: "evidence" } %>
       </p>
     <% end %>
     <%= link_to "Go to: #{ioc.url}", ioc.url, target: "_blank", class: 'card-link' %>

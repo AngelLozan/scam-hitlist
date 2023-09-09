@@ -142,7 +142,7 @@ class IocsController < ApplicationController
     Aws.config.update(region: region)
 
     bucket = Aws::S3::Bucket.new(bucket_name)
-    object_key = SecureRandom.hex
+    object_key = params[:fileName]
 
     url = bucket.object(object_key).presigned_url(:put)
     puts "Created presigned URL: #{url}"

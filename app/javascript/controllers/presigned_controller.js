@@ -3,7 +3,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 
 export default class extends Controller {
-    static targets = ["form", "fileInput", "fileUrl"]
+    static targets = ["form", "fileInput", "fileUrl", "link"]
 
     connect() {
         console.log("Controller connected");
@@ -14,7 +14,9 @@ export default class extends Controller {
 
     async fetchPresigned() {
         try {
-            const res = await fetch('/presigned');
+            const file = await this.fileInputTarget.files[0];
+            const fileName = file.name;
+            const res = await fetch(`/presigned?name=${fileName}`);
             const data = await res.json();
             console.log("The url is:", data);
             this.fileUrlTarget.setAttribute("data-url", data.presigned_url);
@@ -102,6 +104,19 @@ export default class extends Controller {
         }
 
     }
+
+    // async downloadFile (download_url, file_name, e){
+    //     e.preventDefault();
+    //     try {
+    //       const link = this.linkTarget
+    //       link.= presignedUrl;
+    //       link.download = fileName;
+    //       link.target = "_blank";
+    //       link.click();
+    //     } catch(e) {
+    //         console.log(e);
+    //     }
+    // }
 
 
 

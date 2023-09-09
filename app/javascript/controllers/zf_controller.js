@@ -7,7 +7,7 @@ export default class extends Controller {
         fox: String,
     };
 
-    static targets = ['zfbtn', 'cabtn', 'whois', 'ptbtn']
+    static targets = ['zfbtn', 'cabtn', 'whois', 'ptbtn', 'evidence']
 
     connect() {
         console.log('connected zf controller');
@@ -160,6 +160,26 @@ export default class extends Controller {
             console.log(data);
         } catch (error) {
             console.log(error.message);
+        }
+    }
+
+    async presignedUrl(e) {
+        e.preventDefault();
+        const evidenceUrl = this.evidenceTarget.href
+        const parts = upload_file_url.split("?");
+        const key = parts[0].split("/").pop();
+        console.log("Object Key:", key);
+
+        try {
+            let res = await fetch(`/download_presigned?key=${key}`, {
+                method: 'GET'
+            });
+            const data = await res.json();
+            console.log("Download url is: ", data.download_url);
+            this.evidenceTarget.href = data.download_url;
+
+        } catch (e) {
+            console.log(e);
         }
     }
 

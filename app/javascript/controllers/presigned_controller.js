@@ -8,8 +8,8 @@ export default class extends Controller {
     connect() {
         console.log("Controller connected");
         // console.log(this.fileInputTarget);
-        console.log(this.formTarget);
-        console.log(this.fileUrlTarget);
+        // console.log(this.formTarget);
+        // console.log(this.fileUrlTarget);
     }
 
     async fetchPresigned() {
@@ -105,19 +105,6 @@ export default class extends Controller {
         }
 
     }
-
-    // async downloadFile (download_url, file_name, e){
-    //     e.preventDefault();
-    //     try {
-    //       const link = this.linkTarget
-    //       link.= presignedUrl;
-    //       link.download = fileName;
-    //       link.target = "_blank";
-    //       link.click();
-    //     } catch(e) {
-    //         console.log(e);
-    //     }
-    // }
 
 
 

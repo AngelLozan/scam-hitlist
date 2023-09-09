@@ -1,4 +1,4 @@
-
+<input type="file" id="file-input" data-presigned-target="fileInput" data-action="change->presigned#fetchPresigned" class="mb-3">
 <%= simple_form_for(@ioc) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
@@ -53,7 +53,7 @@
     <%= f.input :follow_up_count %>
     <%= f.input :comments, :input_html => {:rows => 10} %>
     <%= f.input :removed_date, default: nil, include_blank: true %>
-    <%= f.input :file, direct_upload: true %>
+    <%= f.hidden_field :file_url, id: 'file-url', data: { presigned_target: "fileUrl" } %>
   </div>
 
   <div class="form-actions d-flex flex-column">

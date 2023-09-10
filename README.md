@@ -25,6 +25,8 @@ run `rails db:drop db:create db:migrate db:seed` to create database and seed wit
 
 Configure IAM keys for S3 bucket in `config/credentials.yml.enc` by using the terminal. If no editor is specified, use `EDITOR="nano" rails credentials:edit` to edit and encrypt keys. 
 
+Name S3 bucket `scam-hitlist` *important*
+
 ## To run in development
 
 Change `config/database.yml` values in development to comment out the env-passed vars and uncomment database name `scam-hitlist-development`

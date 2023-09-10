@@ -305,12 +305,10 @@ class IocsController < ApplicationController
     false
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_ioc
     @ioc = Ioc.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def ioc_params
     params.require(:ioc).permit(:status, :url, :removed_date, :report_method_one, :report_method_two, :form, :host,
                                 :follow_up_date, :follow_up_count, :comments, :file_url, :zf_status, :ca_status, :pt_status, :gg_status)
@@ -336,37 +334,30 @@ class IocsController < ApplicationController
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 
-
-
-  # def pdf_mime_type?(file)
-  #   mime = MIME::Types.type_for(file.original_filename).first
-  #   mime&.content_type == 'application/pdf'
+  # def valid_file_type?(file)
+  #   allowed_types = %w[image/jpeg image/png text/plain message/rfc822]
+  #   allowed_types.include?(file.content_type)
   # end
 
-  def valid_file_type?(file)
-    allowed_types = %w[image/jpeg image/png text/plain message/rfc822]
-    allowed_types.include?(file.content_type)
-  end
+  # def valid_file_size?(file)
+  #   max_file_size_in_bytes = 5 * 1024 * 1024 # 5 MB
+  #   file.size <= max_file_size_in_bytes && file.size > 0
+  # end
 
-  def valid_file_size?(file)
-    max_file_size_in_bytes = 5 * 1024 * 1024 # 5 MB
-    file.size <= max_file_size_in_bytes && file.size > 0
-  end
+  # def virus_total(file_upload)
+  #   api_key = ENV['VIRUS_TOTAL']
+  #   vtscan = VirustotalAPI::File.upload(file_upload, api_key)
+  #   upload_id = vtscan.id
+  #   puts "========================================="
+  #   puts "===========>> #{vtscan.id} <=="
+  #   puts "========================================="
+  #   return upload_id
+  # end
 
-  def virus_total(file_upload)
-    api_key = ENV['VIRUS_TOTAL']
-    vtscan = VirustotalAPI::File.upload(file_upload, api_key)
-    upload_id = vtscan.id
-    puts "========================================="
-    puts "===========>> #{vtscan.id} <=="
-    puts "========================================="
-    return upload_id
-  end
-
-  def enqueue_scan(file_upload, ioc_id)
-    id = virus_total(file_upload)
-    CheckScan.set(wait: 20.minutes).perform_later(id, ioc_id)
-  end
+  # def enqueue_scan(file_upload, ioc_id)
+  #   id = virus_total(file_upload)
+  #   CheckScan.set(wait: 20.minutes).perform_later(id, ioc_id)
+  # end
 
   # def virus_total?(file_upload)
   #   # file = VirusTotal::File.new(upload, ENV['VIRUS_TOTAL'])

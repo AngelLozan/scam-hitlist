@@ -11,13 +11,17 @@
 @import "components/index";
 @import "pages/index";
 
-// body {
-//   background-color: $light-gray;
-// }
-
 body.light {
   color: $black;
   background-color: $light-gray;
+
+  .form-control {
+    background-color: #f1faee;
+  }
+
+  .form-select {
+    background-color: #f1faee;
+  }
 }
 
 body.dark {
@@ -61,6 +65,10 @@ body.dark {
   }
 
   .form-control {
+    background-color: $gray;
+  }
+
+  .form-select {
     background-color: $gray;
   }
 

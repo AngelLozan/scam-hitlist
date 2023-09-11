@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: scam-hitlist-service
+spec:
+  selector:
+    app: root
+  type: NodePort
+  #type: LoadBalancer
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 3000

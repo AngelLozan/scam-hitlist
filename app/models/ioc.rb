@@ -1,9 +1,11 @@
 require "date"
+require 'net/http'
+require 'json'
+require "uri"
 
 class Ioc < ApplicationRecord
   before_save :add_protocol_to_url
   before_save :set_removed_date, if: :status_changed_to_resolved?
-  has_one_attached :file, dependent: :destroy
   enum :status, { added: 0, reported: 1, resolved: 2, official_url: 3, watchlist: 4 }
   enum :zf_status, { not_sub_zf: 0, submitted_zf: 1 } # Used for buttons on show page
   enum :ca_status, { not_sub_ca: 0, submitted_ca: 1 }
@@ -11,7 +13,6 @@ class Ioc < ApplicationRecord
   enum :gg_status, { not_sub_gg: 0, submitted_gg: 1 }
   validates :url, presence: true
   validates :url, uniqueness: true
-  # validates :report_method_one, presence: true
   paginates_per 10
 
   include PgSearch::Model
@@ -75,4 +76,5 @@ class Ioc < ApplicationRecord
 
     self.url = "http://#{url}"
   end
+
 end

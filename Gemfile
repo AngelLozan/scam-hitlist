@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.2'
 
+# gemspec
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 7.0.6'
@@ -51,6 +52,9 @@ gem 'sassc-rails'
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# gem 'rest-client', '~> 1.8.0' # Cannot use virustotal, every version of virus_total depends on rest-client ~> 1.6.7
+gem 'activesupport', '>= 7.0.7.1'
+
 gem 'autoprefixer-rails'
 gem 'bootstrap', '~> 5.2'
 gem 'cloudinary'
@@ -66,7 +70,7 @@ gem "pg_search"
 gem 'nokogiri'
 gem 'simple_form', github: 'heartcombo/simple_form'
 gem 'mail'
-gem 'mime-types', '~> 3.1'
+gem 'mime-types', '~> 3.5.1'
 gem 'tzinfo-data' # For Docker image to work properly with alpine
 gem 'puppeteer-ruby', '~> 0.45.3'
 # Security audits for dependencies and code. 
@@ -74,6 +78,12 @@ gem 'bundler-audit', require: false
 gem 'ruby_audit', require: false
 gem "brakeman"
 gem 'clamby', '~> 1.1' # Not used yet. 
+gem 'simple-form-datepicker', '~> 0.1.3'
+# gem 'virus_total'
+gem 'virustotal_api'
+gem "aws-sdk-s3", require: false
+gem 'delayed_job_active_record'
+
 
 group :development, :test, :production do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

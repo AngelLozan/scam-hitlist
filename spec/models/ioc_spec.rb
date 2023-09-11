@@ -20,14 +20,17 @@ RSpec.describe Ioc, type: :model do
     expect(subject).to be_valid
   end
   it 'should allow attachment of a photo' do
-    file = Rails.root.join('spec', 'support', 'assets', 'ban.png')
-    image = ActiveStorage::Blob.create_and_upload!(
-      io: File.open(file, 'rb'),
-      filename: 'ban.png',
-      content_type: 'image/png'
-    ).signed_id
-    ioc = Ioc.new(url: 'https://www.example.com', report_method_one: 'Emailed host', file: image)
-    expect(ioc.file.attached?).to be(true)
+    # file = Rails.root.join('spec', 'support', 'assets', 'ban.png')
+    # image = ActiveStorage::Blob.create_and_upload!(
+    #   io: File.open(file, 'rb'),
+    #   filename: 'ban.png',
+    #   content_type: 'image/png'
+    # ).signed_id
+    file = "amazonpresignedurl.com"
+    # ioc = Ioc.new(url: 'https://www.example.com', report_method_one: 'Emailed host', file: image)
+    ioc = Ioc.new(url: 'https://www.example.com', report_method_one: 'Emailed host', file_url: file)
+    # expect(ioc.file.attached?).to be(true)
+    expect(ioc.file_url?).to be(true)
   end
 
   it 'should validate url uniqueness' do

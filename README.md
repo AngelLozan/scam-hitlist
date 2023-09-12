@@ -2,7 +2,7 @@
 
 ![Spam Banned Icon](https://github.com/AngelLozan/scam-hitlist/blob/main/app/assets/images/ban.png?raw=true)
 
-An app to improve and streamline the brand protection program wiht both database and user authentication.
+An app to improve and streamline the brand protection program with both a database and user authentication.
 
 Report IOCs and track their progress. Use a systematic approach to submitting and tracking IOCs with multiple API integrations.
 
@@ -52,8 +52,7 @@ ActiveRecord::Base.connection.execute("SELECT setval('iocs_id_seq', #{next_avail
 
 ## Base Security Features
 
-- Validates file size and limits to 5 mb and greater than 0
-- Validates file type and only allows PDFs, .eml, jpeg, png, and txt
+- Utilizes presigned AWS S3 bucket upload and download urls for attaching evidence to records. No files touch server ✅
 - Model Validations
 - Uses built in methods to sanitize and remove xss attacks from form inputs (comments and url fields)
 - Strong parameters

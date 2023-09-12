@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: scam-hitlist-config
 data:
-  DB_HOST: "mouse.db.elephantsql.com"
+  POSTGRES_HOST: "mouse.db.elephantsql.com"
   DB_PORT: "5432"
-  DB_USERNAME: "rzwjemeq"
+  POSTGRES_USER: "rzwjemeq"

@@ -8,6 +8,7 @@
       <div class="col-4 col-lg-3">
 
         <div class="d-flex flex-column my-3 justify-content-around">
+          
           <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">Submit to ZF API</button>
           <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="cabtn" data-status="<%= @ioc.ca_status %>">Submit to Chain Abuse API</button>
           <% mailto = "mailto:phish@phishtank.com?subject=Phishing%20Link%2C%20please%20add%20to%20tank&body=Hello%2C%20%0A%0ASITE%3A%20#{@ioc.url.gsub('.', '[.]')}%20%0A%0AThis%20is%20a%20scam%20phishing%20site%20that%20is%20not%20affiliated%20with%20Exodus%20Movement%20Inc.%20or%20our%20crypto%20wallet.%20Please%20add%20it%20to%20the%20tank.%20Thank%20you%21" %>

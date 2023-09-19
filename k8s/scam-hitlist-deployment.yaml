@@ -93,6 +93,11 @@ spec:
             secretKeyRef:
               name: db-creds
               key: recaptcha-secret
+        - name: BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: bucket
         ports:
         - containerPort: 3000
           name: scam-hitlist

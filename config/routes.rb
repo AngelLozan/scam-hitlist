@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
+  
   get '/2b_reported', to: 'iocs#tb_reported', as: 'tb_reported'
   get '/watchlist', to: 'iocs#watchlist', as: 'watchlist'
 

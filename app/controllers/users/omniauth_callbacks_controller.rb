@@ -2,10 +2,10 @@
 
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    content_security_policy do |policy|
-      policy.upgrade_insecure_requests true
-      policy.base_uri "https://scam-hitlist-d.ot.exodus.com"
-    end
+    # content_security_policy do |policy|
+    #   policy.upgrade_insecure_requests true
+    #   policy.base_uri "https://scam-hitlist-d.ot.exodus.com"
+    # end
     
     def google_oauth2
       # user = User.from_google(from_google_params)

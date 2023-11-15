@@ -18,12 +18,12 @@ module ScamHitlist
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
-    # config.middleware.insert_before 0, Rack::Cors do
-    #   allow do
-    #     origins 'https://scam-hitlist-d.ot.exodus.com/'
-    #     resource 'https://scam-hitlist-d.ot.exodus.com/', :headers => :any, :methods => [:get, :post, :options]
-    #   end
-    # end
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'https://scam-hitlist-d.ot.exodus.com/'
+        resource 'https://scam-hitlist-d.ot.exodus.com/', :headers => :any, :methods => [:get, :post, :options]
+      end
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #

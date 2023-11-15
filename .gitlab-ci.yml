@@ -1,0 +1,42 @@
+# Include our gitlabci templates that provide all kinds of helpers
+include:
+  - project: infrastructure/gitlab-ci-templates
+    ref: master
+    file: templates.yml
+  - project: infrastructure/gitlab-ci-templates
+    ref: master
+    file: base.yml
+  - project: infrastructure/gitlab-ci-templates
+    ref: master
+    file: docker-build-multi-arch.yml
+  - project: infrastructure/gitlab-ci-templates
+    ref: master
+    file: dev-branches-manual.yml
+  - project: infrastructure/gitlab-ci-templates
+    ref: master
+    file: dev-master-auto.yml
+  # - project: infrastructure/gitlab-ci-templates
+  #   ref: master
+  #   file: stage-master-manual.yml
+  # - project: infrastructure/gitlab-ci-templates
+  #   ref: master
+  #   file: prod-master-manual.yml
+
+variables:
+  DISABLE_CREATE_ECR: "true"
+  HELM_V3: "true"
+  CI_PROJECT_NAMESPACE: dev-tools
+  AWS_DEFAULT_REGION: us-east-1
+  DOCKER_BUILD_ARCH: "multi-arch"
+  K8S_NAMESPACE: dev-tools
+
+build/docker-multi-arch-x86: &build_docker
+  variables:
+    DOCKER_BUILD_OPTS: "--secret id=rails_master_key,src=/root/rails-master-key"
+    KUBERNETES_SERVICE_ACCOUNT_OVERWRITE: gitlab-runner-scam-hitlist-docker-build
+  before_script:
+    - aws secretsmanager get-secret-value --secret-id scam-hitlist-rails-master-key --query SecretString --output text > /root/rails-master-key
+  after_script:
+    - rm -rf /root/rails-master-key
+
+build/docker-multi-arch-arm64: *build_docker

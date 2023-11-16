@@ -3,7 +3,8 @@
 require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
-  config.action_mailer.default_url_options = { host: 'http://TODO_PUT_YOUR_DOMAIN_HERE' }
+  # config.force_ssl = true
+  config.action_mailer.default_url_options = { host: 'https://scam-hitlist-d.ot.exodus.com' }
   # Settings specified here will take precedence over those in config/application.rb.
   config.secret_key_base = ENV["SECRET_KEY_BASE"]
 

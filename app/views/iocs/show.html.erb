@@ -7,6 +7,7 @@
       </div>
       <div class="col-4 col-lg-3">
 
+
         <% if policy(Ioc).ca? %>
           <div class="d-flex flex-column my-3 justify-content-around">
             <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">Submit to ZF API</button>

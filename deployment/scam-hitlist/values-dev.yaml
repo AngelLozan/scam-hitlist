@@ -1,0 +1,26 @@
+# Dev-specific env variables
+deployment:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 350Mi
+
+  autoscaling:
+    enabled: false
+
+  extraEnvs:
+    - name: BUCKET
+      value: exodus-scam-hitlist-dev-dev
+
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::483945769383:role/scam-hitlist
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: dev-tools
+    hosts:
+      - host: scam-hitlist-d.ot.exodus.com
+        paths:
+          - /

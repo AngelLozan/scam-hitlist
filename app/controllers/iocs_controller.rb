@@ -160,6 +160,7 @@ class IocsController < ApplicationController
   def presigned
     authorize @ioc
     bucket_name = "scam-hitlist"
+    bucket_name = ENV['BUCKET']
     region = "eu-north-1"
     Aws.config.update(region: region)
 
@@ -179,7 +180,7 @@ class IocsController < ApplicationController
     key = params[:key]
     signer = Aws::S3::Presigner.new
     url = signer.presigned_url(:get_object,
-                 bucket: "scam-hitlist",
+                 bucket: ENV['BUCKET'],
                  key: key,
                  expires_in: 7.days.to_i,
                  response_content_disposition: "attachment"

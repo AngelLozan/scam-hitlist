@@ -8,14 +8,18 @@ require "aws-sdk-s3"
 
 class IocsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[new simple_create]
+  skip_after_action :verify_authorized, only: %i[reported follow_up tb_reported watchlist]
   before_action :set_ioc, only: %i[show screenshot edit update ca destroy]
   helper_method :sort_column, :sort_direction
 
   # GET /iocs or /iocs.json
   def index
-    @iocs = Ioc.where.not(status: :official_url).order("#{sort_column} #{sort_direction}").page params[:page]
-    @hosts = Host.all
-    @forms = Form.all
+    @iocs = policy_scope(Ioc)
+    @iocs = @iocs.where.not(status: :official_url).order("#{sort_column} #{sort_direction}").page params[:page]
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @hosts = Host.all
+    # @forms = Form.all
 
     return unless params[:query].present?
 
@@ -28,9 +32,12 @@ class IocsController < ApplicationController
   end
 
   def reported
-    @iocs = Ioc.where(status: 1).order("#{sort_column} #{sort_direction}").page params[:page]
-    @hosts = Host.all
-    @forms = Form.all
+    @iocs = policy_scope(Ioc)
+    @iocs = @iocs.where(status: 1).order("#{sort_column} #{sort_direction}").page params[:page]
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @hosts = Host.all
+    # @forms = Form.all
 
     return unless params[:query].present?
 
@@ -43,9 +50,12 @@ class IocsController < ApplicationController
   end
 
   def follow_up
-    @iocs = Ioc.follow_up_needed.order("#{sort_column} #{sort_direction}").page params[:page]
-    @hosts = Host.all
-    @forms = Form.all
+    @iocs = policy_scope(Ioc)
+    @iocs = @iocs.follow_up_needed.order("#{sort_column} #{sort_direction}").page params[:page]
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @hosts = Host.all
+    # @forms = Form.all
 
     return unless params[:query].present?
 
@@ -58,13 +68,17 @@ class IocsController < ApplicationController
   end
 
   def tb_reported
-    @iocs = Ioc.tb_reported.order("#{sort_column} #{sort_direction}").page params[:page]
+    @iocs = policy_scope(Ioc)
+    @iocs = @iocs.tb_reported.order("#{sort_column} #{sort_direction}").page params[:page]
   end
 
   def watchlist
-    @iocs = Ioc.watchlist.order("#{sort_column} #{sort_direction}").page params[:page]
-    @hosts = Host.all
-    @forms = Form.all
+    @iocs = policy_scope(Ioc)
+    @iocs = @iocs.watchlist.order("#{sort_column} #{sort_direction}").page params[:page]
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @hosts = Host.all
+    # @forms = Form.all
 
     return unless params[:query].present?
 
@@ -77,6 +91,7 @@ class IocsController < ApplicationController
   end
 
   def show
+    authorize @ioc
     # @dev For screenshoting from within the app.
     if params[:screenshot_url]
       url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
@@ -126,17 +141,25 @@ class IocsController < ApplicationController
   # GET /iocs/new
   def new
     @ioc = Ioc.new
-    @forms = Form.all
-    @hosts = Host.all
+    authorize @ioc
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @forms = Form.all
+    # @hosts = Host.all
   end
 
   # GET /iocs/1/edit
   def edit
-    @forms = Form.all
-    @hosts = Host.all
+    authorize @ioc
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @forms = Form.all
+    # @hosts = Host.all
   end
 
   def presigned
+    authorize @ioc
+    bucket_name = "scam-hitlist"
     bucket_name = ENV['BUCKET']
     region = "eu-north-1"
     Aws.config.update(region: region)
@@ -153,6 +176,7 @@ class IocsController < ApplicationController
   end
 
   def download_presigned
+    authorize @ioc
     key = params[:key]
     signer = Aws::S3::Presigner.new
     url = signer.presigned_url(:get_object,
@@ -169,6 +193,7 @@ class IocsController < ApplicationController
   # POST /iocs or /iocs.json
   def create
     @ioc = Ioc.new(ioc_params)
+    authorize @ioc
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
 
@@ -194,6 +219,7 @@ class IocsController < ApplicationController
 
   def simple_create
     @ioc = Ioc.new(ioc_simple_params)
+    authorize @ioc
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
 
@@ -237,11 +263,13 @@ class IocsController < ApplicationController
   end
 
   def update
-    @forms = Form.all
-    @hosts = Host.all
+    @hosts = policy_scope(Host)
+    @forms = policy_scope(Form)
+    # @forms = Form.all
+    # @hosts = Host.all
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
-
+    authorize @ioc
 
     respond_to do |format|
       if @ioc.update(ioc_params)
@@ -255,6 +283,7 @@ class IocsController < ApplicationController
   end
 
   def ca
+    authorize @ioc
     request_body = [
       {
         addresses: [
@@ -290,6 +319,7 @@ class IocsController < ApplicationController
 
   def destroy
     @ioc.destroy
+    authorize @ioc
 
     respond_to do |format|
       format.html { redirect_to iocs_url, alert_success: "The record was successfully destroyed." }

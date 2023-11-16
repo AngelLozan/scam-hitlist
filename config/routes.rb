@@ -12,9 +12,22 @@ Rails.application.routes.draw do
   get '/reported', to: 'iocs#reported', as: 'reported'
   get '/follow_up', to: 'iocs#follow_up', as: 'follow_up'
 
+  # devise_for :users, controllers: {
+  #   omniauth_callbacks: 'users/omniauth_callbacks'
+  # }
+
   devise_for :users, controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    registrations: 'custom_devise/registrations'
   }
+
+  get '/users/new', to: 'users#new', as: 'new_user'
+  delete "users/:id", to: "users#destroy"
+  devise_scope :users do
+    post '/users', to: 'custom_devise/registrations#create', as: 'create_user'
+  end
+  get '/users', to: 'users#index', as: 'users'
+  get '/users/:id/', to: 'users#show', as: 'user'
+  
   
   get '/2b_reported', to: 'iocs#tb_reported', as: 'tb_reported'
   get '/watchlist', to: 'iocs#watchlist', as: 'watchlist'

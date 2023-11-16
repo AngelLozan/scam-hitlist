@@ -1,10 +1,9 @@
-
 <div class="container mt-3">
   <div class='d-flex justify-content-center mb-3'>
-    <h2 class='mb-3'>Sign Up</h2>
+    <h2 class='mb-3'>New User</h2>
   </div>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: :false }) do |f| %>
+<%= simple_form_for(@user, data: { turbo: :false }) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
@@ -22,10 +21,8 @@
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit, "Sign up", class:"btn btn-primary" %>
+    <%= f.button :submit, "Create User", class:"btn btn-primary" %>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>
 
 </div>

@@ -7,19 +7,22 @@
       </div>
       <div class="col-4 col-lg-3">
 
-        <div class="d-flex flex-column my-3 justify-content-around">
-          
-          <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">Submit to ZF API</button>
-          <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="cabtn" data-status="<%= @ioc.ca_status %>">Submit to Chain Abuse API</button>
-          <% mailto = "mailto:phish@phishtank.com?subject=Phishing%20Link%2C%20please%20add%20to%20tank&body=Hello%2C%20%0A%0ASITE%3A%20#{@ioc.url.gsub('.', '[.]')}%20%0A%0AThis%20is%20a%20scam%20phishing%20site%20that%20is%20not%20affiliated%20with%20Exodus%20Movement%20Inc.%20or%20our%20crypto%20wallet.%20Please%20add%20it%20to%20the%20tank.%20Thank%20you%21" %>
-          <button class="btn btn-primary mb-3" data-url=<%= mailto %> data-action="click->zf#postPT" data-zf-target="ptbtn" data-status="<%= @ioc.pt_status %>" data-id="<%= @ioc.id %>">Submit to PhishTank</button>
-          <% if @ioc.created_at < 7.days.ago %>
-            <button class="btn btn-primary mb-3" data-action="click->zf#presignedUrl" >New Evidence Url</button>
-          <% end %>
-          <% if @host[:email].nil? || @host[:email] == 'null' || @host[:email] == 'N/A' %>
-              <button class="btn btn-primary mb-3" data-action="click->zf#copyLookUp" data-url='<%= @ioc.url %>' >Copy IOC & LookUp Host</button>
-            <% else %>
-              <%= link_to "Follow up with #{@host.email}?", "mailto:#{@host.email}", target: "_blank", class: 'btn btn-primary mb-3 text-break' %>
+
+        <% if policy(Ioc).ca? %>
+          <div class="d-flex flex-column my-3 justify-content-around">
+            <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">Submit to ZF API</button>
+            <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="cabtn" data-status="<%= @ioc.ca_status %>">Submit to Chain Abuse API</button>
+            <% mailto = "mailto:phish@phishtank.com?subject=Phishing%20Link%2C%20please%20add%20to%20tank&body=Hello%2C%20%0A%0ASITE%3A%20#{@ioc.url.gsub('.', '[.]')}%20%0A%0AThis%20is%20a%20scam%20phishing%20site%20that%20is%20not%20affiliated%20with%20Exodus%20Movement%20Inc.%20or%20our%20crypto%20wallet.%20Please%20add%20it%20to%20the%20tank.%20Thank%20you%21" %>
+            <button class="btn btn-primary mb-3" data-url=<%= mailto %> data-action="click->zf#postPT" data-zf-target="ptbtn" data-status="<%= @ioc.pt_status %>" data-id="<%= @ioc.id %>">Submit to PhishTank</button>
+            <% if @ioc.created_at < 7.days.ago %>
+              <button class="btn btn-primary mb-3" data-action="click->zf#presignedUrl" >New Evidence Url</button>
+            <% end %>
+            <% if @host[:email].nil? || @host[:email] == 'null' || @host[:email] == 'N/A' %>
+                <button class="btn btn-primary mb-3" data-action="click->zf#copyLookUp" data-url='<%= @ioc.url %>' >Copy IOC & LookUp Host</button>
+              <% else %>
+                <%= link_to "Follow up with #{@host.email}?", "mailto:#{@host.email}", target: "_blank", class: 'btn btn-primary mb-3 text-break' %>
+            <% end %>
+
           <% end %>
 
           <%= link_to "Take Screenshot 👇", ioc_path(ioc: @ioc, screenshot_url: @ioc.url), class: "btn btn-primary mb-3 text-break" %>
@@ -43,6 +46,7 @@
         </div>
 
       </div>
+
     <% else %>
       <div class="col-12">
         <%= render @ioc %>
@@ -52,9 +56,13 @@
 
 
   <div class="d-flex flex-column">
-    <%= link_to "Edit this record", edit_ioc_path(@ioc), class: 'btn btn-primary' %>
+    <% if policy(@ioc).edit? %>
+      <%= link_to "Edit this record", edit_ioc_path(@ioc), class: 'btn btn-primary' %>
+    <% end %>
     <%= link_to "Back to all IOCs", iocs_path, class: 'btn btn-info mt-3' %>
-    <%= link_to "Delete", @ioc, class: "btn btn-danger mt-3 text-white", data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+    <% if policy(@ioc).destroy? %>
+      <%= link_to "Delete", @ioc, class: "btn btn-danger mt-3 text-white", data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+    <% end %>
   </div>
 
 </div>

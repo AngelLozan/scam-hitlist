@@ -1,5 +1,14 @@
 require "csv"
 
+
+puts "deleting existing data"
+  Ioc.destroy_all
+  Form.destroy_all
+  Host.destroy_all
+  User.destroy_all
+puts "done deleting existing data"
+
+
 puts "Populating Domain Host/Registrar list.."
 
 CSV.foreach(Rails.root.join("lib/hosts.csv"), headers: :first_row) do |row|
@@ -21,6 +30,11 @@ CSV.foreach(Rails.root.join("lib/forms.csv"), headers: :first_row) do |row|
 
   puts "created #{form}"
 end
+
+puts "creating users for Dean and Scott"
+  User.create!(email: "dean@exodus.io", password: "changeme")
+  User.create!(email: "scott.lo@exodus.io", password: "changeme")
+puts "Created two users, Dean and Scott.  They can add more."
 
 puts "creating IOCs, this can take a moment ..."
 

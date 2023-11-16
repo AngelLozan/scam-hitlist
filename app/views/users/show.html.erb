@@ -1,0 +1,13 @@
+<div class="container-fluid mt-3">
+
+  <p style="color: green"><%= notice %></p>
+
+  <%= render @user %>
+
+  <div class="d-flex flex-column">
+   <%= link_to "Back to all Users", users_path, class: "btn btn-info mt-3" %>
+
+   <%= button_to "Delete account", user_path(@user), class: "btn btn-danger mt-3 text-white", data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %>
+  </div>
+
+</div>

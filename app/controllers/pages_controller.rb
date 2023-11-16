@@ -7,12 +7,16 @@ class PagesController < ApplicationController
   def home
     @current_user = current_user
     @ioc = Ioc.new
+    authorize @ioc
   end
 
   def settings
-    @forms = Form.all.order("#{sort_column} #{sort_direction}").page params[:page]
-    @hosts = Host.all.order("#{sort_column_host} #{sort_direction}").page params[:page]
-    @iocs = Ioc.official_url.order("#{sort_column} #{sort_direction}").page params[:page]
+    @forms = policy_scope(Form)
+    @hosts = policy_scope(Host)
+    @iocs = policy_scope(Ioc)
+    @forms = @forms.all.order("#{sort_column} #{sort_direction}").page params[:page]
+    @hosts = @hosts.all.order("#{sort_column_host} #{sort_direction}").page params[:page]
+    @iocs = @iocs.official_url.order("#{sort_column} #{sort_direction}").page params[:page]
 
     return unless params[:query].present?
 

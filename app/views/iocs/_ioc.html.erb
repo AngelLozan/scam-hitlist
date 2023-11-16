@@ -38,11 +38,13 @@
       <strong>Follow-up count:</strong>
       <%= ioc.follow_up_count %>
     </p>
-    <% unless !ioc.file_url %>
-      <p class="mb-3">
-        <strong>Evidence:</strong>
-          <%= link_to "Download Evidence", ioc.file_url, target: "_blank", class: 'card-link', data: { zf_target: "evidence" } %>
-      </p>
+    <% if policy(Ioc).presigned? %>
+      <% unless !ioc.file_url %>
+        <p class="mb-3">
+          <strong>Evidence:</strong>
+            <%= link_to "Download Evidence", ioc.file_url, target: "_blank", class: 'card-link', data: { zf_target: "evidence" } %>
+        </p>
+      <% end %>
     <% end %>
     <%= link_to "Go to: #{ioc.url}", ioc.url, target: "_blank", class: 'card-link' %>
   <% end %>

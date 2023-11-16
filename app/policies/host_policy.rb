@@ -13,27 +13,27 @@ class HostPolicy < ApplicationPolicy
     true
   end
 
-   def show
+   def show?
     user.is_brand_protector?
   end
 
-  def new
+  def new?
     create?
   end
 
-  def create
+  def create?
    user.is_brand_protector?
   end
 
-  def edit
+  def edit?
     update?
   end
 
-  def update
+  def update?
     user.is_brand_protector?
   end
 
-  def destroy
+  def destroy?
     user.is_brand_protector?
   end
 end

@@ -20,9 +20,14 @@ Rails.application.routes.draw do
     registrations: 'custom_devise/registrations'
   }
 
-   resources :users_admin, :controller => 'users'
-  # devise_for :users
-
+  get '/users/new', to: 'users#new', as: 'new_user'
+  delete "users/:id", to: "users#destroy"
+  devise_scope :users do
+    post '/users', to: 'custom_devise/registrations#create', as: 'create_user'
+  end
+  get '/users', to: 'users#index', as: 'users'
+  get '/users/:id/', to: 'users#show', as: 'user'
+  
   
   get '/2b_reported', to: 'iocs#tb_reported', as: 'tb_reported'
   get '/watchlist', to: 'iocs#watchlist', as: 'watchlist'

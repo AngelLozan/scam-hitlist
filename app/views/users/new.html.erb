@@ -1,2 +1,28 @@
-<h1>UsersAdmin#new</h1>
-<p>Find me in app/views/users_admin/new.html.erb</p>
+<div class="container mt-3">
+  <div class='d-flex justify-content-center mb-3'>
+    <h2 class='mb-3'>New User</h2>
+  </div>
+
+<%= simple_form_for(@user, data: { turbo: :false }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :email,
+                required: true,
+                autofocus: true,
+                input_html: { autocomplete: "email" }%>
+    <%= f.input :password,
+                required: true,
+                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                input_html: { autocomplete: "new-password" } %>
+    <%= f.input :password_confirmation,
+                required: true,
+                input_html: { autocomplete: "new-password" } %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, "Create User", class:"btn btn-primary" %>
+  </div>
+<% end %>
+
+</div>

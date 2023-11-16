@@ -3,7 +3,7 @@
 class User < ApplicationRecord
   # has_one_attached :image
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :omniauthable, omniauth_providers: [:google_oauth2]
+         :recoverable, :rememberable, :validatable #, :omniauthable, omniauth_providers: [:google_oauth2]
 
   # def self.from_google(email:, uid:)
   #   find_or_create_by!(email: email, uid: uid, provider: "google_oauth2")
@@ -14,12 +14,22 @@ class User < ApplicationRecord
   #               password: Devise.friendly_token[0, 20]).find_or_create_by!(email: u[:email], image: u[:image])
   # end
 
-  def self.from_google(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
-      # user.full_name = auth.info.name # assuming the user model has a name
-      user.image = auth.info.image
+  # def self.from_google(auth)
+  #   where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+  #     user.email = auth.info.email
+  #     user.password = Devise.friendly_token[0, 20]
+  #     # user.full_name = auth.info.name # assuming the user model has a name
+  #     user.image = auth.info.image
+  #   end
+  # end
+
+
+  def is_brand_protector?
+    if self.email == 'dean@exodus.io' || self.email == 'scott.lo@exodus.io'
+      true
+    else
+      false
     end
   end
+
 end

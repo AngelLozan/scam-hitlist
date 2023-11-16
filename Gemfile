@@ -83,6 +83,7 @@ gem 'simple-form-datepicker', '~> 0.1.3'
 gem 'virustotal_api'
 gem "aws-sdk-s3", require: false
 gem 'delayed_job_active_record'
+gem 'pundit'
 
 
 group :development, :test, :production do

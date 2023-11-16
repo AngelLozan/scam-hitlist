@@ -2,24 +2,29 @@ class FormsController < ApplicationController
   before_action :set_form, only: %i[show edit update destroy]
 
   def index
-    @forms = Form.all
+    @forms = policy_scope(Form)
+    # @forms = Form.all
   end
 
 
   def show
+    authorize @form
   end
 
 
   def new
+    authorize @form
     @form = Form.new
   end
 
 
   def edit
+    authorize @form
   end
 
 
   def create
+    authorize @form
     @form = Form.new(form_params)
 
     respond_to do |format|
@@ -35,6 +40,7 @@ class FormsController < ApplicationController
 
 
   def update
+    authorize @form
     respond_to do |format|
       if @form.update(form_params)
         format.html { redirect_to form_url(@form), notice: "Form was successfully updated." }
@@ -47,6 +53,7 @@ class FormsController < ApplicationController
   end
 
   def destroy
+    authorize @form
     @form.destroy
 
     respond_to do |format|

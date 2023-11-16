@@ -2,23 +2,26 @@ class HostsController < ApplicationController
   before_action :set_host, only: %i[show edit update destroy]
 
   def index
-    @hosts = Host.all
+    @hosts = policy_scope(Host)
+    # @hosts = Host.all
   end
 
   def show
+    authorize @host
   end
 
-  # GET /hosts/new
   def new
+    authorize @host
     @host = Host.new
   end
 
-  # GET /hosts/1/edit
   def edit
+    authorize @host
   end
 
   # POST /hosts or /hosts.json
   def create
+    authorize @host
     @host = Host.new(host_params)
 
     respond_to do |format|
@@ -34,6 +37,7 @@ class HostsController < ApplicationController
 
   # PATCH/PUT /hosts/1 or /hosts/1.json
   def update
+    authorize @host
     respond_to do |format|
       if @host.update(host_params)
         format.html { redirect_to host_url(@host), notice: "Host was successfully updated." }
@@ -47,6 +51,7 @@ class HostsController < ApplicationController
 
   # DELETE /hosts/1 or /hosts/1.json
   def destroy
+    authorize @host
     @host.destroy
 
     respond_to do |format|

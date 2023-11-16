@@ -57,11 +57,11 @@ class CustomDevise::RegistrationsController < Devise::RegistrationsController
 
     def redirect_unless_brand_protector
       if !current_user
-        flash[:error] = "Login is restricted to only the SecOps team 😎."
         redirect_to root_path
+        flash[:alert] = "Sign up is restricted to only the SecOps team 😎."
       else
         unless current_user.is_brand_protector?
-          flash[:error] = "Login is restricted to only the SecOps team 😎."
+          flash[:alert] = "Sign up is restricted to only the SecOps team 😎."
           redirect_to root_path
         end
       end

@@ -1,0 +1,9 @@
+one:
+  url: https://raw.githubusercontent.com/Neo23x0/signature-base/develop/iocs/iocs.yml
+  removed_date: 2019-01-01
+  report_method_one: "email"
+  report_method_two: "web"
+  form: "google"
+  follow_up_date: 2019-01-01
+  follow_up_count: 1
+  comments: "This is a comment"

@@ -178,6 +178,7 @@ export default class extends Controller {
         try {
             await navigator.clipboard.writeText(url);
             window.open('https://centralops.net/co/', "_blank")
+            this.displayFlashMessage('CentralOps opened in new tab 👀','success');
         } catch (error) {
             console.log(error.message);
             this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');

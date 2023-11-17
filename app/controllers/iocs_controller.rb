@@ -93,19 +93,22 @@ class IocsController < ApplicationController
   def show
     authorize @ioc
 
-    begin
-      url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
-      api_token = ENV['BROWSERLESS_TOKEN']
-      ws_url = "wss://chrome.browserless.io?token=#{api_token}"
+    if params[:screenshot_url]
+      begin
+        url = ActionController::Base.helpers.sanitize(params[:screenshot_url])
+        api_token = ENV['BROWSERLESS_TOKEN']
+        ws_url = "wss://chrome.browserless.io?token=#{api_token}"
 
-      Puppeteer.connect(browser_ws_endpoint: ws_url) do |browser|
-        page = browser.pages.first || browser.new_page
-        page.goto(url)
-        @image = page.screenshot()
+        Puppeteer.connect(browser_ws_endpoint: ws_url) do |browser|
+          page = browser.pages.first || browser.new_page
+          page.goto(url)
+          @image = page.screenshot()
+        end
+
+      rescue StandardError => e
+        # flash[:alert] = "An error occurred while taking the screenshot: #{e.message}"
+        @screenshot_error = "An error occurred while capturing the screenshot: #{e.message}"
       end
-
-    rescue StandardError => e
-      flash[:alert] = "An error occurred while taking the screenshot: #{e.message}"
     end
 
     # @dev To account for legacy data. Needs cleaning to avoid so many conditions.

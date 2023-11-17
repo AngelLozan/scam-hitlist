@@ -111,6 +111,7 @@ export default class extends Controller {
 
         } catch (e) {
             console.log(e);
+            this.displayFlashMessage("Was unable to connect to S3 bucket to get resource url", 'warning');
         }
 
     }

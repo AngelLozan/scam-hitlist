@@ -164,6 +164,7 @@ class IocsController < ApplicationController
   end
 
   def presigned
+    @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified
     authorize @ioc
     bucket_name = "scam-hitlist"
     bucket_name = ENV['BUCKET']
@@ -182,6 +183,7 @@ class IocsController < ApplicationController
   end
 
   def download_presigned
+    @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified.
     authorize @ioc
     key = params[:key]
     signer = Aws::S3::Presigner.new

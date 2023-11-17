@@ -2,6 +2,7 @@
 
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+    
     def google_oauth2
       # user = User.from_google(from_google_params)
       user = User.from_google(auth)
@@ -18,14 +19,6 @@ module Users
     end
 
     private
-
-    # def from_google_params
-    #   @from_google_params ||= {
-    #     uid: auth.uid,
-    #     email: auth.info.email,
-    #     image: auth.info.image
-    #   }
-    # end
 
     def auth
       @auth ||= request.env['omniauth.auth']

@@ -4,15 +4,14 @@
   networks:
     backend:
     frontend:
-    # selenium:
   services:
     db:
       image: postgres:14.2-alpine
       ports:
         - "5432:5432"
       environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       networks:
         - backend
     redis:
@@ -21,42 +20,22 @@
         - "6379:6379"
       networks:
         - backend
-    # browserless:
-    #   image: browserless/chrome:latest
-    #   environment:
-    #     - DEBUG=browserless:*
-    #     - MAX_CONCURRENT_SESSIONS=10
-    #     - CONNECTION_TIMEOUT=60000
-    #     - MAX_QUEUE_LENGTH=20
-    #     - PREBOOT_CHROME=true
-    #     - DEMO_MODE=false
-    #     - HOST=0.0.0.0
-    #     - ENABLE_DEBUGGER=false
-    #     - TOKEN=${BROWSERLESS_TOKEN}
-    #     - PORT=3000
-    #     - WORKSPACE_DELETE_EXPIRED=true
-    #   container_name: "browserless"
-    #   restart: always
-    #   ports:
-    #     - "3000:3000"
     app:
       platform: linux/amd64
       build: .
       tty: true
       volumes:
         - .:/workdir
-      # links:
-      #   - chromium
       working_dir: /workdir
       environment:
-        DB: ${DB}
-        DB_HOST: ${DB_HOST}
+        DB: ${POSTGRES_DB}
+        POSTGRES_HOST: ${POSTGRES_HOST}
         DB_PORT: 5432
-        DB_USERNAME: ${DB_USERNAME}
-        DB_PASSWORD: ${DB_PASSWORD}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+        SECRET_KEY_BASE: ${SECRET_KEY_BASE}
         BUNDLE_GEMFILE: /workdir/Gemfile
-      # SELENIUM_REMOTE_URL: http://chrome_server:4444/wd/hub
-      # command: bash -c "bundle exec rails s -p 8080 -b '0.0.0.0'"
       command: >
         bash -c "bundle install &&
                  yarn &&
@@ -65,13 +44,10 @@
       networks:
         - backend
         - frontend 
-        # - selenium
       ports:
         - "8080:8080"
       depends_on:
         - db
         - redis
-        # - browserless
-        # - chrome
 
 

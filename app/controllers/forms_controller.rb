@@ -5,20 +5,20 @@ class FormsController < ApplicationController
     @forms = Form.all
   end
 
-  # GET /forms/1 or /forms/1.json
+
   def show
   end
 
-  # GET /forms/new
+
   def new
     @form = Form.new
   end
 
-  # GET /forms/1/edit
+
   def edit
   end
 
-  # POST /forms or /forms.json
+
   def create
     @form = Form.new(form_params)
 
@@ -33,7 +33,7 @@ class FormsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /forms/1 or /forms/1.json
+
   def update
     respond_to do |format|
       if @form.update(form_params)
@@ -46,7 +46,6 @@ class FormsController < ApplicationController
     end
   end
 
-  # DELETE /forms/1 or /forms/1.json
   def destroy
     @form.destroy
 
@@ -58,12 +57,10 @@ class FormsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_form
     @form = Form.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def form_params
     params.require(:form).permit(:name, :url)
   end

@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scam-hitlist # name of the deployment
+  labels:
+    app: root
+    component: scam-hitlist
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: root
+      component: scam-hitlist
+  template:
+    metadata:
+      labels:
+        app: root
+        component: scam-hitlist
+    spec:
+      containers:
+      - name: scam-hitlist
+        image: scottlozano/scam-hitlist:latest
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: connection_string
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: username 
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: password 
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: name 
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: database
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: secret-key-base
+        - name: GOOGLE_OAUTH_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: google-id
+        - name: GOOGLE_OAUTH_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: google-secret
+        - name: EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: email
+        - name: ZF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: zf 
+        - name: CA_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: ca
+        - name: VIRUS_TOTAL
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: vt
+        - name: RECAPTCHA_SITE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: recaptcha-key
+        - name: RECAPTCHA_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: recaptcha-secret
+        ports:
+        - containerPort: 3000
+          name: scam-hitlist
+

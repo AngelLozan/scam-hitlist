@@ -1,6 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import html2canvas from "html2canvas";
-
 
 // Connects to data-controller="zf"
 export default class extends Controller {
@@ -9,7 +7,7 @@ export default class extends Controller {
         fox: String,
     };
 
-    static targets = ['zfbtn', 'cabtn', 'whois', 'ptbtn']
+    static targets = ['zfbtn', 'cabtn', 'whois', 'ptbtn', 'evidence']
 
     connect() {
         console.log('connected zf controller');
@@ -72,7 +70,7 @@ export default class extends Controller {
             let res = await fetch('https://api.zerofox.com/2.0/threat_submit/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `${this.foxValue}` },
-                body: JSON.stringify({ "source": `${url}`, "alert_type": "url", "violation": "phishing", "entity_id": "1194602", "request_takedown": false, "notes": "test please ignore" })
+                body: JSON.stringify({ "source": `${url}`, "alert_type": "url", "violation": "phishing", "entity_id": "1194602", "request_takedown": false, "notes": "For review" })
             })
             let data = await res.json();
             console.log(data);
@@ -162,6 +160,27 @@ export default class extends Controller {
             console.log(data);
         } catch (error) {
             console.log(error.message);
+        }
+    }
+
+    // @dev This allows grabbing a new temp download url for evidene that is over limit for presigned url timeframe (see ioc controller)
+    async presignedUrl(e) {
+        e.preventDefault();
+        const evidenceUrl = this.evidenceTarget.href
+        const parts = upload_file_url.split("?");
+        const key = parts[0].split("/").pop();
+        console.log("Object Key:", key);
+
+        try {
+            let res = await fetch(`/download_presigned?key=${key}`, {
+                method: 'GET'
+            });
+            const data = await res.json();
+            console.log("Download url is: ", data.download_url);
+            this.evidenceTarget.href = data.download_url;
+
+        } catch (error) {
+            console.log(error);
         }
     }
 

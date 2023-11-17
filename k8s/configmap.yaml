@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scam-hitlist-config
+data:
+  POSTGRES_HOST: "mouse.db.elephantsql.com"
+  DB_PORT: "5432"
+  POSTGRES_USER: "rzwjemeq"

@@ -10,6 +10,9 @@ application.register("flash", FlashController)
 import NavbarController from "./navbar_controller"
 application.register("navbar", NavbarController)
 
+import PresignedController from "./presigned_controller"
+application.register("presigned", PresignedController)
+
 import TableController from "./table_controller"
 application.register("table", TableController)
 

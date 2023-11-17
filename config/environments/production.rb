@@ -5,6 +5,7 @@ require 'active_support/core_ext/integer/time'
 Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'http://TODO_PUT_YOUR_DOMAIN_HERE' }
   # Settings specified here will take precedence over those in config/application.rb.
+  config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -21,7 +22,7 @@ Rails.application.configure do
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
+  config.require_master_key = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -41,7 +42,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :cloudinary
+  # config.active_storage.service = :cloudinary
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil

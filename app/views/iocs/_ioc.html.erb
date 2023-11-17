@@ -46,7 +46,11 @@
         </p>
       <% end %>
     <% end %>
-    <%= link_to "Go to: #{ioc.url}", ioc.url, target: "_blank", class: 'card-link' %>
+    <% if ioc.url.include?("http") %>
+      <a href='<%= ioc.url.strip %>' target="_blank" class='card-link' > Go to: <%= ioc.url.strip %></a>
+    <% else %>
+      <a href='http://<%= ioc.url.strip %>' target="_blank" class='card-link' > Go to: <%= ioc.url.strip %></a>
+    <% end %>
   <% end %>
   </div>
 </div>

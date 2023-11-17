@@ -4,7 +4,7 @@ require 'json'
 require "uri"
 
 class Ioc < ApplicationRecord
-  before_save :add_protocol_to_url
+  # before_save :add_protocol_to_url
   before_save :set_removed_date, if: :status_changed_to_resolved?
   enum :status, { added: 0, reported: 1, resolved: 2, official_url: 3, watchlist: 4 }
   enum :zf_status, { not_sub_zf: 0, submitted_zf: 1 } # Used for buttons on show page
@@ -71,10 +71,12 @@ class Ioc < ApplicationRecord
     self.removed_date ||= Date.current
   end
 
-  def add_protocol_to_url
-    return unless url.present? && !url.start_with?('http://', 'https://')
-
-    self.url = "http://#{url}"
-  end
+  # def add_protocol_to_url
+  #   if self.url.present? && !self.url.start_with?('http://', 'https://')
+  #     self.url = "http://#{url}"
+  #   else
+  #     return
+  #   end
+  # end
 
 end

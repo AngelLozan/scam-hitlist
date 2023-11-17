@@ -129,10 +129,8 @@ export default class extends Controller {
         button.setAttribute('data-bs-dismiss', 'alert');
 
         flashElement.appendChild(button);
-        // Append the flash message to the page
         document.body.appendChild(flashElement);
 
-        // Remove the flash message after a certain duration (e.g., 5000 milliseconds)
         setTimeout(() => {
             flashElement.remove();
         }, 5000);

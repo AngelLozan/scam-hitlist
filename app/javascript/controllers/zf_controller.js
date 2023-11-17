@@ -56,9 +56,11 @@ export default class extends Controller {
             if (response.pt_status === 'submitted_pt') {
                 this.ptbtnTarget.innerText = 'Submitted!'
                 this.ptbtnTarget.disabled = true;
+                this.displayFlashMessage('Opened your email client to send a message 👍','success');
             }
         } catch (error) {
             console.log(error.message);
+            this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
         }
     }
 
@@ -90,45 +92,27 @@ export default class extends Controller {
                     if (response.zf_status === 'submitted_zf') {
                         this.zfbtnTarget.innerText = 'Submitted!'
                         this.zfbtnTarget.disabled = true;
+                        this.displayFlashMessage('Successfully submitted IOC to ZeroFox ✅','success');
                     }
                 } catch (error) {
                     console.log(error.message);
+                    this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
                 }
 
             }
 
         } catch (error) {
             console.log(error.message);
+            this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
         }
     }
 
     async postCAIOC(e) {
         e.preventDefault();
-        // const url = e.currentTarget.getAttribute('data-url');
         const id = e.currentTarget.getAttribute('data-id');
-        // const requestBody = [
-        //   {
-        //     "addresses": [
-        //       {
-        //         "domain": `${url}`
-        //       }
-        //     ],
-        //     "agreedToBeContactedData": {
-        //       "agreed": true
-        //     },
-        //     "scamCategory": "PHISHING",
-        //     "description": "Phishing site"
-        //   }
-        // ];
+       
         try {
-            // Patch to ioc/ca (body from above)
-            // Response from controller then set the button as same below.
-            // let res = await fetch('https://api.chainabuse.com/v0/reports/batch', {
-            //   method: 'POST',
-            //   headers: {'content-type':'application/json', 'accept': 'application/json', 'authorization': `${this.caValue}`},
-            //   body: JSON.stringify(requestBody)
-            // })
-            // let data = await res.json();
+            
             let res = await fetch(`/ca/${id}`, {
                 method: 'GET',
                 headers: { "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken }
@@ -152,14 +136,17 @@ export default class extends Controller {
                     if (response.ca_status === 'submitted_ca') {
                         this.cabtnTarget.innerText = 'Submitted!'
                         this.cabtnTarget.disabled = true;
+                        this.displayFlashMessage('Successfully submitted IOC to ChainAbuse ✅','success');
                     }
                 } catch (error) {
                     console.log(error.message);
+                    this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
                 }
             }
             console.log(data);
         } catch (error) {
             console.log(error.message);
+            this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
         }
     }
 
@@ -181,6 +168,7 @@ export default class extends Controller {
 
         } catch (error) {
             console.log(error);
+            this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
         }
     }
 
@@ -190,9 +178,32 @@ export default class extends Controller {
         try {
             await navigator.clipboard.writeText(url);
             window.open('https://centralops.net/co/', "_blank")
+            this.displayFlashMessage('CentralOps opened in new tab 👀','success');
         } catch (error) {
             console.log(error.message);
+            this.displayFlashMessage(`Something went wrong : ${error.message}`,'alert_warning');
         }
+    }
+
+    displayFlashMessage(message, type) {
+        const flashElement = document.createElement('div');
+        flashElement.className = `alert alert-${type} alert-dismissible fade show m-1`;
+        flashElement.role = 'alert';
+        flashElement.setAttribute('data-controller', 'flash');
+        flashElement.textContent = message;
+
+        const button = document.createElement('button');
+        button.className = 'btn-close';
+        button.setAttribute('data-bs-dismiss', 'alert');
+
+        flashElement.appendChild(button);
+        // Append the flash message to the page
+        document.body.appendChild(flashElement);
+
+
+        setTimeout(() => {
+            flashElement.remove();
+        }, 5000);
     }
 
 

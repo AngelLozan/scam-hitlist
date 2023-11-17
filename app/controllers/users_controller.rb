@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
   def show
     authorize @user
+    @current_user = current_user
   end
 
   def new
@@ -17,8 +18,16 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    @users = policy_scope(User)
+    @users = @users
     authorize @user
-    @user.destroy
+    if @users.count == 1 && @user.is_brand_protector?
+      puts '>>>>>> LAST ADMIN <<<<<<<<'
+      redirect_to users_path, notice: "Must be at least one admin user"
+      return
+    else
+      @user.destroy
+    end
 
     respond_to do |format|
       format.html { redirect_to root_path, notice: "User was successfully destroyed." }

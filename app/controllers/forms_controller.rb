@@ -13,8 +13,8 @@ class FormsController < ApplicationController
 
 
   def new
-    authorize @form
     @form = Form.new
+    authorize @form
   end
 
 
@@ -24,8 +24,8 @@ class FormsController < ApplicationController
 
 
   def create
-    authorize @form
     @form = Form.new(form_params)
+    authorize @form
 
     respond_to do |format|
       if @form.save

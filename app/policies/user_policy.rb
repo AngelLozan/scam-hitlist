@@ -14,7 +14,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def create?
-   user.is_brand_protector?
+    user.is_brand_protector?
   end
 
   def edit?

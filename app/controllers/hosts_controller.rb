@@ -11,8 +11,8 @@ class HostsController < ApplicationController
   end
 
   def new
-    authorize @host
     @host = Host.new
+    authorize @host
   end
 
   def edit
@@ -21,8 +21,8 @@ class HostsController < ApplicationController
 
   # POST /hosts or /hosts.json
   def create
-    authorize @host
     @host = Host.new(host_params)
+     authorize @host
 
     respond_to do |format|
       if @host.save

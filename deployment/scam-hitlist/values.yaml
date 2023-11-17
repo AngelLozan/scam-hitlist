@@ -1,0 +1,77 @@
+# Default values for deployment, this is necessary because we're using a unified helm subchart
+deployment:
+  # This is the name of the deployment, this is used in a _lot_ of places in the helm charts so lets just specify it
+  name: scam-hitlist
+
+  # Service definitions
+  service:
+    targetPort: 3000
+
+  image:
+    repository: 534042329084.dkr.ecr.us-east-1.amazonaws.com/dev-tools/scam-hitlist
+
+  serviceAccount:
+    enabled: true
+
+  # Environment variables
+  globalEnvs:
+    - name: AWS_SECRETS_NAMES
+      value: scam-hitlist-rails-master-key,scam-hitlist-db,scam-hitlist-secret
+
+  # livenessProbes are used to determine when to restart a container
+  # Only specify the values you need to override from the defaults
+  livenessProbe:
+    enabled: false
+
+  # readinessProbes are used to determine when a container is ready to start accepting traffic
+  # Only specify the values you need to override from the defaults
+  readinessProbe:
+    enabled: false
+
+  # deployment container resource requests/limits
+  # this is set VERY low by default, to be aggressive above resource limiting, please override this if necessary
+  # Note: Limits are HARD Limits
+  #       Requests are "soft" limits and are what affects HPA (autoscaling) aggressiveness if HPA is enabled
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: dev-tools
+    hosts:
+      - scam-hitlist.exodus-local.io
+
+  # If you want to enable autoscaling and 3 replicas
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 30
+
+  nodeSelector:
+    kubernetes.io/arch: arm64
+
+  # because we want it to run on arm64 nodes as well
+  tolerations:
+    - key: "kubernetes.io/arch"
+      operator: "Equal"
+      value: "arm64"
+      effect: "NoExecute"
+
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: RuntimeDefault
+
+  volumes:
+    - name: tmp
+      emptyDir: {}
+
+  volumeMounts:
+    - name: tmp
+      mountPath: /home/ruby/build/tmp

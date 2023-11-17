@@ -1,0 +1,6 @@
+dependencies:
+- alias: deployment
+  repository: s3://exodus-ops-ue1/charts
+  # repository: file://../../../../helm-charts/charts/deployment
+  name: deployment
+  version: ~1.0.0

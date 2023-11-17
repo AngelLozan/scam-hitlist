@@ -1,72 +1,53 @@
-FROM --platform=linux/amd64 ruby:3.1.2-alpine3.15
+# syntax=docker/dockerfile:1
+# Secrets Manager
+ARG SECRETS_MANAGER_GO_VERSION=v1.4.0
+FROM 534042329084.dkr.ecr.us-east-1.amazonaws.com/infrastructure/secrets-manager-go:${SECRETS_MANAGER_GO_VERSION} as secrets-manager
 
-# Install Git
-RUN apk add --no-cache git
+# Builder and Runner image
+FROM 534042329084.dkr.ecr.us-east-1.amazonaws.com/exodus/base-docker-images:amazonlinux2023-ruby3.1
 
-RUN gem install dotenv
+ENV \
+  RAILS_LOG_TO_STDOUT="1" \
+  RAILS_SERVE_STATIC_FILES="true" \
+  RAILS_ENV="production" \
+  BUNDLE_WITHOUT="test"
 
-# Puppeteer Tooling
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    nodejs \
-    yarn \
-    libpq \
-    libpq-dev \
-    postgresql-client \
-    xdg-utils \
-    at-spi2-atk \
-    libdrm \
-    libxkbcommon \
-    libxcomposite \
-    libxdamage \
-    libxfixes \
-    libxrandr \
-    build-base
+COPY --from=secrets-manager --chmod=755 /secrets-manager-go /bin/secrets-manager-go
 
+#Install Node20, and psql-devel
+RUN --mount=type=cache,target=/var/cache/yum \
+  yum install -y https://rpm.nodesource.com/pub_20.x/nodistro/repo/nodesource-release-nodistro-1.noarch.rpm && \
+  yum install -y nodejs --setopt=nodesource-nodejs.module_hotfixes=1 && \
+  npm install -g yarn npm && \
+  yum install -y postgresql-devel
 
-ENV APP_HOME /workdir
-RUN mkdir ${APP_HOME}
-WORKDIR ${APP_HOME}
+RUN groupadd --gid 1000 ruby && \
+  useradd --uid 1000 --gid ruby --shell /bin/bash --create-home ruby
 
+WORKDIR /home/ruby/build
 
-# Change env to production if needed.
+COPY --chown=ruby:ruby package.json yarn.lock Gemfile Gemfile.lock ./
 
-ENV RAILS_LOG_TO_STDOUT="1" \
-    RAILS_SERVE_STATIC_FILES="true" \
-    RAILS_ENV="production" \
-    BUNDLE_WITHOUT="test" \
-    SECRET_KEY_BASE=1
+# Install dependencies
+RUN yarn install --frozen-lockfile && \
+  gem install bundler -v 2.4.18 && \
+  gem install dotenv && \
+  bundle install --jobs 20 --retry 5
 
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-ENV CHROMIUM_FLAGS "--no-sandbox --disable-setuid-sandbox"
+COPY --chown=ruby:ruby . .
 
-# RUN yarn add puppeteer@13.5.0
+RUN yarn build && \
+  bundle exec bootsnap precompile --gemfile app/ lib/ 
 
-COPY Gemfile ${APP_HOME}/Gemfile
-COPY Gemfile.lock ${APP_HOME}/Gemfile.lock
+RUN --mount=type=secret,id=rails_master_key,dst=/root/rails_master_key \
+  export RAILS_MASTER_KEY=$(cat /root/rails_master_key) && \
+  bin/rails assets:precompile
 
-COPY Gemfile Gemfile.lock ./
+USER ruby
 
+COPY --chown=ruby:ruby container-entrypoint.sh /usr/local/bin/container-entrypoint.sh
 
-RUN gem install bundler -v 2.4.13 && bundle install --jobs 20 --retry 5
+# # Uncomment below for running only as docker container. Responsible for starting redis and db.
+# # ENTRYPOINT ["sh", "./entrypoint.sh"] 
 
-COPY . /workdir
-
-RUN yarn install && yarn build
-
-RUN bundle exec bootsnap precompile --gemfile app/ lib/
-
-# RUN bundle exec rake assets:precompile
-RUN bin/rails assets:precompile
-
-EXPOSE 8080
-
-# Uncomment below for running only as docker container. Responsible for starting redis and db.
-ENTRYPOINT ["sh", "./entrypoint.sh"] 
-
-CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
+ENTRYPOINT ["/usr/local/bin/container-entrypoint.sh"]

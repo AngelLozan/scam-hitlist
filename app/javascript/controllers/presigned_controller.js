@@ -3,7 +3,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 
 export default class extends Controller {
-    static targets = ["form", "fileInput", "fileUrl", "link"]
+    static targets = ["form", "fileInput", "fileUrl", "link", "alert"]
 
     connect() {
         console.log("Controller connected");
@@ -52,40 +52,43 @@ export default class extends Controller {
     }
 
     async download(key) {
-      try {
-        let res = await fetch(`/download_presigned?key=${key}`, {
-          method: 'GET'
-        });
-        const data = await res.json();
-        console.log("Download url is: ", data.download_url);
-        return (data.download_url);
-      } catch(e) {
-        console.log(e);
-      }
+        try {
+            let res = await fetch(`/download_presigned?key=${key}`, {
+                method: 'GET'
+            });
+            const data = await res.json();
+            console.log("Download url is: ", data.download_url);
+            return (data.download_url);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     async handleSubmit(event) {
         event.preventDefault();
         try {
-            const path = this.formTarget.action
-            const fileValue = this.fileInputTarget
-            const file = fileValue.files[0]
-            const upload_file_url = this.fileUrlTarget.getAttribute("data-url");
+            const path = this.formTarget.action;
+            const fileValue = this.fileInputTarget;
+            let formData;
 
-            // Get object key to create download presigned url
-            const parts = upload_file_url.split("?");
-            const objectKey = parts[0].split("/").pop();
-            console.log("Object Key:", objectKey);
-            const download = await this.download(objectKey);
-
-            this.fileUrlTarget.value = download
-            const formData = await new FormData(this.formTarget);
-
-
-            // Upload file to S3 Bucket
-            console.log("Calling PUT using presigned URL with client");
-            await this.put(upload_file_url, file);
-            console.log("\nDone. Check your S3 console.");
+            if (fileValue.files.length > 0) {
+                const file = fileValue.files[0];
+                const upload_file_url = this.fileUrlTarget.getAttribute("data-url");
+                // Get object key to create download presigned url
+                const parts = upload_file_url.split("?");
+                const objectKey = parts[0].split("/").pop();
+                console.log("Object Key:", objectKey);
+                const download = await this.download(objectKey);
+                this.fileUrlTarget.value = download
+                formData = await new FormData(this.formTarget);
+                // Upload file to S3 Bucket
+                console.log("Calling PUT using presigned URL with client");
+                await this.put(upload_file_url, file);
+                console.log("\nDone. Check your S3 console.");
+            } else {
+                console.log("NO FILE");
+                formData = await new FormData(this.formTarget);
+            }
 
             // Post form data and create IOC with download url attached so evidence can be accessed.
             let res = await fetch(path, {
@@ -96,14 +99,43 @@ export default class extends Controller {
 
             if (data.show_url) {
                 window.location.href = data.show_url;
+                this.displayFlashMessage(data.alert_success, 'success');
+            } else if (data.errors){
+                console.log("Data:", data);
+                this.displayFlashMessage(data.errors, 'success');
+                this.formTarget.reset();
             } else {
                 console.log("Data:", data);
+                this.displayFlashMessage(data.alert_warning, 'warning');
             }
 
         } catch (e) {
             console.log(e);
         }
 
+    }
+
+   
+
+    displayFlashMessage(message, type) {
+        const flashElement = document.createElement('div');
+        flashElement.className = `alert alert-${type} alert-dismissible fade show m-1`;
+        flashElement.role = 'alert';
+        flashElement.setAttribute('data-controller', 'flash');
+        flashElement.textContent = message;
+
+        const button = document.createElement('button');
+        button.className = 'btn-close';
+        button.setAttribute('data-bs-dismiss', 'alert');
+
+        flashElement.appendChild(button);
+        // Append the flash message to the page
+        document.body.appendChild(flashElement);
+
+        // Remove the flash message after a certain duration (e.g., 5000 milliseconds)
+        setTimeout(() => {
+            flashElement.remove();
+        }, 5000);
     }
 
 

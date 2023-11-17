@@ -36,12 +36,13 @@ WORKDIR ${APP_HOME}
 
 
 # Change env to production if needed.
-ARG RAILS_MASTER_KEY
+# ARG RAILS_MASTER_KEY
 ENV RAILS_LOG_TO_STDOUT="1" \
     RAILS_SERVE_STATIC_FILES="true" \
     RAILS_ENV="production" \
     BUNDLE_WITHOUT="test" \
-    RAILS_MASTER_KEY=$RAILS_MASTER_KEY
+    SECRET_KEY_BASE=1
+    # RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ENV CHROMIUM_FLAGS "--no-sandbox --disable-setuid-sandbox"
@@ -62,11 +63,12 @@ RUN yarn install && yarn build
 
 RUN bundle exec bootsnap precompile --gemfile app/ lib/
 
-RUN bundle exec rake assets:precompile
+# RUN bundle exec rake assets:precompile
+RUN bin/rails assets:precompile --trace
 
 EXPOSE 8080
 
-# Uncomment below for running only as docker container. Responsible for starting redis and db.
-# ENTRYPOINT ["sh", "./entrypoint.sh"] 
+# Uncomment below for running only as docker container with docker-compose build/up. Responsible for starting redis and db.
+ENTRYPOINT ["sh", "./entrypoint.sh"] 
 
 CMD ["./bin/rails", "server", "-b", "0.0.0.0"]

@@ -189,32 +189,31 @@ class IocsController < ApplicationController
   end
   
 
-  # POST /iocs or /iocs.json
   def create
     @ioc = Ioc.new(ioc_params)
     authorize @ioc
+    @iocs = policy_scope(Ioc)
+    @iocs = @iocs
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
 
-    all_urls = Ioc.pluck(:url)
+    all_urls = @iocs.pluck(:url)
     new_url = @ioc.url.present? ? "http://#{@ioc.url}" : ""
 
     respond_to do |format|
       if @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
-        format.html do
-          redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been added 👍"
-        end
-        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        # format.html do
+        #   redirect_to iocs_url, status: :unprocessable_entity, alert_success: "This has already been added 👍"
+        # end
+        format.json { render json: { errors: ["This has already been added 👍"] }, status: :unprocessable_entity, alert_success: "This has already been added 👍" }
       elsif @ioc.save
-        # format.html { redirect_to ioc_url(@ioc), alert_success: "A record was successfully created ✅" }
-        # format.json { render :show, status: :created, location: @ioc }
-        format.json { render json: { ioc: @ioc, show_url: ioc_url(@ioc) }, status: :created }
+        format.json { render json: { ioc: @ioc, show_url: ioc_url(@ioc), alert_success: "A record was successfully created ✅" }, status: :created }
       else
-        format.html { render :new, status: :unprocessable_entity, alert_warning: "Something is wrong 🤔" }
-        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        format.json { render json: { errors: @ioc.errors.full_messages, alert_warning: "Something is wrong/missing (URL?) 🤔" }, status: :unprocessable_entity }
       end
     end
   end
+
 
   def simple_create
     @ioc = Ioc.new(ioc_simple_params)
@@ -264,11 +263,11 @@ class IocsController < ApplicationController
   def update
     @hosts = policy_scope(Host)
     @forms = policy_scope(Form)
+    authorize @ioc
     # @forms = Form.all
     # @hosts = Host.all
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
-    authorize @ioc
 
     respond_to do |format|
       if @ioc.update(ioc_params)

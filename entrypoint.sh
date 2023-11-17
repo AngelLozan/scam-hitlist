@@ -16,7 +16,7 @@ echo "Assets precompiled! Pipeline ready."
 echo "Postgres is up and running!"
 
 # If the database exists, migrate. Otherwise setup (create and migrate)
-bundle exec rake db:migrate 2>/dev/null || bundle exec rake db:create db:migrate
+bundle exec rake db:migrate db:seed 2>/dev/null || bundle exec rake db:create db:migrate db:seed
 echo "Postgres database has been created & migrated!"
 
 # Remove a potentially pre-existing server.pid for Rails.

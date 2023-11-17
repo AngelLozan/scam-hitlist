@@ -1,4 +1,5 @@
-<%= simple_form_for(@ioc, url: simple_create_iocs_path) do |f| %>
+
+<%= simple_form_for(@ioc, url: simple_create_iocs_path, html: { data: { presigned_target: "form", action: "submit->presigned#handleSubmit" }}) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 

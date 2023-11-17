@@ -34,6 +34,7 @@ export default class extends Controller {
                         'Content-Length': new Blob([data]).size.toString(),
                     },
                     body: data,
+                    mode: 'cors',
                 })
                 .then((response) => {
                     if (!response.ok) {
@@ -111,7 +112,7 @@ export default class extends Controller {
 
         } catch (e) {
             console.log(e);
-            this.displayFlashMessage("Was unable to connect to S3 bucket to get resource url", 'warning');
+            this.displayFlashMessage(`🤔 Something went wrong: ${e.message}`, 'warning');
         }
 
     }

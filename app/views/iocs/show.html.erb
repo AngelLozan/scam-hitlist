@@ -10,10 +10,41 @@
 
         <% if policy(Ioc).ca? %>
           <div class="d-flex flex-column my-3 justify-content-around">
-            <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">Submit to ZF API</button>
-            <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="cabtn" data-status="<%= @ioc.ca_status %>">Submit to Chain Abuse API</button>
+
+            <button class="btn btn-primary mb-3" data-action="click->zf#modal" data-status='<%= @ioc.zf_status %>' data-zf-target="zfbtn">
+              Submit to ZF API
+            </button>
+
+        
+            <div data-zf-target="modal" class="modal">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <span data-zf-target="close" data-action="click->zf#modalClose" class="close_modal">&times;</span>
+                  <h2></h2>
+                </div>
+                <div class="modal-body">
+                  <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="phishing" data-zf-target="phishing">Phishing</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="spoofing" data-zf-target="spoofing">Spoofing</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="impersonation" data-zf-target="imp">Impersonation</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="rogue app" data-zf-target="rouge">Rogue App</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="trademark" data-zf-target="tm">Trademark</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="copyright" data-zf-target="copyright">Copyright</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="malware" data-zf-target="malware">Malware</button>
+                  <button data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="other" data-zf-target="other">Other</button>
+                </div>
+                <div class="modal-footer">
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary mb-3" data-action="click->zf#postCAIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-zf-target="cabtn" data-status="<%= @ioc.ca_status %>">
+              Submit to Chain Abuse API
+            </button>
+            
             <% mailto = "mailto:phish@phishtank.com?subject=Phishing%20Link%2C%20please%20add%20to%20tank&body=Hello%2C%20%0A%0ASITE%3A%20#{@ioc.url.gsub('.', '[.]')}%20%0A%0AThis%20is%20a%20scam%20phishing%20site%20that%20is%20not%20affiliated%20with%20Exodus%20Movement%20Inc.%20or%20our%20crypto%20wallet.%20Please%20add%20it%20to%20the%20tank.%20Thank%20you%21" %>
-            <button class="btn btn-primary mb-3" data-url=<%= mailto %> data-action="click->zf#postPT" data-zf-target="ptbtn" data-status="<%= @ioc.pt_status %>" data-id="<%= @ioc.id %>">Submit to PhishTank</button>
+            <button class="btn btn-primary mb-3" data-url=<%= mailto %> data-action="click->zf#postPT" data-zf-target="ptbtn" data-status="<%= @ioc.pt_status %>" data-id="<%= @ioc.id %>">
+              Submit to PhishTank
+            </button>
             
             <% if @ioc.file_url && @ioc.created_at > 7.days.ago %>
               <button class="btn btn-primary mb-3" data-action="click->zf#presignedUrl" >New Evidence Url</button>

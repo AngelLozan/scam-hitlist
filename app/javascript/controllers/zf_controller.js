@@ -40,12 +40,12 @@ export default class extends Controller {
     }
 
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            this.modalTarget.style.display = "none";
-        }
-    }
+    // // When the user clicks anywhere outside of the modal, close it
+    // window.onclick = function(event) {
+    //     if (event.target == modal) {
+    //         this.modalTarget.style.display = "none";
+    //     }
+    // }
 
     modal() {
         this.modalTarget.style.display = 'block';

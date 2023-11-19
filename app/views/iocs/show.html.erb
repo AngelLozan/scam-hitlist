@@ -19,18 +19,19 @@
             <div data-zf-target="modal" class="modal">
               <div class="modal-content">
                 <div class="modal-header">
+                  <h3 class="mt-3">Please select type of violation ⬇⬇⬇</h3>
                   <span data-zf-target="close" data-action="click->zf#modalClose" class="close_modal">&times;</span>
-                  <h2></h2>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body mt-3">
                   <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="phishing" data-zf-target="phishing">Phishing</button>
-                  <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="spoofing" data-zf-target="spoofing">Spoofing</button>
+                  <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="fraud" data-zf-target="fraud">Fraud</button>
                   <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="impersonation" data-zf-target="imp">Impersonation</button>
-                  <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="rogue app" data-zf-target="rouge">Rogue App</button>
+                  <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="rogue_app" data-zf-target="rouge">Rogue App</button>
                   <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="trademark" data-zf-target="tm">Trademark</button>
                   <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="copyright" data-zf-target="copyright">Copyright</button>
                   <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="malware" data-zf-target="malware">Malware</button>
                   <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="other" data-zf-target="other">Other</button>
+                  <button class="btn btn-primary mb-3" data-action="click->zf#postZFIOC" data-url='<%= @ioc.url %>' data-id='<%= @ioc.id %>' data-custom-id="email" data-zf-target="email">Email</button>
                 </div>
                 <div class="modal-footer">
                 </div>
@@ -46,7 +47,7 @@
               Submit to PhishTank
             </button>
             
-            <% if @ioc.file_url && @ioc.created_at > 7.days.ago %>
+            <% if @ioc.file_url && @ioc.created_at < 7.days.ago %>
               <button class="btn btn-primary mb-3" data-action="click->zf#presignedUrl" >New Evidence Url</button>
             <% end %>
             

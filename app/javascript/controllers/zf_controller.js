@@ -55,51 +55,63 @@ export default class extends Controller {
         this.modalTarget.style.display = 'none';
     }
 
+    async postEmailEvidence(_alert_id) {
+        const alertId = _alert_id;
+
+        try {
+            let res1 = await fetch(this.evidenceTarget.href);
+            console.log("SUCCESSFUL DOWNLOAD");
+            let download = await res1.text();
+            const formData = new FormData();
+            const blob = new Blob([download], { type: 'text/plain' });
+            formData.append('file', blob, 'evidence.eml');
+
+            try {
+                let res2 = await fetch(`https://api.zerofox.com/2.0/threat_submit/alerts/${alertId}/attachments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `${this.foxValue}` },
+                    body: formData,
+                    // body: JSON.stringify({ 'alert_id': `${alertId}`, 'file': `${formData}`}),
+                })
+                let data = await res2.json();
+                console.log(data)
+                console.log("SUCCESSFUL SUBMIT FILE TO ZF");
+            } catch (e) {
+                console.log("FAILED TO SUBMIT FILE TO ZF:", e);
+                this.displayFlashMessage(`Something went wrong in ZF file submission: ${e.message}`, 'alert_warning');
+            }
+
+        } catch (e) {
+            console.log("FAILED TO DOWNLOAD EVIDENCE FILE AND CONVERT:", e);
+            this.displayFlashMessage(`Something went wrong in presigned url download: ${e.message}`, 'alert_warning');
+        }
+    }
+
     async postZFIOC(e) {
         e.preventDefault();
-        const url = e.currentTarget.getAttribute('data-url');
-        const id = e.currentTarget.getAttribute('data-id');
-        const violation = e.currentTarget.getAttribute('data-custom-id');
-        let type;
-
-        if (violation === "spoofing") {
-            type = 'email'
+        let url = e.currentTarget.getAttribute('data-url');
+        url = url.trim();
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(url) || url.startsWith('http') ){
+            url = url
         } else {
-            type = 'url'
+            url = `http://${url}`;
         }
 
-        // @dev Implement file attachement from IOC evidence as condition if email
+        const id = e.currentTarget.getAttribute('data-id');
+        const alertDesignation = e.currentTarget.getAttribute('data-custom-id');
+        let type;
+        let violation;
+        let alertID;
 
-        // /threat_submit/alerts/{alert_id}/attachments
+        if (alertDesignation === "email") {
+            type = 'email';
+            violation = 'phishing';
+        } else {
+            type = 'url';
+            violation = alertDesignation;
+        }
 
-        // const alertId = 123; // Replace with your actual alert ID
-        // const fileInput = document.getElementById('file-input'); // Replace with the ID or reference of your file input element
-
-        // // Assuming you have an input element of type 'file'
-        // const file = fileInput.files[0];
-
-        // // Create FormData object and append the file
-        // const formData = new FormData();
-        // formData.append('file', file);
-
-        // // Make the fetch request
-        // fetch(`https://api.example.com/threat_submit/alerts/${alertId}/attachments`, {
-        //   method: 'POST',
-        //   body: formData,
-        // })
-        //   .then(response => {
-        //     if (!response.ok) {
-        //       throw new Error(`Request failed with status ${response.status}`);
-        //     }
-        //     return response.json();
-        //   })
-        //   .then(data => {
-        //     console.log('Attachment added successfully:', data);
-        //   })
-        //   .catch(error => {
-        //     console.error('Error adding attachment:', error);
-        //   });
-
+        this.modalClose();
 
         try {
             let res = await fetch('https://api.zerofox.com/2.0/threat_submit/', {
@@ -109,9 +121,9 @@ export default class extends Controller {
             })
             let data = await res.json();
             console.log(data);
+
             if (data.alert_id) {
-                this.zfbtnTarget.innerText = 'Submitted!'
-                this.zfbtnTarget.disabled = true;
+                alertID = data.alert_id;
                 // Update the status via the controller to reviewed.
                 try {
                     let setStatus = await fetch(`/iocs/${id}`, {
@@ -127,6 +139,16 @@ export default class extends Controller {
                         this.zfbtnTarget.disabled = true;
                         this.displayFlashMessage('Successfully submitted IOC to ZeroFox ✅', 'success');
                     }
+                    // @dev Implement once ZF API endpoint working
+                    // if (type === 'email') {
+                    //     try {
+                    //         let submitEvidence = await this.postEmailEvidence(alertID);
+                    //         this.displayFlashMessage('Submitting email evidence, this may take a moment... 🕘', 'info');
+                    //         console.log("Submitting evidence")
+                    //     } catch (e) {
+                    //         console.log("Failed to submit evidence", e);
+                    //     }
+                    // }
                 } catch (error) {
                     console.log(error.message);
                     this.displayFlashMessage(`Something went wrong : ${error.message}`, 'alert_warning');

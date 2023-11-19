@@ -226,6 +226,7 @@ class IocsController < ApplicationController
   def simple_create
     @ioc = Ioc.new(ioc_simple_params)
     authorize @ioc
+    @ioc = @ioc
     @ioc.url = sanitize_url(@ioc.url)
     @ioc.comments = sanitize_comments(@ioc.comments)
 
@@ -235,35 +236,35 @@ class IocsController < ApplicationController
 
     respond_to do |format|
       if @ioc.url.present? && official_urls.any? { |u| u.include? new_url }
-        format.html do
-          redirect_to root_path, status: :unprocessable_entity,
-                                 alert_primary: "This is owned by Exodus, please check with the team 😎"
-        end
-        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        # format.html do
+        #   redirect_to root_path, status: :unprocessable_entity,
+        #                          alert_primary: "This is owned by Exodus, please check with the team 😎"
+        # end
+        format.json { render json: { ioc: @ioc, root_url: root_path, alert_success: "This is owned by Exodus, please check with the team 😎" }, status: :ok }
         puts "\n OFFICIAL \n"
       elsif @ioc.url.present? && all_urls.any? { |u| u.include? new_url }
-        format.html do
-          redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been reported 👍"
-        end
-        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        # format.html do
+        #   redirect_to root_path, status: :unprocessable_entity, alert_success: "This has already been reported 👍"
+        # end
+        format.json { render json: { ioc: @ioc, root_url: root_path, alert_success: "This has already been reported 👍" }, status: :ok }
         puts "\n JA \n >>>>>#{new_url}<<<< \n"
       elsif verify_recaptcha(model: @ioc) && @ioc.save
-        format.html do
-          redirect_to root_path, alert_success: "A record was successfully created, thanks! We'll review this shortly ✅"
-        end
-        format.json { render :show, status: :created, location: @ioc }
+        # format.html do
+        #   redirect_to root_path, alert_success: "A record was successfully created, thanks! We'll review this shortly ✅"
+        # end
+        format.json { render json: { ioc: @ioc, root_url: root_path, alert_success: "A record was successfully created, thanks! We'll review this shortly ✅" }, status: :created }
       elsif !@ioc.url.present?
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "First field is required 👀" }
-        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        # format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "First field is required 👀" }
+        format.json { render json: { errors: @ioc.errors, alert_warning: "First field is required 👀" },status: :unprocessable_entity }
       elsif !verify_recaptcha(model: @ioc)
-        format.html do
-          redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖"
-        end
-        format.json { render json: object.errors, status: :unprocessable_entity }
+        # format.html do
+        #   redirect_to root_path, status: :unprocessable_entity, alert_danger: "Please complete recaptcha 🤖"
+        # end
+        format.json { render json: { captcha_errors: @ioc.errors, alert_warning: "Please complete recaptcha 🤖" }, status: :unprocessable_entity }
         puts "\n CAPTCHA \n >>>>>#{new_url}<<<< \n"
       else
-        format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Something is missing 🤔" }
-        format.json { render json: @ioc.errors, status: :unprocessable_entity }
+        # format.html { redirect_to root_path, status: :unprocessable_entity, alert_warning: "Something is missing 🤔" }
+        format.json { render json: { errors: @ioc.errors, alert_warning: "Something is missing 🤔" },status: :unprocessable_entity }
       end
     end
   end
@@ -359,7 +360,7 @@ class IocsController < ApplicationController
   end
 
   def ioc_simple_params
-    params.require(:ioc).permit(:url, :comments, :file)
+    params.require(:ioc).permit(:url, :comments, :file_url)
   end
 
   def sort_column

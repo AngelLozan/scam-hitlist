@@ -100,21 +100,24 @@ export default class extends Controller {
             });
             let data = await res.json();
 
-            if (data.show_url) {
-                window.location.href = data.show_url;
+            if (data.root_url) {
+                // window.location.href = data.root_url;
                 this.displayFlashMessage(data.alert_success, 'success');
-            } else if (data.errors){
+                this.formTarget.reset();
+            } else if (data.captcha_errors){
                 console.log("Data:", data);
-                this.displayFlashMessage(data.errors, 'success');
+                this.displayFlashMessage(`${data.captcha_errors.base[0]} 🤖`, 'warning');
                 this.formTarget.reset();
             } else {
                 console.log("Data:", data);
                 this.displayFlashMessage(data.alert_warning, 'warning');
+                this.formTarget.reset();
             }
 
         } catch (e) {
             console.log(e);
             this.displayFlashMessage(`🤔 Something went wrong: ${e.message}`, 'warning');
+            // this.formTarget.reset();
         }
 
     }

@@ -166,7 +166,6 @@ class IocsController < ApplicationController
   def presigned
     @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified
     authorize @ioc
-    bucket_name = "scam-hitlist"
     bucket_name = ENV['BUCKET']
     region = "eu-north-1"
     Aws.config.update(region: region)
@@ -281,7 +280,7 @@ class IocsController < ApplicationController
     respond_to do |format|
       if @ioc.update(ioc_params)
         format.html { redirect_to ioc_url(@ioc), alert_success: "The record was successfully updated." }
-        format.json { render :show, status: :ok, location: @ioc }
+        format.json { render json: { zf_status: 'submitted_zf' }, status: :ok, location: @ioc }
       else
         format.html { render :edit, status: :unprocessable_entity, alert_warning: "Something is missing" }
         format.json { render json: @ioc.errors.full_messages, status: :unprocessable_entity }

@@ -234,8 +234,9 @@ export default class extends Controller {
     // @dev This allows grabbing a new temp download url for evidene that is over limit for presigned url timeframe (see ioc controller)
     async presignedUrl(e) {
         e.preventDefault();
+        const id = e.currentTarget.getAttribute('data-id');
         const evidenceUrl = this.evidenceTarget.href
-        const parts = upload_file_url.split("?");
+        const parts = evidenceUrl.split("?");
         const key = parts[0].split("/").pop();
         console.log("Object Key:", key);
 

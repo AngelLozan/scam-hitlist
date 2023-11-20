@@ -185,6 +185,8 @@ class IocsController < ApplicationController
     @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified.
     authorize @ioc
     key = params[:key]
+    region = "eu-north-1"
+    Aws.config.update(region: region)
     signer = Aws::S3::Presigner.new
     url = signer.presigned_url(:get_object,
                  bucket: ENV['BUCKET'],

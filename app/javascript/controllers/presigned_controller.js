@@ -26,7 +26,7 @@ export default class extends Controller {
         }
     }
 
-// @dev Need to configure CORs via the S3 bucket
+// @dev Need to configure CORs via the S3 bucket to allow below method
     
     put(url, data) {
         return new Promise((resolve, reject) => {

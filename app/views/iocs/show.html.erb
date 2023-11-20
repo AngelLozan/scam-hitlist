@@ -47,7 +47,7 @@
               Submit to PhishTank
             </button>
             
-            <% if @ioc.file_url && @ioc.created_at > 7.days.ago %>
+            <% if @ioc.file_url && @ioc.created_at < 7.days.ago %>
               <button class="btn btn-primary mb-3" data-action="click->zf#presignedUrl" data-id="<%= @ioc.id %>">New Evidence Url</button>
             <% end %>
             

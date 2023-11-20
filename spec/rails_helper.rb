@@ -51,7 +51,7 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers
   config.include FactoryBot::Syntax::Methods
   FactoryBot.find_definitions
-  OmniAuth.config.test_mode = true
+  # OmniAuth.config.test_mode = true
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false

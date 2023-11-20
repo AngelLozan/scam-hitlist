@@ -1,24 +1,34 @@
 # frozen_string_literal: true
 
-FactoryBot.define do
-  factory :auth_hash, class: OmniAuth::AuthHash do
-    initialize_with do
-      OmniAuth::AuthHash.new({
-                               provider:,
-                               uid:,
-                               info: {
-                                 email:
-                               }
-                             })
-    end
 
-    trait :google do
-      provider { 'google_oauth2' }
-      sequence(:uid)
-      email { ENV.fetch('EMAIL', nil) }
-    end
+FactoryBot.define do
+  factory :user do
+    email { "scott.lo@exodus.io" }
+    password { "changeme" }
+    # sequence(:email { |n| "test-#{n.to_s.rjust(3, "0")}@sample.com" }
+    # password { "123456" }
   end
 end
+
+# FactoryBot.define do
+#   factory :auth_hash, class: OmniAuth::AuthHash do
+#     initialize_with do
+#       OmniAuth::AuthHash.new({
+#                                provider:,
+#                                uid:,
+#                                info: {
+#                                  email:
+#                                }
+#                              })
+#     end
+
+#     trait :google do
+#       provider { 'google_oauth2' }
+#       sequence(:uid)
+#       email { ENV.fetch('EMAIL', nil) }
+#     end
+#   end
+# end
 
 #   factory :user do
 #     email { ENV['EMAIL'] }

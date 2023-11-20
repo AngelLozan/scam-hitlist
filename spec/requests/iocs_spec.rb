@@ -1,4 +1,5 @@
 require "rails_helper"
+require_relative "../support/devise"
 require "date"
 require "nokogiri"
 require 'byebug'
@@ -18,9 +19,10 @@ RSpec.describe IocsController, type: :controller do
     end
 
     context "when user is logged in" do
-      it "returns http success" do
-        authenticate # See private method
+      login_user
 
+      it "returns http success" do
+        # authenticate # See private method
         get :index
         expect(response).to have_http_status(:success)
       end
@@ -45,9 +47,10 @@ RSpec.describe IocsController, type: :controller do
   describe "Edit an Ioc" do
     let(:ioc) { Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test", host: "hm-changed", status: 1) }
     let(:host) { Host.create!(name: "hm-changed", email: "hm-changed@vnnic.vn") }
+    login_user
 
     before do
-      authenticate
+      # authenticate
       ioc
       host # @dev This triggers creating of the host
       get :edit, params: { id: ioc.id }
@@ -71,8 +74,10 @@ RSpec.describe IocsController, type: :controller do
 
   describe "Reported route" do
     context "when a user is logged in" do
+      login_user
+
       before do
-        authenticate
+        # authenticate
         Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1)
         Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test", status: 0)
         get :reported
@@ -90,8 +95,9 @@ RSpec.describe IocsController, type: :controller do
 
   describe "2b_reported route" do
     context "when a user is logged in" do
+      login_user
       before do
-        authenticate
+        # authenticate
         Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1)
         Ioc.create!(url: "https://www.google.com", report_method_one: "email", comments: "test", status: 0)
         get :tb_reported
@@ -128,9 +134,10 @@ RSpec.describe IocsController, type: :controller do
   describe "follow-up route" do
     t = DateTime.now - 14
     puts t
+    login_user
 
     before do
-      authenticate
+      # authenticate
       Ioc.create!(url: "https://www.bing.com", report_method_one: "email", comments: "test", status: 1,
                   created_at: t)
       get :follow_up
@@ -146,8 +153,10 @@ RSpec.describe IocsController, type: :controller do
   end
 
   describe "simple_create route" do
+    login_user
+
     before do
-      authenticate
+      # authenticate
     end
 
     it "routes / to iocs#simple_create" do
@@ -169,20 +178,20 @@ end
 private
 
 def authenticate
-  # Stub the OmniAuth behavior
-  OmniAuth.config.test_mode = true
-  OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new(
-    provider: "google",
-    uid: "123456789",
-    info: {
-      email: "test@example.com",
-      name: "John Doe",
-      image: "https://example.com/avatar.jpg",
-    },
-  )
+  # # Stub the OmniAuth behavior
+  # OmniAuth.config.test_mode = true
+  # OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new(
+  #   provider: "google",
+  #   uid: "123456789",
+  #   info: {
+  #     email: "scott.lo@exodus.io",
+  #     name: "Scott Lozano",
+  #     image: "https://example.com/avatar.jpg",
+  #   },
+  # )
 
-  allow(controller).to receive(:authenticate_user!) # Stub Devise's authenticate_user! method
-  allow(controller).to receive(:current_user) { nil } # Mock current_user method to return nil
+  # allow(controller).to receive(:authenticate_user!) # Stub Devise's authenticate_user! method
+  # allow(controller).to receive(:current_user) { nil } # Mock current_user method to return nil
 
-  request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google] # Set the OmniAuth mock auth hash in the request environment
+  # request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google] # Set the OmniAuth mock auth hash in the request environment
 end

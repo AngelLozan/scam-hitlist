@@ -43,6 +43,6 @@ Rails.application.routes.draw do
   root to: 'pages#home'
 
   authenticate :user, ->(user) { user.admin == true } do
-    mount Blazer::Engine, at: "data"
+    mount Blazer::Engine, at: "data", as: "data"
   end
 end

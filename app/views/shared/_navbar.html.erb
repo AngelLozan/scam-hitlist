@@ -47,6 +47,13 @@
               <i class="fa-brands fa-watchman-monitoring"> Watchlist</i>
             <% end %>
           </li>
+          <% if current_user.admin == true %>
+            <li class="nav-item">
+              <%= link_to data_url, class: "nav-link" do %>
+               <i class="fa-solid fa-database"> Data Dashboard</i>
+              <% end %>
+            </li>
+          <% end %>
 
           <li class="nav-item dropdown">
           <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

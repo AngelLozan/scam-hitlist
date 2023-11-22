@@ -32,8 +32,8 @@ CSV.foreach(Rails.root.join("lib/forms.csv"), headers: :first_row) do |row|
 end
 
 puts "creating users for Dean and Scott"
-  User.create!(email: "dean@exodus.io", password: "changeme")
-  User.create!(email: "scott.lo@exodus.io", password: "changeme")
+  User.create!(email: "dean@exodus.io", password: "changeme", admin: true)
+  User.create!(email: "scott.lo@exodus.io", password: "changeme", admin: true)
 puts "Created two users, Dean and Scott.  They can add more."
 
 puts "creating IOCs, this can take a moment ..."

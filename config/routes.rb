@@ -41,4 +41,8 @@ Rails.application.routes.draw do
   get '/download_presigned', to: 'iocs#download_presigned', as: 'download_presigned'
 
   root to: 'pages#home'
+
+  authenticate :user, ->(user) { user.admin == true } do
+    mount Blazer::Engine, at: "data"
+  end
 end

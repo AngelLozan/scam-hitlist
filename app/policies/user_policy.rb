@@ -22,7 +22,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user.is_brand_protector?
+    true
   end
 
   def destroy?

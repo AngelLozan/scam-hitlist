@@ -12,7 +12,7 @@
   <div class="d-flex flex-column">
 
     <% if @current_user == @user %>
-      <%= link_to "Edit my email or password", edit_user_registration_path, class: "btn btn-info mt-3" %>
+      <%= link_to "Edit my email or password", edit_user_registration_path(id: @user), class: "btn btn-info mt-3" %>
     <% end %>
 
    <%= link_to "Back to all Users", users_path, class: "btn btn-info mt-3" %>

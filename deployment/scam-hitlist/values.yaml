@@ -16,7 +16,9 @@ deployment:
   # Environment variables
   globalEnvs:
     - name: AWS_SECRETS_NAMES
-      value: scam-hitlist-rails-master-key,scam-hitlist-db,scam-hitlist-secret
+      value: scam-hitlist-db,scam-hitlist-secret
+    - name: RAILS_ENV
+      value: production
 
   # livenessProbes are used to determine when to restart a container
   # Only specify the values you need to override from the defaults

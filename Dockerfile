@@ -9,7 +9,6 @@ FROM 534042329084.dkr.ecr.us-east-1.amazonaws.com/exodus/base-docker-images:amaz
 ENV \
   RAILS_LOG_TO_STDOUT="1" \
   RAILS_SERVE_STATIC_FILES="true" \
-  RAILS_ENV="production" \
   BUNDLE_WITHOUT="test"
 
 COPY --from=secrets-manager --chmod=755 /secrets-manager-go /bin/secrets-manager-go
@@ -37,10 +36,7 @@ RUN yarn install --frozen-lockfile && \
 COPY --chown=ruby:ruby . .
 
 RUN yarn build && \
-  bundle exec bootsnap precompile --gemfile app/ lib/ 
-
-RUN --mount=type=secret,id=rails_master_key,dst=/root/rails_master_key \
-  export RAILS_MASTER_KEY=$(cat /root/rails_master_key) && \
+  bundle exec bootsnap precompile --gemfile app/ lib/ && \
   bin/rails assets:precompile
 
 USER ruby

@@ -29,11 +29,11 @@ trap 'term_handler' SIGTERM
 # Run migrations
 # If the database exists, migrate. Otherwise setup (create and migrate)
 echo "Running migrations"
-secrets-manager-go -k RAILS_MASTER_KEY=SINGLE_STRING_SECRET -- bundle exec rake db:migrate 2>/dev/null || bundle exec rake db:create db:migrate
+secrets-manager-go -- bundle exec rake db:migrate 2>/dev/null || bundle exec rake db:create db:migrate
 
 # Fetch secrets from AWS Secrets Manager, run the Rails server, and store PID to $pid
 echo "Starting server"
-secrets-manager-go -k RAILS_MASTER_KEY=SINGLE_STRING_SECRET -- bundle exec rails server -b 0.0.0.0
+secrets-manager-go -- bundle exec rails server -b 0.0.0.0
 pid="$!"
 echo "Found pid: $pid"
 

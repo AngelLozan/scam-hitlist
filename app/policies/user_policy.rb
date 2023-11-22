@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    user.is_brand_protector?
+    true
   end
 
   def new?

@@ -37,6 +37,10 @@ class ApplicationController < ActionController::Base
     redirect_to(request.referrer || root_path)
   end
 
+  def require_admin
+    redirect_to root_path unless current_user && current_user.admin == true
+  end
+
 private
 
   def skip_pundit?

@@ -10,9 +10,12 @@ Quicker and more efficient than using spreadsheets and allows for more efficient
 
 Allows for unauthorized users to submit IOCs in a limited fashion, laying foundation for broader brand protection program across departments and ecosystem. Allows for evidence attachment and tracking. Allows for multiple users to work on the same IOC.
 
-## Version History 🥲
+## Version History 🥲 => 😊
+
+v3 here: https://scam-hitlist-d.ot.exodus.com/
 
 See v2 here: https://docs.google.com/spreadsheets/d/1FyhDyRa8tjQvUSRn8BjviR0g9x7BU3nfmK73njYPyu4/edit?pli=1#gid=0
+
 see v1 here: https://docs.google.com/spreadsheets/d/1Zd-47ml3BH3ma23JPC4SC-peafXgJSjXKpi8kHvNPzY/edit#gid=1387966833
 
 

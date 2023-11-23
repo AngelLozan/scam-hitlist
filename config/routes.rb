@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  get 'health/readiness'
-  get 'health/liveness'
+  
+  get 'health/ready', to: 'health#readiness'
+  get 'health/live', to: 'health#liveness'
+
   resources :hosts
   resources :forms
   resources :iocs do

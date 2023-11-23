@@ -23,12 +23,22 @@ deployment:
   # livenessProbes are used to determine when to restart a container
   # Only specify the values you need to override from the defaults
   livenessProbe:
-    enabled: false
+    enabled: true
+    httpGet:
+      path: /health/live
+      port: 3000
+    initialDelaySeconds: 10
+    periodSeconds: 5
 
   # readinessProbes are used to determine when a container is ready to start accepting traffic
   # Only specify the values you need to override from the defaults
   readinessProbe:
-    enabled: false
+    enabled: true
+    httpGet:
+      path: /health/ready
+      port: 3000
+    initialDelaySeconds: 20
+    periodSeconds: 5
 
   # deployment container resource requests/limits
   # this is set VERY low by default, to be aggressive above resource limiting, please override this if necessary

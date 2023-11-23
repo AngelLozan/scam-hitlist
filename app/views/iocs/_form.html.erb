@@ -1,4 +1,4 @@
-<input type="file" id="file-input" data-presigned-target="fileInput" data-action="change->presigned#fetchPresigned" class="mb-3">
+<input type="file" id="file-input" data-presigned-target="fileInput" class="mb-3 form-control">
 <%= simple_form_for ioc, html: { data: { presigned_target: "form", action: "submit->presigned#handleSubmit" }} do |f| %>
 
   <%= f.error_notification %>

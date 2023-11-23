@@ -163,6 +163,7 @@ class IocsController < ApplicationController
     # @hosts = Host.all
   end
 
+# @dev For publicly available upload url. Not used in current version.
   def presigned
     @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified
     authorize @ioc
@@ -182,6 +183,7 @@ class IocsController < ApplicationController
       render json: { error: "Failed to generate presigned URL" }, status: :unprocessable_entity
   end
 
+# @dev For publicly available download url. Not used in current version. 
   def download_presigned
     @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified.
     authorize @ioc

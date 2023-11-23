@@ -9,7 +9,7 @@
     <%= f.hidden_field :file_url, id: 'file-url', data: { presigned_target: "fileUrl" } %>
   </div>
   <label for="file-input"> Attach an image, email, text or other evidence files.</label>
-  <input type="file" id="file-input" data-presigned-target="fileInput" data-action="change->presigned#fetchPresigned" class="mb-3">
+  <input type="file" id="file-input" data-presigned-target="fileInput" class="mb-3 form-control">
   <div class="d-flex justify-content-center my-3">
    <%= recaptcha_tags %>
   </div>

@@ -232,46 +232,48 @@ export default class extends Controller {
     }
 
     // @dev This allows grabbing a new temp download url for evidene that is over limit for presigned url timeframe (see ioc controller)
-    async presignedUrl(e) {
-        e.preventDefault();
-        const id = e.currentTarget.getAttribute('data-id');
-        const evidenceUrl = this.evidenceTarget.href
-        const parts = evidenceUrl.split("?");
-        const key = parts[0].split("/").pop();
-        console.log("Object Key:", key);
+    // @dev For publicly available presigned url. 
+    
+    // async presignedUrl(e) {
+    //     e.preventDefault();
+    //     const id = e.currentTarget.getAttribute('data-id');
+    //     const evidenceUrl = this.evidenceTarget.href
+    //     const parts = evidenceUrl.split("?");
+    //     const key = parts[0].split("/").pop();
+    //     console.log("Object Key:", key);
 
-        try {
-            let res = await fetch(`/download_presigned?key=${key}`, {
-                method: 'GET'
-            });
-            const data = await res.json();
-            const download = data.download_url;
-            console.log("Download url is: ", data.download_url);
-            this.evidenceTarget.href = data.download_url;
+    //     try {
+    //         let res = await fetch(`/download_presigned?key=${key}`, {
+    //             method: 'GET'
+    //         });
+    //         const data = await res.json();
+    //         const download = data.download_url;
+    //         console.log("Download url is: ", data.download_url);
+    //         this.evidenceTarget.href = data.download_url;
 
-            // @dev Need to post new url to iocs controller here to preserve url as part of record
-            try {
-                let setStatus = await fetch(`/iocs/${id}`, {
-                    method: 'PATCH',
-                    headers: { "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
-                    body: JSON.stringify({ 'file_url': download })
-                })
-                console.log(setStatus);
-                let response = await setStatus.json();
-                console.log(response);
-                if (response.ok) {
-                    this.displayFlashMessage('Updated file url for next 7 days ✅', 'success');
-                }
-            } catch (error) {
-                console.log(error.message);
-                this.displayFlashMessage(`Something went wrong : ${error.message}`, 'alert_warning');
-            }
+    //         // @dev Need to post new url to iocs controller here to preserve url as part of record
+    //         try {
+    //             let setStatus = await fetch(`/iocs/${id}`, {
+    //                 method: 'PATCH',
+    //                 headers: { "Content-Type": "application/json", "Accept": "application/json", "X-CSRF-Token": this.csrfToken },
+    //                 body: JSON.stringify({ 'file_url': download })
+    //             })
+    //             console.log(setStatus);
+    //             let response = await setStatus.json();
+    //             console.log(response);
+    //             if (response.ok) {
+    //                 this.displayFlashMessage('Updated file url for next 7 days ✅', 'success');
+    //             }
+    //         } catch (error) {
+    //             console.log(error.message);
+    //             this.displayFlashMessage(`Something went wrong : ${error.message}`, 'alert_warning');
+    //         }
 
-        } catch (error) {
-            console.log(error);
-            this.displayFlashMessage(`Something went wrong : ${error.message}`, 'alert_warning');
-        }
-    }
+    //     } catch (error) {
+    //         console.log(error);
+    //         this.displayFlashMessage(`Something went wrong : ${error.message}`, 'alert_warning');
+    //     }
+    // }
 
     async copyLookUp(e) {
         e.preventDefault();

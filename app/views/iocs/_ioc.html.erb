@@ -40,9 +40,9 @@
     </p>
     <% if policy(Ioc).presigned? %>
       <% unless !ioc.file_url %>
-        <p class="mb-3">
-          <strong>Evidence:</strong>
-            <%= link_to "Download Evidence", ioc.file_url, target: "_blank", class: 'card-link', data: { zf_target: "evidence" } %>
+        <p class="mb-3" data-controller="presigned" data-presigned-bucket-value="<%= ENV['BUCKET']%>" data-presigned-access-value="<%= ENV['ACCESS_KEY']%>" data-presigned-secret-value="<%= ENV['SECRET_ACCESS_KEY']%>" data-presigned-region-value="<%= ENV['REGION']%>">
+          <strong data-presigned-target="evidence" data-url="<%= ioc.file_url %>">Evidence:</strong>
+            <button data-action="click->presigned#downloadEvidence" class="btn btn-primary">Download Evidence</button>
         </p>
       <% end %>
     <% end %>

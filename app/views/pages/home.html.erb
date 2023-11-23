@@ -1,6 +1,4 @@
-
-
-<div class="banner"  data-controller="presigned">
+<div class="banner"  data-controller="presigned" data-presigned-bucket-value="<%= ENV['BUCKET']%>" data-presigned-access-value="<%= ENV['ACCESS_KEY']%>" data-presigned-secret-value="<%= ENV['SECRET_ACCESS_KEY']%>" data-presigned-region-value="<%= ENV['REGION']%>">
   <%= image_tag "Home.svg", alt: 'background', class: 'background-image'%>
   <div class="banner-content text-center">
     <div >

@@ -56,4 +56,4 @@ jobs:
           cp config/database.github.yml config/database.yml
           bundle exec rails db:create db:migrate
       - name: Run all tests
-        run: rake
+        run: bundle exec rake

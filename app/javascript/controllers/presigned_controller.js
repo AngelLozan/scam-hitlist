@@ -23,9 +23,6 @@ export default class extends Controller {
 
     connect() {
         console.log("Presigned controller connected");
-        // console.log(this.fileInputTarget);
-        // console.log(this.formTarget);
-        // console.log(this.fileUrlTarget);
     }
 
     // async fetchPresigned() {
@@ -72,30 +69,6 @@ export default class extends Controller {
     //     });
     // }
 
-
-
-    // async downloadEvidence(e) {
-    //     // e.preventDefault();
-    //     console.log("Clicked download");
-    //     const key = this.evidenceTarget.getAttribute('data-url');
-    //     const command = new GetObjectCommand({
-    //         Bucket: this.bucketValue,
-    //         Key: key,
-    //     });
-
-    //     try {
-    //         const response = await this.client.send(command);
-    //         // The Body object also has 'transformToByteArray' and 'transformToWebStream' methods.
-    //         const fileContent = await response.Body.transformToString();
-    //         console.log("DOWNLOAD: ", fileContent);
-
-    //         const blob = new Blob([fileContent], { type: 'application/octet-stream' });
-    //         const blobUrl = URL.createObjectURL(blob);
-    //         window.open(blobUrl, '_blank');
-    //     } catch (err) {
-    //         console.error(err);
-    //     }
-    // };
 
 
     async downloadEvidence(e) {

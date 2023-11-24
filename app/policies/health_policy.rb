@@ -13,6 +13,4 @@ class HealthPolicy < ApplicationPolicy
     true
   end
 
-
-  end
 end

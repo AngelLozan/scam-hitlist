@@ -11,8 +11,8 @@ include:
     file: docker-build-multi-arch.yml
   - project: infrastructure/gitlab-ci-templates
     ref: master
-    # file: dev-branches-manual.yml
-    file: dev-branches-auto.yaml
+    file: dev-branches-manual.yml
+    # file: dev-branches-auto.yaml
   - project: infrastructure/gitlab-ci-templates
     ref: master
     file: dev-master-auto.yml

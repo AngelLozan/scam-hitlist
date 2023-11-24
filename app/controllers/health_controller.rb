@@ -3,6 +3,7 @@ class HealthController < ApplicationController
   skip_after_action :verify_authorized, only: %i[readiness liveness]
 
   def readiness
+    authorize @health
     if ready_to_serve?
       render plain: 'OK', status: 200
     else
@@ -11,6 +12,7 @@ class HealthController < ApplicationController
   end
 
   def liveness
+    authorize @health
     render plain: 'OK', status: 200
   end
 

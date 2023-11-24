@@ -36,3 +36,4 @@ def authenticate
 
   request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:google] # Set the OmniAuth mock auth hash in the request environment
 end
+

@@ -167,23 +167,40 @@ class IocsController < ApplicationController
   def presigned
     @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified
     authorize @ioc
-    bucket_name = ENV['BUCKET']
-    # region = "eu-north-1" # @dev for dev
-    region = ENV['REGION']
-    Aws.config.update(region: region)
 
-    bucket = Aws::S3::Bucket.new(bucket_name)
-    object_key = params[:fileName]
+    role_credentials = Aws::AssumeRoleWebIdentityCredentials.new(
+      client: Aws::STS::Client.new(),
+      role_arn: ENV['AWS_ROLE_ARN'],
+      web_identity_token_file: ENV['AWS_WEB_IDENTITY_TOKEN_FILE'],
+    )
 
-    url = bucket.object(object_key).presigned_url(:put)
-    puts "Created presigned URL: #{url}"
-    render json: { presigned_url: url }
-    rescue Aws::Errors::ServiceError => e
-      puts "Couldn't create presigned URL for #{bucket.name}:#{object_key}. Here's why: #{e.message}"
-      render json: { error: "Failed to generate presigned URL" }, status: :unprocessable_entity
+    region = ENV['AWS_REGION']
+    
+    client = Aws::S3::Client.new(
+      region: region,
+      credentials: role_credentials,
+    )
+    
+    render json: { client: client }
+  rescue Aws::Errors::ServiceError => e
+    puts "Couldn't create client. Here's why: #{e.message}"
+    render json: { error: "Failed to generate client" }, status: :unprocessable_entity
+    
+    # bucket_name = ENV['BUCKET']
+    # # region = "eu-north-1" # @dev for dev
+    # Aws.config.update(region: region)
+
+    # bucket = Aws::S3::Bucket.new(bucket_name)
+    # object_key = params[:fileName]
+
+    # url = bucket.object(object_key).presigned_url(:put)
+    # puts "Created presigned URL: #{url}"
+    # render json: { presigned_url: url }
+    # rescue Aws::Errors::ServiceError => e
+    #   puts "Couldn't create presigned URL for #{bucket.name}:#{object_key}. Here's why: #{e.message}"
+    #   render json: { error: "Failed to generate presigned URL" }, status: :unprocessable_entity
   end
 
-# @dev For publicly available download url. Not used in current version. 
   def download_presigned
     @ioc = Ioc.find(1) # Dummy Ioc needed for pundit. Not modified.
     authorize @ioc

@@ -3,6 +3,8 @@
   "private": "true",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.409.0",
+    "@aws-sdk/client-sts": "^3.454.0",
+    "@aws-sdk/credential-provider-node": "^3.451.0",
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/turbo-rails": "^7.3.0",
     "@popperjs/core": "^2.11.8",

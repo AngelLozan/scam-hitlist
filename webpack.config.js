@@ -16,5 +16,10 @@ module.exports = {
         new webpack.optimize.LimitChunkCountPlugin({
             maxChunks: 1
         })
-    ]
+    ],
+    resolve: {
+        fallback: {
+            "fs": false
+        },
+    }
 }

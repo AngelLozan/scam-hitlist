@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { PutObjectCommand, GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+// const { getDefaultRoleAssumerWithWebIdentity } = require("@aws-sdk/client-sts");
+// const { defaultProvider } = require("@aws-sdk/credential-provider-node");
 
 
 export default class extends Controller {
@@ -21,14 +23,40 @@ export default class extends Controller {
     //     },
     // });
 
-    client = new S3Client({
-        credentials: fromTokenFile({
-          clientConfig: { region: this.regionValue }
-        });
-    });
 
-    connect() {
+    // provider = defaultProvider({
+    //     roleAssumerWithWebIdentity: getDefaultRoleAssumerWithWebIdentity({
+    //         // You must explicitly pass a region if you are not using us-east-1
+    //         region: "eu-west-1"
+    //     }),
+    // });
+
+    // client = new S3Client({ credentialDefaultProvider: this.provider });
+    client;
+
+    async connect() {
         console.log("Presigned controller connected");
+        client = await this.getClientAuth();
+        if (client) {
+            console.log("Got client!");
+            this.displayFlashMessage("Got the client!", 'success');
+        }
+    }
+
+    async getClientAuth(){
+        let client;
+        try {
+            let res = await fetch(`/presigned`, {
+                method: 'GET'
+            });
+            const data = await res.json();
+            client = data.client
+            console.log("Client is: ", data.client);
+            return client; 
+        } catch(e) {
+            console.log(e);
+            this.displayFlashMessage(data.error, 'warning');
+        }
     }
 
     // async fetchPresigned() {

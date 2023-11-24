@@ -12,13 +12,19 @@ export default class extends Controller {
 
     static targets = ["form", "fileInput", "fileUrl", "link", "alert", "evidence"]
 
+    // @dev For testing
+    // client = new S3Client({
+    //     region: this.regionValue,
+    //     credentials: {
+    //         accessKeyId: this.accessValue,
+    //         secretAccessKey: this.secretValue,
+    //     },
+    // });
 
     client = new S3Client({
-        region: this.regionValue,
-        credentials: {
-            accessKeyId: this.accessValue,
-            secretAccessKey: this.secretValue,
-        },
+        credentials: fromTokenFile({
+          clientConfig: { region: this.regionValue }
+        });
     });
 
     connect() {

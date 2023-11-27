@@ -180,7 +180,7 @@ class IocsController < ApplicationController
       region: region,
       credentials: role_credentials,
     )
-    
+    puts ">>>>> FOUND A CLIENT AND PASSED TO CONTROLLER <<<<<<<<<"
     render json: { client: client }
   rescue Aws::Errors::ServiceError => e
     puts "Couldn't create client. Here's why: #{e.message}"

@@ -32,6 +32,7 @@ export default class extends Controller {
     // });
 
     // client = new S3Client({ credentialDefaultProvider: this.provider });
+    
     client;
 
     async connect() {
